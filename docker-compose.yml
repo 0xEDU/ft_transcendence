@@ -1,11 +1,19 @@
-version: "3"
 services:
-  guis-web:
-
-  svcs-api:
-
   postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-vol:/var/lib/postgresql
+    restart: always
 
 volumes:
   postgres-vol:
-
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '~/goinfre/ft_transcendence_data'
