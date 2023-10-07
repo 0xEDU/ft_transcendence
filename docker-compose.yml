@@ -1,0 +1,11 @@
+version: "3"
+services:
+  guis-web:
+
+  svcs-api:
+
+  postgres:
+
+volumes:
+  postgres-vol:
+
