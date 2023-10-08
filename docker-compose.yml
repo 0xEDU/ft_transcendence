@@ -9,6 +9,22 @@ services:
     volumes:
       - postgres-vol:/var/lib/postgresql
     restart: always
+    networks:
+      - transcendence
+
+  api:
+    container_name: api
+    depends_on:
+      - postgres
+    build:
+      context: ./api/
+    ports:
+      - 3000:3000
+    networks:
+      - transcendence
+    restart: always
+    volumes:
+      - ./api:/usr/src/app
 
 volumes:
   postgres-vol:
@@ -17,3 +33,8 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '~/goinfre/ft_transcendence_data'
+
+networks:
+  transcendence:
+    driver: bridge
+    name: transcendence
