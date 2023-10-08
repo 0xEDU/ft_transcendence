@@ -1,0 +1,4 @@
+packages/**/node_modules
+.gitignore
+.git
+*.md

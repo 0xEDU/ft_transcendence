@@ -1,3 +1,4 @@
+version: '3'
 services:
   postgres:
     image: postgres:16-alpine
@@ -6,35 +7,27 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
+    ports:
+      - 5433:5432
     volumes:
       - postgres-vol:/var/lib/postgresql
     restart: always
     networks:
       - transcendence
 
-  pong-api:
-    container_name: pong-api
-    depends_on:
-      - postgres
-    build:
-      context: ./packages/pong-api
-      dockerfile: ./Dockerfile.prod
-    networks:
-      - transcendence
-    restart: always
-
-  pong-front:
-    container_name: pong-front
-    depends_on:
-      - pong-api
-    build:
-      context: ./packages/pong-front
-      dockerfile: ./Dockerfile.prod
+  ft_transcendence_dev:
+    image: ft_transcendence_dev
+    container_name: ft_transcendence_dev
+    volumes:
+      - ..:/workspaces/ft_transcendence:cached
+    build: 
+      context: ..
+      dockerfile: ./.devcontainer/Dockerfile
     ports:
-      - 8080:80
+      - 3000:3000
+      - 8000:3001
     networks:
       - transcendence
-    restart: always
 
 volumes:
   postgres-vol:
