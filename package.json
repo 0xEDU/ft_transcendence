@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "pong-api": "npm run start:dev --prefix packages/pong-api",
-    "pong-front": "npm start --prefix packages/pong-front",
-    "dev": "concurrently \"npm run pong-api\" \"npm run pong-front\""
+    "api": "npm run start:dev --prefix packages/api",
+    "client": "npm start --prefix packages/client",
+    "dev": "concurrently \"npm run api\" \"npm run client\""
   },
   "dependencies": {
     "concurrently": "^8.2.1"

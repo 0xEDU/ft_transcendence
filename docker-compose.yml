@@ -12,23 +12,23 @@ services:
     networks:
       - transcendence
 
-  pong-api:
-    container_name: pong-api
+  api:
+    container_name: api
     depends_on:
       - postgres
     build:
-      context: ./packages/pong-api
+      context: ./packages/api
       dockerfile: ./Dockerfile.prod
     networks:
       - transcendence
     restart: always
 
-  pong-front:
-    container_name: pong-front
+  client:
+    container_name: client
     depends_on:
-      - pong-api
+      - api
     build:
-      context: ./packages/pong-front
+      context: ./packages/client
       dockerfile: ./Dockerfile.prod
     ports:
       - 8080:80

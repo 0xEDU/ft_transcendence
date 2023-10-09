@@ -8,15 +8,15 @@ RUN npm install
 
 COPY . .
 
-FROM node:20-bookworm as pong-front-build
+FROM node:20-bookworm as client-build
 
-WORKDIR /workspaces/ft_transcendence/packages/pong-front
+WORKDIR /workspaces/ft_transcendence/packages/client
 
 RUN npm install
 
-FROM node:20-bookworm as pong-api-build
+FROM node:20-bookworm as api-build
 
-WORKDIR /workspaces/ft_transcendence/packages/pong-api
+WORKDIR /workspaces/ft_transcendence/packages/api
 
 RUN npm install
 
