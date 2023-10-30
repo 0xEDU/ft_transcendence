@@ -9,8 +9,8 @@ services:
       POSTGRES_DB: postgres
     ports:
       - 5433:5432
-    volumes:
-      - postgres-vol:/var/lib/postgresql
+    # volumes:
+    #   - postgres-vol:/var/lib/postgresql
     restart: always
     networks:
       - transcendence
@@ -25,17 +25,17 @@ services:
       dockerfile: ./.devcontainer/Dockerfile
     ports:
       - 3000:3000
-      - 8000:3001
+      - 3001:3001
     networks:
       - transcendence
 
-volumes:
-  postgres-vol:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '~/goinfre/ft_transcendence_data'
+# volumes:
+#   postgres-vol:
+#     driver: local
+#     driver_opts:
+#       type: 'none'
+#       o: 'bind'
+#       device: '~/goinfre/ft_transcendence_data'
 
 networks:
   transcendence:
