@@ -1,6 +1,5 @@
 version: '3'
-
-services: 
+services:
   postgres:
     image: postgres:16-alpine
     container_name: postgres
@@ -8,14 +7,24 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
-    ports:
-      - 5433:5432
     restart: always
+    networks:
+      - ft_transcendence
 
   django:
     image: django
-    build:
-      context: ./transcendence-core/
+    container_name: django
+    command: python manage.py runserver 0.0.0.0:8000
+    build: ./transcendence-core/
     ports:
       - '8000:8000'
     restart: always
+    networks:
+      - ft_transcendence
+    depends_on:
+      - postgres
+
+networks:
+  ft_transcendence:
+    driver: bridge
+    name: inception
