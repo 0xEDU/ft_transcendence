@@ -1,4 +1,6 @@
-services:
+version: '3'
+
+services: 
   postgres:
     image: postgres:16-alpine
     container_name: postgres
@@ -6,45 +8,14 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
-    volumes:
-      - postgres-vol:/var/lib/postgresql
-    restart: always
-    networks:
-      - transcendence
-
-  api:
-    container_name: api
-    depends_on:
-      - postgres
-    build:
-      context: ./packages/api
-      dockerfile: ./Dockerfile.prod
-    networks:
-      - transcendence
-    restart: always
-
-  client:
-    container_name: client
-    depends_on:
-      - api
-    build:
-      context: ./packages/client
-      dockerfile: ./Dockerfile.prod
     ports:
-      - 8080:80
-    networks:
-      - transcendence
+      - 5433:5432
     restart: always
 
-volumes:
-  postgres-vol:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '~/goinfre/ft_transcendence_data'
-
-networks:
-  transcendence:
-    driver: bridge
-    name: transcendence
+  django:
+    image: django
+    build:
+      context: ./transcendence-core/
+    ports:
+      - '8000:8000'
+    restart: always

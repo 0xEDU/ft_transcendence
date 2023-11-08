@@ -1,29 +1,20 @@
-FROM node:20-bookworm as repo-setup
+FROM python:3.8.10-alpine as django-build
+
+RUN apk update && apk add git 
 
 WORKDIR /workspaces
 
-COPY package.json .
-
-RUN npm install
-
 COPY . .
-
-FROM node:20-bookworm as client-build
-
-WORKDIR /workspaces/ft_transcendence/packages/client
-
-RUN npm install
-
-FROM node:20-bookworm as api-build
-
-WORKDIR /workspaces/ft_transcendence/packages/api
-
-RUN npm install
-
-FROM node:20-bookworm as deploy
 
 WORKDIR /workspaces/ft_transcendence
 
-RUN apt update && apt install git
+RUN pip install --upgrade pip
+
+RUN pip install -r transcendence-core/requirements/local.txt
+# RUN pip install -r transcendence-core/requirements/local.txt
+
+FROM django-build as django-deploy
+
+WORKDIR /workspaces/ft_transcendence
 
 CMD [ "sleep", "infinity" ]

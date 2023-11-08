@@ -16,7 +16,9 @@
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"customizations": {
 		"vscode": {
-			"extensions": [ "VisualStudioExptTeam.vscodeintellicode" ]
+			"extensions": [
+				"VisualStudioExptTeam.vscodeintellicode"
+			]
 		}
 	},
 
@@ -33,7 +35,7 @@
 	// "shutdownAction": "none",
 
 	// Uncomment the next line to run commands after the container is created.
-	"postCreateCommand": "npm run dev"
+	//"postCreateCommand": "python3 manage.py runserver 0.0.0.0:8000"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
