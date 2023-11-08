@@ -19,9 +19,8 @@ COPY . $TRANSCENDENCE_DIR
 # run this command to install all dependencies
 RUN pip install -r requirements/local.txt
 
+# create certificates for ssl/https
+RUN openssl req -newkey rsa:2048 -nodes -keyout /private.key -x509 -days 365 -out /certificate.pem -subj "/C=BR/ST=SP/L=SãoPaulo/O=42sp/CN=pong.42"
+
 # port where the Django app runs
 EXPOSE 8000
-
-# # start server
-# ENTRYPOINT [ "python3" ]
-# CMD [ "manage.py", "runserver", "0.0.0.0:8000" ]

@@ -10,11 +10,13 @@ services:
     restart: always
     networks:
       - ft_transcendence
+    volumes:
+      - postgres-vol:/var/lib/postgresql
 
   django:
     image: django
     container_name: django
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver_plus --cert-file cert.pem --key-file key.pem 0.0.0.0:8000
     build: ./transcendence-core/
     ports:
       - '8000:8000'
@@ -28,3 +30,11 @@ networks:
   ft_transcendence:
     driver: bridge
     name: inception
+
+volumes:
+  postgres-vol:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '~/goinfre/ft_transcendence_data'
