@@ -1,4 +1,4 @@
-packages/**/node_modules
+venv/
 .gitignore
 .git
 *.md
