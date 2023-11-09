@@ -1,0 +1,35 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+  
+  .button {
+    padding: 20px 60px;
+    font-size: 2em;
+    color: #000000;
+    background: #1fda28;
+    border: 2px solid #fff;
+    border-radius: 10px; /* Rounded corners */
+    text-decoration: none; /* Removes underline from text */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    text-transform: uppercase; /* Capitalize text */
+    letter-spacing: 2px; /* Add spacing between letters */
+    outline: none; /* Remove outline on focus */
+  }
+  
+  .button:hover {
+    background-color: #59fc61; /* Darken button color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+  }
+  
+  .button:active {
+    background-color: #0a5a86; /* Further darken button color on click */
+    transform: translateY(4px); /* Push the button down a bit when clicked */
+    box-shadow: none; /* Remove shadow when clicked */
+  }  
