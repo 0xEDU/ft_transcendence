@@ -1,26 +1,29 @@
 let lastTime = 0;
 let countdown = 3;
+let countdownTime = Date.now();
 let isCountdownActive = true;
+let gameOver = false;
 let leftScore = 0;
 let rightScore = 0;
-let gameOver = false;
+let requestId = null;
 let canvasWidth = window.innerWidth * 0.8;
 let canvasHeight = window.innerHeight * 0.8;
+let paddleSpeed = 70;
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 const winningScore = 5;
-const paddleSpeed = 70;
 const ballSpeed = 4.7;
 const maxBallSpeed = 10;
 const ballSpeedIncreaseFactor = 1.10;
+const originalCanvasWidth = 1536;
+const originalCanvasHeight = 864;
 
-canvasWidth = Math.min(canvasWidth, 1536);
-canvasHeight = Math.min(canvasHeight, 864);
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
+
+canvas.width = canvasWidth = Math.min(canvasWidth, originalCanvasWidth);
+canvas.height = canvasHeight = Math.min(canvasHeight, originalCanvasHeight);
 const grid = 15;
-const paddleHeight = grid * 6;
-const maxPaddleY = canvasHeight - grid - paddleHeight;
+let paddleHeight = grid * 6;
+let maxPaddleY = canvasHeight - grid - paddleHeight;
 
 const leftPaddle = {
     x: grid * 2,
@@ -44,8 +47,8 @@ const ball = {
     width: grid,
     height: grid,
     resetting: false,
-    dx: 0, // Initially stationary
-    dy: 0
+    dx: ballSpeed,
+    dy: ballSpeed
 };
 
 const keyState = {
@@ -82,13 +85,26 @@ function resetGame() {
     leftScore = 0;
     rightScore = 0;
     gameOver = false;
+    isCountdownActive = true;
+    countdown = 3;
+    countdownTime = Date.now();
+
+    // Reset ball position
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
-    ball.dx = 0; // Remain stationary during countdown
+    // The ball will be set in motion after the countdown ends
+    ball.dx = 0;
     ball.dy = 0;
-    countdown = 4; // Reset countdown
-    isCountdownActive = true;
-    countdownTime = 0;
+
+    // Reset paddle positions if needed
+    leftPaddle.y = (canvas.height / 2) - (leftPaddle.height / 2);
+    rightPaddle.y = (canvas.height / 2) - (rightPaddle.height / 2);
+
+    // Reset key states to prevent stuck keys during game over
+    keyState.ArrowUp = false;
+    keyState.ArrowDown = false;
+    keyState.w = false;
+    keyState.s = false;
 }
 
 function drawScore() {
@@ -102,12 +118,14 @@ function checkGameOver() {
         gameOver = true;
         context.fillStyle = 'black';
         context.fillRect(canvas.width / 2 - grid / 2, grid, grid, canvas.height - grid * 2);
+
+        // Adjust the font size based on the new canvas size
+        const fontSize = canvasWidth / 20; // Example: base your font size on the width
+        context.font = `bold ${fontSize}px Helvetica`;
         context.fillStyle = 'white';
-        context.font = 'bold 50px Helvetica';
         context.textAlign = 'center';
         context.fillText("Game Over!", canvas.width / 2, canvas.height / 2);
-        context.fillText("Press Enter to restart", canvas.width / 2, canvas.height / 2 + 60);
-        context.textAlign = 'start';
+        context.fillText("Press Enter to restart", canvas.width / 2, canvas.height / 2 + fontSize);
     }
 }
 
@@ -127,90 +145,120 @@ function updatePaddleMovement(deltaTime) {
     rightPaddle.y = Math.max(grid, Math.min(rightPaddle.y + rightPaddle.dy * movementScale, maxPaddleY));
 }
 
-let countdownTime = 0; // Variable to track countdown time
+// All your function definitions (collides, resetGame, drawScore, checkGameOver) will remain the same.
 
-function loop(timestamp) {
-    if (gameOver) {
-        return;
-    }
-
-    const deltaTime = timestamp - lastTime;
-    lastTime = timestamp;
-
-    requestAnimationFrame(loop);
+function drawEverything() {
+    // Clear the canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
-
-    updatePaddleMovement(deltaTime);
 
     // Draw paddles
     context.fillStyle = 'white';
     context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
     context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
 
-    // Handle Countdown Logic
-    if (isCountdownActive) {
-        if (countdown > 0) {
-            if (timestamp - countdownTime >= 1000) {
-                countdown -= 1; // Decrement countdown
-                countdownTime = timestamp; // Update countdownTime
-            }
-
-            // Display Countdown
-            context.font = 'bold 60px Helvetica';
-            context.fillStyle = 'white';
-            context.textAlign = 'center';
-            context.fillText(countdown.toString(), canvas.width / 2, canvas.height / 2);
-
-        } else {
-            isCountdownActive = false; // End countdown
-            ball.dx = ballSpeed; // Start the ball movement
-            ball.dy = -ballSpeed;
-        }
-    } else {
-        // Game logic when countdown is not active
-        ball.x += ball.dx;
-        ball.y += ball.dy;
-
-        // Ball movement and collision logic
-        if (ball.y < grid || ball.y + grid > canvas.height - grid) {
-            ball.dy *= -1;
-            if (ball.y < grid) ball.y = grid;
-            else ball.y = canvas.height - grid * 2;
-        }
-
-        if (ball.x < 0 || ball.x > canvas.width) {
-            if (!ball.resetting) {
-                ball.resetting = true;
-                if (ball.x < 0) rightScore++;
-                else if (ball.x > canvas.width) leftScore++;
-
-                setTimeout(() => {
-                    ball.resetting = false;
-                    ball.x = canvas.width / 2;
-                    ball.y = canvas.height / 2;
-                    const randomAngle = Math.random() * Math.PI/2 - Math.PI/4;
-                    const direction = Math.random() < 0.5 ? 1 : -1;
-                    ball.dx = direction * ballSpeed * Math.cos(randomAngle);
-                    ball.dy = ballSpeed * Math.sin(randomAngle);
-                }, 400);
-            }
-        }
-
-        if (collides(ball, leftPaddle) || collides(ball, rightPaddle)) {
-            let additionalSpeed = (leftPaddle.dy + rightPaddle.dy) / 4;
-            additionalSpeed = Math.max(Math.min(additionalSpeed, 1), -1);  // Limiting additional speed
-            ball.dy += additionalSpeed;
-        }
-
-		for (let i = grid; i < canvas.height - grid; i += grid * 2) {
-			context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
-		}
-
+    // Draw ball if countdown is not active
+    if (!isCountdownActive) {
         context.fillRect(ball.x, ball.y, ball.width, ball.height);
     }
 
+    // Draw scores
     drawScore();
+
+    // Draw the net if countdown is not active
+    if (!isCountdownActive) {
+        for (let i = grid; i < canvas.height - grid; i += grid * 2) {
+            context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
+        }
+    }
+
+    // Handle game over display
     checkGameOver();
+
+    // Display Countdown
+    if (isCountdownActive) {
+        context.font = 'bold 60px Helvetica';
+        context.fillStyle = 'white';
+        context.textAlign = 'center';
+        context.fillText(countdown.toString(), canvas.width / 2, canvas.height / 2);
+    }
+}
+
+function updateGameLogic() {
+    if (isCountdownActive) {
+        if (Date.now() - countdownTime >= 1000) {
+            countdown -= 1;
+            countdownTime = Date.now();
+            if (countdown === 0) {
+                isCountdownActive = false; // End countdown
+                resetBall(); // Reset the ball's position and speed
+            }
+        }
+    } else {
+            // Ball movement logic
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Ball collision with top and bottom
+            if (ball.y < grid || ball.y > canvas.height - grid - ball.height) {
+                ball.dy = -ball.dy;
+                ball.y = ball.y < grid ? grid : canvas.height - grid - ball.height;
+            }
+
+            // Ball out of bounds logic
+            if (ball.x < 0 || ball.x > canvas.width - ball.width) {
+                if (!ball.resetting) {
+                    ball.resetting = true;
+                    ball.x < 0 ? rightScore++ : leftScore++;
+                    // Reset ball after a score
+                    setTimeout(() => {
+                        ball.resetting = false;
+                        resetBall();
+                    }, 400);
+                }
+            }
+
+            // Paddle collision
+            if (collides(ball, leftPaddle) || collides(ball, rightPaddle)) {
+                let combinedSpeed = (leftPaddle.dy + rightPaddle.dy) / 4;
+                combinedSpeed = Math.max(Math.min(combinedSpeed, 1), -1); // Limiting additional speed
+                ball.dy += combinedSpeed;
+            }
+        }
+}
+
+function resetBall() {
+    // Center the ball
+    ball.x = canvas.width / 2 - ball.width / 2;
+    ball.y = canvas.height / 2 - ball.height / 2;
+
+    // Set the ball's speed relative to the size of the canvas
+    const baseSpeedX = canvasWidth * (ballSpeed / originalCanvasWidth);
+    const baseSpeedY = canvasHeight * (ballSpeed / originalCanvasHeight);
+
+    // Randomize the direction of the ball
+    const randomAngle = Math.random() * Math.PI / 2 - Math.PI / 4;
+    const direction = Math.random() < 0.5 ? 1 : -1;
+    ball.dx = direction * baseSpeedX * Math.cos(randomAngle);
+    ball.dy = baseSpeedY * Math.sin(randomAngle);
+}
+
+function loop(timestamp) {
+    if (!gameOver) {
+        const deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+
+        updatePaddleMovement(deltaTime);
+        updateGameLogic(deltaTime);
+        drawEverything();
+
+        requestId = requestAnimationFrame(loop);
+    } else {
+        // Cancel the animation frame request if the game is over
+        if (requestId) {
+            cancelAnimationFrame(requestId);
+            requestId = null;
+        }
+    }
 }
 
 document.addEventListener('keydown', function(e) {
@@ -220,7 +268,10 @@ document.addEventListener('keydown', function(e) {
 
     if (e.key === 'Enter' && gameOver) {
         resetGame();
-        requestAnimationFrame(loop);
+        // Restart the game loop if the game was over
+        if (!requestId) {
+            requestId = requestAnimationFrame(loop);
+        }
     }
 });
 
@@ -231,18 +282,57 @@ document.addEventListener('keyup', function(e) {
 });
 
 window.addEventListener('resize', () => {
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    // Calculate new canvas dimensions
+    const newCanvasWidth = window.innerWidth * 0.8;
+    const newCanvasHeight = window.innerHeight * 0.8;
+    
+    // Calculate scale factors based on the initial sizes
+    const scaleX = newCanvasWidth / canvas.width;
+    const scaleY = newCanvasHeight / canvas.height;
 
-    maxPaddleY = canvas.height - grid - paddleHeight;
+    // Scale the canvas size
+    canvas.width = canvasWidth = newCanvasWidth;
+    canvas.height = canvasHeight = newCanvasHeight;
 
-    leftPaddle.x = grid * 2;
-    leftPaddle.y = Math.min(leftPaddle.y, maxPaddleY); // Ensure paddle is within bounds
-    rightPaddle.x = canvas.width - grid * 3;
-    rightPaddle.y = Math.min(rightPaddle.y, maxPaddleY); // Ensure paddle is within bounds
-    ball.x = canvas.width / 2;
-    ball.y = canvas.height / 2;
+    // Update the base unit (grid) according to the new canvas size
+    const newGrid = Math.min(canvas.width, canvas.height) / 50; // Example: base your grid on the smaller dimension
+
+    // Scale and reposition the left paddle
+    leftPaddle.width = newGrid;
+    leftPaddle.height = newGrid * 6;
+    leftPaddle.x = newGrid * 2; // Maintain position based on new grid
+    leftPaddle.y = (canvas.height / 2) - (leftPaddle.height / 2);
+
+    // Scale and reposition the right paddle
+    rightPaddle.width = newGrid;
+    rightPaddle.height = newGrid * 6;
+    rightPaddle.x = canvas.width - (newGrid * 3); // Maintain position based on new grid
+    rightPaddle.y = (canvas.height / 2) - (rightPaddle.height / 2);
+
+    // Scale and reposition the ball
+    ball.width = newGrid;
+    ball.height = newGrid;
+    ball.x = (canvas.width / 2) - (newGrid / 2);
+    ball.y = (canvas.height / 2) - (newGrid / 2);
+
+    // Scale the ball's speed based on the average scale factor
+    const averageScale = (scaleX + scaleY) / 2;
+    ball.dx *= averageScale;
+    ball.dy *= averageScale;
+
+	const currentHeightRatio = canvas.height / originalCanvasHeight;
+	paddleSpeed = 70 * currentHeightRatio;
+
+	resetBall();
+
+    // Update the maximum Y position for paddles
+    maxPaddleY = canvas.height - newGrid - leftPaddle.height;
+
+    // Adjust the font size for the score display
+    context.font = `bold ${newGrid * 2}px Helvetica`;
+
+    // Redraw everything after resizing
+    drawEverything();
 });
 
-requestAnimationFrame(loop);
+requestId = requestAnimationFrame(loop);
