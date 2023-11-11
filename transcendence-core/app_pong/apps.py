@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class PongConfig(AppConfig):
+class AppPongConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'pong'
+    name = 'app_pong'

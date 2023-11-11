@@ -20,6 +20,6 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pong/', include('pong.urls')),
+    path('app_pong/', include('app_pong.urls')),
     path('', views.home, name='home'),
 ]
