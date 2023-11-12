@@ -8,6 +8,8 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
     restart: always
+    ports:
+        - '5432:5432'
     networks:
       - ft_transcendence
     volumes:
@@ -29,7 +31,7 @@ services:
 networks:
   ft_transcendence:
     driver: bridge
-    name: inception
+    name: ft_transcendence
 
 volumes:
   postgres-vol:
