@@ -1,16 +1,23 @@
-html, body {
-    height: 100%;
+.main-div {
+    height: 100vh;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     background: black;
-  }
-  
+}
+
 canvas {
     max-width: 1536px; /* Maximum width */
     max-height: 864px; /* Maximum height */
     width: 80%; /* Relative width */
     height: auto; /* Maintain aspect ratio */
     border: 1px solid white; /* Optional, for visibility */
+}
+
+.match-history {
+    width: 25%;
+    height: 100%;
+    color: #fff;
+    background-color: blue;
 }
