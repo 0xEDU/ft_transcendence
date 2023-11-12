@@ -51,7 +51,7 @@ start-app: docker-compose.yml
 	docker-compose up --build --detach django
 
 stop-app: docker-compose.yml
-	docker-compose down django
+	docker-compose stop django
 
 restart-app: docker-compose.yml
 	docker-compose up --build --detach --force-recreate django
