@@ -29,7 +29,7 @@ services:
 networks:
   ft_transcendence:
     driver: bridge
-    name: inception
+    name: transcendence
 
 volumes:
   postgres-vol:
