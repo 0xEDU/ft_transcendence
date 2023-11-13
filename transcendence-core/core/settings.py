@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'app_pong',
-    'app_users',
+    'pong',
+    'auth',
 ]
 
 MIDDLEWARE = [

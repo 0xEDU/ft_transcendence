@@ -47,4 +47,4 @@ def pong_view(request):
     context = {
         "records": [record, record2, record3, record4, record5, record6, record7]
     }
-    return render(request, 'app_pong/index.html', context)
+    return render(request, 'pong/index.html', context)
