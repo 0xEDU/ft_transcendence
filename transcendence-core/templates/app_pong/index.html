@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trancendence</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+  <main class="main-div">
+    <canvas class="" id="game"></canvas>
+    <article class="mx-2 container w-25 mh-100 h-75">
+      <p style="color: #fff"> Match history </p>
+      <ul class="list-group overflow-scroll" style="height: 95%;">
+        {% for record in records %}
+          {% include 'pong/partials/match-card.html' %}
+        {% endfor %}
+      </ul>
+    </article>
+    <script src="{% static 'js/pong.js' %}"></script>
+  </main>
+</body>
+</html>

@@ -5,6 +5,8 @@ services:
     container_name: postgres
     env_file: .env  
     restart: always
+    ports:
+        - '5432:5432'
     networks:
       - ft_transcendence
     volumes:
@@ -26,7 +28,7 @@ services:
 networks:
   ft_transcendence:
     driver: bridge
-    name: transcendence
+    name: ft_transcendence
 
 volumes:
   postgres-vol:
