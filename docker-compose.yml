@@ -3,10 +3,7 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: postgres
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: postgres
+    env_file: .env  
     restart: always
     ports:
         - '5432:5432'
