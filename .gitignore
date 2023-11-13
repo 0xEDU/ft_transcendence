@@ -4,4 +4,4 @@ node_modules/
 /**/dist/
 .vscode
 .env
-venv
+.venv

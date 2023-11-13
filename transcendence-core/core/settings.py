@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'pong',
+    'soninha',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',  # Set to the appropriate host
+        'PORT': '5432',       # Set to the appropriate port
     }
 }
 
