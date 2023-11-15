@@ -16,7 +16,7 @@ services:
     image: django
     container_name: django
     command: python manage.py runserver_plus --cert-file cert.pem --key-file key.pem 0.0.0.0:8000
-    build: ./transcendence-core/
+    build: ./
     ports:
       - '8000:8000'
     restart: always
