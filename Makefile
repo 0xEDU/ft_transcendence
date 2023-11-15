@@ -31,7 +31,7 @@ start-db: volumes docker-compose.yml
 	docker-compose up --build --detach postgres
 
 stop-db: docker-compose.yml
-	docker-compose stop postgres
+	@./_compose_scripts/conditional-stop-container.sh postgres
 
 restart-db: volumes docker-compose.yml
 	docker-compose up --build --detach --force-recreate postgres
@@ -51,7 +51,7 @@ start-app: docker-compose.yml
 	docker-compose up --build --detach django
 
 stop-app: docker-compose.yml
-	docker-compose stop django
+	@./_compose_scripts/conditional-stop-container.sh django
 
 restart-app: docker-compose.yml
 	docker-compose up --build --detach --force-recreate django
