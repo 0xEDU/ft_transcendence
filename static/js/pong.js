@@ -126,7 +126,38 @@ function checkGameOver() {
         context.textAlign = 'center';
         context.fillText("Game Over!", canvas.width / 2, canvas.height / 2);
         context.fillText("Press Enter to restart", canvas.width / 2, canvas.height / 2 + fontSize);
+        
+        const baseUrl = window.location.origin
+        const url =  baseUrl + "/pong/game"
+        const data = {
+            "player1_score": leftScore,
+            "player2_score": rightScore
+        }
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(data)
+        })
     }
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 function updatePaddleMovement(deltaTime) {
