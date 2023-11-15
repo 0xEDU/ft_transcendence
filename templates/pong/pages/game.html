@@ -12,16 +12,22 @@
 </head>
 
 <body>
-  <main class="main-div">
-    <canvas class="" id="game"></canvas>
-    <article class="mx-2 container w-25 mh-100 h-75">
-      <p style="color: #fff"> Match history </p>
-      <ul class="list-group overflow-scroll" style="height: 95%;">
-        {% for record in records %}
-          {% include 'pong/partials/match-card.html' %}
-        {% endfor %}
-      </ul>
-    </article>
+  <main class="bg-black vh-100">
+    <div class="d-flex text-white justify-content-evenly">
+      <h2>{{player1}}</h2>
+      <h2>{{player2}}</h2>
+    </div>
+    {% comment %} <p style="color: #fff"> Match history </p> {% endcomment %}
+    <div class="d-flex h-75">
+      <canvas class="" id="game"></canvas>
+      <article class="mx-2 container w-25 mh-100">
+        <ul class="list-group overflow-auto w-100 h-100" style>
+          {% for record in records %}
+            {% include 'pong/partials/match-card.html' %}
+          {% endfor %}
+        </ul>
+      </article>
+    </div>
     <script src="{% static 'js/pong.js' %}"></script>
   </main>
 </body>

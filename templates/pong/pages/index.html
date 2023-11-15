@@ -10,6 +10,11 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
 </head>
 <body>
-    <a href="{% url 'pong:game' %}" class="button">Pong</a>
+    <form action="{% url 'pong:game' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="player1" placeholder="Player One Name">
+        <input type="text" name="player2" placeholder="Player Two Name">
+        <button type="submit">Play Pong</button> 
+    </form>
 </body>
 </html>
