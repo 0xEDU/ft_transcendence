@@ -1,7 +1,9 @@
 from django.shortcuts import render
 
+def home_view(request):
+    return render(request, 'pong/pages/index.html')
 
-def pong_view(request):
+def game_view(request):
     record = {
         "left_name": "etachott",
         "left_score": 5,
@@ -47,4 +49,4 @@ def pong_view(request):
     context = {
         "records": [record, record2, record3, record4, record5, record6, record7]
     }
-    return render(request, 'pong/index.html', context)
+    return render(request, 'pong/pages/game.html', context)
