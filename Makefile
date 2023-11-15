@@ -1,5 +1,5 @@
 SERVICES = django postgres
-FOLDER = scripts
+FOLDER = _compose_scripts
 FILES = conditional-delete-container.sh \
 		conditional-delete-image.sh \
 		conditional-delete-volume.sh \
@@ -37,11 +37,11 @@ restart-db: volumes docker-compose.yml
 	docker-compose up --build --detach --force-recreate postgres
 
 clean-db: chmod-scripts
-	@./scripts/conditional-stop-container.sh postgres
-	@./scripts/conditional-delete-container.sh postgres
+	@./_compose_scripts/conditional-stop-container.sh postgres
+	@./_compose_scripts/conditional-delete-container.sh postgres
 
 fclean-db: clean-db
-	@./scripts/conditional-delete-image.sh postgres
+	@./_compose_scripts/conditional-delete-image.sh postgres
 
 frestart-db: fclean-db start-db
 
@@ -57,11 +57,11 @@ restart-app: docker-compose.yml
 	docker-compose up --build --detach --force-recreate django
 
 clean-app: chmod-scripts
-	@./scripts/conditional-stop-container.sh django
-	@./scripts/conditional-delete-container.sh django
+	@./_compose_scripts/conditional-stop-container.sh django
+	@./_compose_scripts/conditional-delete-container.sh django
 
 fclean-app: clean-app
-	@./scripts/conditional-delete-image.sh django
+	@./_compose_scripts/conditional-delete-image.sh django
 
 frestart-app: fclean-app start-app
 
