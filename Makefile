@@ -73,6 +73,11 @@ chmod-scripts: $(DOCKER_SCRIPTS)
 volumes:
 	mkdir -p ~/goinfre/ft_transcendence_data
 
+fetch-translation-hooks:
+	django-admin makemessages -a
+
+compile-translations:
+	django-admin compilemessages
 
 .PHONY: start stop restart clean fclean frestart \
 		db-start db-stop db-restart db-clean db-fclean db-frestart \
