@@ -7,6 +7,7 @@ from pong.models import Match, Score
 def home_view(request):
     return render(request, 'pong/pages/index.html')
 
+# Refer to https://pythonacademy.com.br/blog/como-utilizar-as-class-based-views-do-django for to implements this
 class MatchView(UpdateView):
     model = Match
 
