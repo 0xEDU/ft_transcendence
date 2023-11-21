@@ -10,8 +10,9 @@ let canvasWidth = window.innerWidth * 0.8;
 let canvasHeight = window.innerHeight * 0.8;
 let paddleSpeed = 50;
 const canvas = document.getElementById('game');
+const matchId = canvas.dataset.matchId;
 const context = canvas.getContext('2d');
-const winningScore = 5;
+const winningScore = 1;
 const ballSpeed = 8;
 const maxBallSpeed = 15;
 const ballSpeedIncreaseFactor = 1.10;
@@ -128,10 +129,13 @@ function checkGameOver() {
         context.fillText("Press Enter to restart", canvas.width / 2, canvas.height / 2 + fontSize);
         
         const baseUrl = window.location.origin
-        const url =  baseUrl + "/pong/game"
+        const url =  baseUrl + "/pong/match"
         const data = {
+            "player1": "",
+            "player2": "",
             "player1_score": leftScore,
-            "player2_score": rightScore
+            "player2_score": rightScore,
+            "match_id": matchId
         }
         fetch(url, {
             method: 'POST',

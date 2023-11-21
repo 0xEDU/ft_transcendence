@@ -19,7 +19,7 @@
     </div>
     {% comment %} <p style="color: #fff"> Match history </p> {% endcomment %}
     <div class="d-flex h-75">
-      <canvas class="" id="game"></canvas>
+      <canvas class="" id="game" data-match-id={{ match_id }}></canvas>
       <article class="mx-2 container w-25 mh-100">
         <ul class="list-group overflow-auto w-100 h-100" style>
           {% for record in records %}
