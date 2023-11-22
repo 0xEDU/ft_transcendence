@@ -8,6 +8,7 @@ from pong.models import Match, Score
 def home_view(request):
     return render(request, 'pong/pages/index.html')
 
+# This view is called after the game ends, it saves everything in the DB.  
 class MatchView(View):
     def post(self, request, *args, **kwargs):
         try:
@@ -34,6 +35,8 @@ class MatchView(View):
             return HttpResponse('Something went wrong in the Match View')
 
 
+# This view is called when the game starts, it get/create users,
+# create a match and a score, then pass it as context to our template
 class GameView(View):
     def post(self, request, *args, **kwargs):
         player1, created1 = User.objects.get_or_create(display_name=request.POST['player1'], login_intra='unknown', avatar_image_url='unknown')
