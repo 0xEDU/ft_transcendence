@@ -11,8 +11,10 @@ let canvasHeight = window.innerHeight * 0.8;
 let paddleSpeed = 50;
 const canvas = document.getElementById('game');
 const matchId = canvas.dataset.matchId;
+const player1 = canvas.dataset.player1;
+const player2 = canvas.dataset.player2;
 const context = canvas.getContext('2d');
-const winningScore = 1;
+const winningScore = 5;
 const ballSpeed = 8;
 const maxBallSpeed = 15;
 const ballSpeedIncreaseFactor = 1.10;
@@ -131,8 +133,8 @@ function checkGameOver() {
         const baseUrl = window.location.origin
         const url =  baseUrl + "/pong/match"
         const data = {
-            "player1": "",
-            "player2": "",
+            "player1": player1,
+            "player2": player2,
             "player1_score": leftScore,
             "player2_score": rightScore,
             "match_id": matchId
