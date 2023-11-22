@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +10,8 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
 </head>
 <body>
+    {% include "components/navbar.html" %}
+    <h1 style="color: white;">{% translate "Play a match!" %}</h1>
     <a href="{% url 'pong:game' %}" class="button">Pong</a>
 </body>
 </html>

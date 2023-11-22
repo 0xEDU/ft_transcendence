@@ -1,0 +1,41 @@
+{% load static i18n %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'bootstrap-logo.svg' %}" alt="" width="30" height="24">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {% translate "language" %}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        {% get_current_language as CURRENT_LANGUAGE %}
+                        {% get_available_languages as AVAILABLE_LANGUAGES %}
+                        {% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <li class="dropdown-item">
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ redirect_to }}">
+                                    <input type="hidden" name="language" value="{{ language.code }}">
+                                    <input type="submit" name="submit" value="{{ language.name_local }}" class="text-uppercase btn-language">
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
