@@ -1,29 +1,43 @@
-from django.http import HttpRequest, HttpResponse
+import json
+from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView, UpdateView
+from django.views.generic import View
 from soninha.models import User
 from pong.models import Match, Score
 
 def home_view(request):
     return render(request, 'pong/pages/index.html')
 
-# Refer to https://pythonacademy.com.br/blog/como-utilizar-as-class-based-views-do-django for to implements this
-class MatchView(UpdateView):
-    model = Match
-
+class MatchView(View):
     def post(self, request, *args, **kwargs):
-        data = request.POST
-        matchId = data['matchId']
-        match = Match.objects.get(pk=matchId)
-        return HttpResponse('')
+        try:
+            data = json.loads(request.body)
+            matchId = data['match_id']
+            player1_display_name = data['player1']
+            player2_display_name = data['player2']
+            player1_score = data['player1_score']
+            player2_score = data['player2_score']
+
+            match_instance = Match.objects.get(pk=matchId)
+
+            player1_instance = User.objects.get(display_name=player1_display_name)
+            score1 = Score.objects.get(player=player1_instance, match=match_instance)
+            score1.score = player1_score
+            score1.save()
+
+            player2_instance = User.objects.get(display_name=player2_display_name)
+            score2 = Score.objects.get(player=player2_instance, match=match_instance)
+            score2.score = player2_score
+            score2.save()
+            return HttpResponse('')
+        except json.JSONDecodeError as e:
+            return HttpResponse('Something went wrong in the Match View')
 
 
-class GameView(ListView):
-    
+class GameView(View):
     def post(self, request, *args, **kwargs):
-        # print(request.POST)
-        player1 = User.objects.create(display_name=request.POST['player1'], login_intra='unknown', avatar_image_url='unknown')
-        player2 = User.objects.create(display_name=request.POST['player2'], login_intra='unknown', avatar_image_url='unknown')
+        player1, created1 = User.objects.get_or_create(display_name=request.POST['player1'], login_intra='unknown', avatar_image_url='unknown')
+        player2, created2 = User.objects.get_or_create(display_name=request.POST['player2'], login_intra='unknown', avatar_image_url='unknown')
         match = Match.objects.create()
         Score.objects.create(player=player1, match=match, score=0)
         Score.objects.create(player=player2, match=match, score=0)
@@ -35,11 +49,3 @@ class GameView(ListView):
             "match_id": match.id
         }
         return render(request, 'pong/pages/game.html', context)
-
-class MatchView(ListView):
-    model = Match
-
-    # def post(self, *args, **kwargs):
-        # score = Score.objects.create(player=)
-        # match = Match.objects.create()
-        # match.players.add(player1, player2)
