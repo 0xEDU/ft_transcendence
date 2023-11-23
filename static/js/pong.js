@@ -10,6 +10,9 @@ let canvasWidth = window.innerWidth * 0.8;
 let canvasHeight = window.innerHeight * 0.8;
 let paddleSpeed = 50;
 const canvas = document.getElementById('game');
+const matchId = canvas.dataset.matchId;
+const player1 = canvas.dataset.player1;
+const player2 = canvas.dataset.player2;
 const context = canvas.getContext('2d');
 const winningScore = 5;
 const ballSpeed = 8;
@@ -126,7 +129,41 @@ function checkGameOver() {
         context.textAlign = 'center';
         context.fillText("Game Over!", canvas.width / 2, canvas.height / 2);
         context.fillText("Press Enter to restart", canvas.width / 2, canvas.height / 2 + fontSize);
+        
+        const baseUrl = window.location.origin
+        const url =  baseUrl + "/pong/match"
+        const data = {
+            "player1": player1,
+            "player2": player2,
+            "player1_score": leftScore,
+            "player2_score": rightScore,
+            "match_id": matchId
+        }
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(data)
+        })
     }
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 function updatePaddleMovement(deltaTime) {
