@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+section.canvas {
+    height: 400vh;
+    width: 100vw;
+    background-color: violet;
+    z-index: 0;
+}
+
+section.camera {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    border: 10px solid palegreen;
+    box-sizing: border-box;
+}
+
+section.first-try {
+    position: absolute;
+    left: 50%;
+    top: 75%;
+    /* transform: translateX(-100%); */
+    transition: left 0.5s ease;
+    background: palegoldenrod;
+    z-index: 5;
+    height: 200px;
+    width: 200px;
+}
+
+.off-view {
+    transform: translateX(-100%);
+    transition: transform 0.5s ease; /* Add a smooth transition effect */
+}
+
+.on-view {
+    transform: translateX(0);
+}

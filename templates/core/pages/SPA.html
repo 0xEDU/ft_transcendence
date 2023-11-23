@@ -1,0 +1,18 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA POC</title>
+    <link rel="stylesheet" href="{% static 'css/core/pages/SPA.css' %}">
+</head>
+<body>
+    <section class="canvas">
+        <section class="camera"></section>
+        <section id="scrollElement" class="first-try"></section>
+    </section>
+    <script src="{% static 'js/core/pages/SPA.js' %}"></script>
+</body>
+</html>
