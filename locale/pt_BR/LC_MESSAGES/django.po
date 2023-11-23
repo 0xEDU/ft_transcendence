@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-16 23:49-0300\n"
+"POT-Creation-Date: 2023-11-22 20:37-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,19 +30,23 @@ msgstr "Francês"
 msgid "Brazilian Portuguese"
 msgstr "Português brasileiro"
 
-#: templates/core/pages/index.html:35
+#: templates/components/navbar.html:20
 msgid "language"
 msgstr "idioma"
 
-#: templates/core/pages/index.html:47
+#: templates/core/pages/index.html:24
 msgid "Hello World!"
 msgstr "Olá Mundo!"
 
-#: templates/core/pages/index.html:48
+#: templates/core/pages/index.html:25
 msgid "This is a test"
 msgstr "Isso aqui é um teste"
 
-#: templates/core/pages/index.html:50
+#: templates/core/pages/index.html:27
 #, python-format
 msgid "This website is currently in %(current_language)s "
 msgstr "Este site atualmente está em %(current_language)s "
+
+#: templates/pong/pages/index.html:13
+msgid "Play a match!"
+msgstr "Jogue uma partida!"
