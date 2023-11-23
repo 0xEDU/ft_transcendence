@@ -21,15 +21,19 @@ section.camera {
 }
 
 section.first-try {
+    /* positioning */
     position: absolute;
-    left: 50%;
-    top: 75%;
-    /* transform: translateX(-100%); */
-    transition: left 0.5s ease;
-    background: palegoldenrod;
     z-index: 5;
-    height: 200px;
-    width: 200px;
+    /* initial position */
+    left: 100vw;
+    top: 100vh;
+    /* animation */
+    transition: left 0.5s ease;
+    /* format */
+    background: palegoldenrod;
+    /* dimensions */
+    height: 100vh;
+    width: calc(1 * 100vw);
 }
 
 .off-view {
