@@ -9,9 +9,14 @@
     <link rel="stylesheet" href="{% static 'css/core/pages/SPA.css' %}">
 </head>
 <body>
+    <section class="camera"></section>
     <section class="canvas">
-        <section class="camera"></section>
-        <section id="scrollElement" class="first-try"></section>
+        <section id="first-pane" class="pane pane-layer"></section>
+        <section id="second-pane" class="horizontal-pane pane-layer">
+            <section class="pane"></section>
+            <section class="pane"></section>
+        </section>
+        {% comment %} <section id="last-pane" class="pane pane-layer"></section> {% endcomment %}
     </section>
     <script src="{% static 'js/core/pages/SPA.js' %}"></script>
 </body>

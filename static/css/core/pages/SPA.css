@@ -4,37 +4,63 @@
 }
 
 section.canvas {
-    height: 400vh;
-    width: 100vw;
+    height: calc(3 * 100vh);
+    width: calc(1 * 100vw);
     background-color: violet;
     z-index: 0;
 }
 
 section.camera {
     position: fixed;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
+    height: calc(1 * 100vh);
+    width: calc(1 * 100vw);
     z-index: 10;
     border: 10px solid palegreen;
     box-sizing: border-box;
 }
-
-section.first-try {
+section.pane-layer {
     /* positioning */
     position: absolute;
     z-index: 5;
-    /* initial position */
-    left: 100vw;
-    top: 100vh;
-    /* animation */
-    transition: left 0.5s ease;
-    /* format */
-    background: palegoldenrod;
+}
+section.pane {
     /* dimensions */
-    height: 100vh;
+    height: calc(1 * 100vh);
     width: calc(1 * 100vw);
 }
+section#first-pane {
+    background: palegoldenrod;
+}
+section#second-pane {
+    top: calc(1 * 100vh);
+    background: peachpuff;
+}
+section#last-pane {
+    top: calc(2 * 100vh);
+    background: paleturquoise;
+}
+section.horizontal-pane .pane:first-child {
+    background: lightsalmon;
+}
+section.horizontal-pane .pane:first-child {
+    background: lightcoral;
+}
+/* section#second-pane {
+    left: 100vw;
+    top: 100vh;
+    transition: left 0.5s ease;
+} */
+section.horizontal-pane {
+    height: calc(1 * 100vh);
+    width: calc(2 * 100vw);
+
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+
 
 .off-view {
     transform: translateX(-100%);
