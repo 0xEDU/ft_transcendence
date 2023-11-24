@@ -6,7 +6,9 @@ from soninha.models import User
 from pong.models import Match, Score
 
 def home_view(request):
-    return render(request, 'pong/pages/index.html')
+    context = {}
+    context["session"] = request.session
+    return render(request, 'pong/pages/index.html', context)
 
 # This view is called after the game ends, it saves everything in the DB.  
 class MatchView(View):
