@@ -8,16 +8,10 @@
     <title>Trancendence</title>
     <link rel="stylesheet" href="{% static 'css/first_screen.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <script type="module" src="{% static 'js/displayUser.js' %}"></script>
 </head>
-<body>
-    {% include "components/navbar.html" %}
-    <h1 style="color: white;">{% translate "Play a match!" %}</h1>
-    <a href="{% url 'pong:game' %}" class="button">Pong</a>
-    <form action="{% url 'pong:game' %}" method="post">
-        {% csrf_token %}
-        <input type="text" name="player1" placeholder="Player One Name">
-        <input type="text" name="player2" placeholder="Player Two Name">
-        <button type="submit">Play Pong</button> 
-    </form>
+<body class="bg-black">
+    <div id="userDiv"></div>
 </body>
 </html>

@@ -1,12 +1,33 @@
 import json
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 from soninha.models import User
 from pong.models import Match, Score
 
+def get_matches(user_name):
+    matches_list = []
+    user = User.objects.get(display_name=user_name)
+    user_matches_query = "SELECT * from pong_score where player_id=" + str(user.id)
+    matches_record = Match.objects.raw(user_matches_query)
+    for match_record in matches_record:
+        scores_query = "SELECT * from pong_score where match_id=" + str(match_record.match_id)
+        scores = Score.objects.raw(scores_query)
+        left_score = [score for score in scores if score.player_id == user.id]
+        right_score = [score for score in scores if score.player_id != user.id]
+        match_object = {
+            "left_name": user.display_name,
+            "left_score": left_score[0].score,
+            "right_name": User.objects.get(id=right_score[0].player_id).display_name,
+            "right_score": right_score[0].score
+        }
+        matches_list.append(match_object)
+    return matches_list
+
 def home_view(request):
-    return render(request, 'pong/pages/index.html')
+    context = {}
+    context["session"] = request.session
+    return render(request, 'pong/pages/index.html', context)
 
 # This view is called after the game ends, it saves everything in the DB.  
 class MatchView(View):
@@ -30,6 +51,7 @@ class MatchView(View):
             score2 = Score.objects.get(player=player2_instance, match=match_instance)
             score2.score = player2_score
             score2.save()
+            # request.session["matches_record"] = get_matches(request.session["intra_login"])
             return HttpResponse('')
         except json.JSONDecodeError as e:
             return HttpResponse('Something went wrong in the Match View')
@@ -39,14 +61,14 @@ class MatchView(View):
 # create a match and a score, then pass it as context to our template
 class GameView(View):
     def post(self, request, *args, **kwargs):
-        player1, created1 = User.objects.get_or_create(display_name=request.POST['player1'], login_intra='unknown', avatar_image_url='unknown')
-        player2, created2 = User.objects.get_or_create(display_name=request.POST['player2'], login_intra='unknown', avatar_image_url='unknown')
+        player1, created1 = User.objects.get(login_intra=request.POST['player1'])
+        player2, created2 = User.objects.get(login_intra=request.POST['player2'])
         match = Match.objects.create()
         Score.objects.create(player=player1, match=match, score=0)
         Score.objects.create(player=player2, match=match, score=0)
         match.players.add(player1, player2)
         context = {
-            "records": [],
+            "records": request.session["matches_record"],
             "player1": request.POST['player1'], 
             "player2": request.POST['player2'],
             "match_id": match.id
