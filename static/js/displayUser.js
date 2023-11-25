@@ -10,8 +10,6 @@ const displayUser = async () => {
 	const intraLogin = userData['intra_login']
 	if (intraLogin) {
         const intraPfp = userData['intra_pfp']
-        const authLogout = userDiv.dataset.authLogout
-        const pongGame = userDiv.dataset.pongGame
 		insertElement(id,
 		`
         <div class="d-flex">
@@ -35,23 +33,19 @@ const displayUser = async () => {
 		)		
         const logoutButton = document.getElementById('logoutButton')
         logoutButton.addEventListener('click', () => {
-            fetch(authLogout)
-            emptyElement(id)
-            displayUser()
+            fetch("/auth/logout")
+            .then(() => emptyElement(id))
+            .then(() => displayUser())
         })
 	} else {
 		insertElement(id,
             `
             <div>
                 <h1 class="text-white mb-0"> You are not logged </h1>
-                <a id="loginButton" class="btn btn-outline-light">Login with intra</a>
+                <a href="/auth/intra/" class="btn btn-outline-light">Login with intra</a>
             </div>
             ` 
 		)
-        const loginButton = document.getElementById('loginButton')
-        loginButton.addEventListener('click', () => {
-            fetch('/auth/intra')
-        })
 	}
 }
 
