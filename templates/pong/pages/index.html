@@ -9,28 +9,9 @@
     <link rel="stylesheet" href="{% static 'css/first_screen.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <script type="module" src="{% static 'js/displayUser.js' %}"></script>
 </head>
 <body class="bg-black">
-    {% comment %} {% include "components/navbar.html" %} {% endcomment %}
-    {% if session.intra_login %}
-        <h1 class="text-white">Logged as {{ session.intra_login }}</h1>
-        <div>
-            <img src="{{ session.intra_pfp }}">
-        </div>
-    {% else %}
-        <h1 class="text-white"> You are not logged </h1>
-    {% endif %}
-    <div>
-        <h1 style="color: white;">{% translate "Play a match!" %}</h1>
-        <form action="{% url 'pong:game' %}" method="post">
-            {% csrf_token %}
-            <input type="text" name="player1" placeholder="Player One Name">
-            <input type="text" name="player2" placeholder="Player Two Name">
-            <div class="mt-4">
-                <button class="button" type="submit">Play Pong</button> 
-            </div>
-        </form>
-    </div>
-    <a href="{% url 'auth:intra' %}" class="button">Login with intra</a>
+    <div id="userDiv"></div>
 </body>
 </html>
