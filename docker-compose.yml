@@ -1,8 +1,8 @@
 version: '3'
 services:
-  postgres:
+  postgres-transcendence:
     image: postgres:16-alpine
-    container_name: postgres
+    container_name: postgres-transcendence
     env_file: .env  
     restart: always
     ports:
@@ -12,9 +12,9 @@ services:
     volumes:
       - postgres-vol:/var/lib/postgresql
 
-  django:
-    image: django
-    container_name: django
+  django-transcendence:
+    image: django-transcendence
+    container_name: django-postgres
     command: python manage.py runserver_plus --cert-file cert.pem --key-file key.pem 0.0.0.0:8000
     build: ./
     ports:
@@ -23,7 +23,7 @@ services:
     networks:
       - ft_transcendence
     depends_on:
-      - postgres
+      - postgres-transcendence
 
 networks:
   ft_transcendence:
