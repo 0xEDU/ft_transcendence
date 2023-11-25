@@ -4,7 +4,7 @@
 }
 
 section.canvas {
-    height: calc(3 * 100vh);
+    height: calc(4 * 100vh);
     width: calc(1 * 100vw);
     background-color: violet;
     z-index: 0;
