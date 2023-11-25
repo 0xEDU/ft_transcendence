@@ -11,8 +11,11 @@ from soninha.models import User
 
 class LoggedUserView(View):
     def get(self, request, *args, **kwargs):
-        intra_login = request.session["intra_login"]
-        intra_pfp = request.session["intra_pfp"]
+        intra_login = ""
+        intra_pfp = ""
+        if "intra_login" in request.session:
+            intra_login = request.session["intra_login"]
+            intra_pfp = request.session["intra_pfp"]
         response = {
             'intra_login': intra_login,
             'intra_pfp': intra_pfp
@@ -27,20 +30,24 @@ def get_token(code):
     url = os.getenv('TRANSCENDENCE_URL')
     url_parameters = "?grant_type=authorization_code&client_id=" + \
         uid + "&client_secret=" + secret + "&code=" + code + \
-        "&redirect_uri=http%3A%2F%2F10.11.200.14%3A8000%2Fpong%2F"
-    token = json.loads(requests.post(
+        "&redirect_uri=http%3A%2F%2F10.12.200.80%3A8000%2Fauth%2Flogin%2F"
+    tokenJson = json.loads(requests.post(
         intra_endpoint + '/oauth/token' + url_parameters).content)
-    return token['access_token']
+    if "access_token" in tokenJson.keys():
+        return tokenJson["access_token"]
+    return ""
 
 
 # Append request host to api call back instead of writing it by hand in the url
-# def intra_view(request):
-#     return HttpResponseRedirect('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-fb9fffadcc3ee956394c77fc566c527519cc1beaea22c1b86b58312ade803b89&redirect_uri=http%3A%2F%2F10.11.200.14%3A8000%2Fauth%2Flogin%2F&response_type=code')
+def intra_view(request):
+    return redirect("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-fb9fffadcc3ee956394c77fc566c527519cc1beaea22c1b86b58312ade803b89&redirect_uri=http%3A%2F%2F10.12.200.80%3A8000%2Fauth%2Flogin%2F&response_type=code")
 
 
 def login_view(request):
     code = request.GET.get('code', '')
     token = get_token(code)
+    if not token:
+        return HttpResponse("Couldn't get intra token", status=500)
     bearer = "Bearer " + token
     cadet_api = os.getenv('INTRA_ENDPOINT') + os.getenv('CADET_API')
     response = json.loads(requests.get(cadet_api, headers={
