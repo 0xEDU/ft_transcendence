@@ -2,67 +2,75 @@ import os
 import requests
 import json
 from django.views import View
+from django.views.generic import TemplateView
 from django.shortcuts import redirect
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from dotenv import load_dotenv
+from django.http import HttpResponse, JsonResponse
 
 from soninha.models import User
 
 
-class LoggedUserView(View):
+class UserAuthenticatedView(View):
     def get(self, request, *args, **kwargs):
-        intra_login = ""
-        intra_pfp = ""
-        if "intra_login" in request.session:
-            intra_login = request.session["intra_login"]
-            intra_pfp = request.session["intra_pfp"]
-        response = {
-            'intra_login': intra_login,
-            'intra_pfp': intra_pfp
-        }
-        return JsonResponse(response)
+        if "user_id" in request.session:
+            return JsonResponse({'ok': 'User authenticated'})
+        else:
+            return JsonResponse({'error': 'User not authenticated'})
 
 
-def get_token(code):
-    intra_endpoint = os.getenv('INTRA_ENDPOINT')
-    uid = os.getenv('INTRA_UID')
-    secret = os.getenv('INTRA_SECRET')
-    url = os.getenv('TRANSCENDENCE_URL')
-    url_parameters = "?grant_type=authorization_code&client_id=" + \
-        uid + "&client_secret=" + secret + "&code=" + code + \
-        "&redirect_uri=http%3A%2F%2F10.12.200.80%3A8000%2Fauth%2Flogin%2F"
-    tokenJson = json.loads(requests.post(
-        intra_endpoint + '/oauth/token' + url_parameters).content)
-    if "access_token" in tokenJson.keys():
-        return tokenJson["access_token"]
-    return ""
+class UserTemplateView(TemplateView):
+    template_name = "soninha/partials/user.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        session = self.request.session
+        if "user_id" in session and session["user_id"] != "":
+            user = User.objects.get(pk=session["user_id"])
+            context["h1_margin"] = "mb-4"
+            context["h1_text"] = "Logged as " + user.login_intra
+            context["user_image"] = user.avatar_image_url
+            context["anchor_function"] = 'id=logoutButton'
+            context["anchor_text"] = "Logout"
+            return context
+        context["h1_margin"] = "mb-0"
+        context["h1_text"] = "You are not logged"
+        context["anchor_function"] = f"href={os.getenv('INTRA_ACCESS_URL')}"
+        context["anchor_text"] = "Login with intra"
+        return context
 
 
-# Append request host to api call back instead of writing it by hand in the url
-def intra_view(request):
-    return redirect("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-fb9fffadcc3ee956394c77fc566c527519cc1beaea22c1b86b58312ade803b89&redirect_uri=http%3A%2F%2F10.12.200.80%3A8000%2Fauth%2Flogin%2F&response_type=code")
+class LoginView(View):
+    def _get_token(self, code):
+        intra_endpoint = os.getenv('INTRA_ENDPOINT')
+        uid = os.getenv('INTRA_UID')
+        secret = os.getenv('INTRA_SECRET')
+        url = os.getenv('TRANSCENDENCE_URL')
+        url_parameters = "?grant_type=authorization_code&client_id=" + \
+            uid + "&client_secret=" + secret + "&code=" + code + \
+            "&redirect_uri=http%3A%2F%2F10.11.200.14%3A8000%2Fauth%2Flogin%2F"
+        tokenJson = json.loads(requests.post(
+            intra_endpoint + '/oauth/token' + url_parameters).content)
+        if "access_token" in tokenJson.keys():
+            return tokenJson["access_token"]
+        return ""
+
+    def get(self,  request, *args, **kwargs):
+        code = request.GET.get('code', '')
+        token = self._get_token(code)
+        if not token:
+            return HttpResponse("Couldn't get intra token", status=500)
+        bearer = "Bearer " + token
+        cadet_api = os.getenv('INTRA_ENDPOINT') + os.getenv('CADET_API')
+        response = json.loads(requests.get(cadet_api, headers={
+                              'Authorization': bearer}).content)
+        login_intra = response["login"]
+        pfp_intra = response["image"]["versions"]["medium"]
+        new_user, _ = User.objects.get_or_create(
+            display_name='', login_intra=login_intra, avatar_image_url=pfp_intra)
+        request.session["user_id"] = new_user.id
+        return redirect('/pong')  # This will return the html
 
 
-def login_view(request):
-    code = request.GET.get('code', '')
-    token = get_token(code)
-    if not token:
-        return HttpResponse("Couldn't get intra token", status=500)
-    bearer = "Bearer " + token
-    cadet_api = os.getenv('INTRA_ENDPOINT') + os.getenv('CADET_API')
-    response = json.loads(requests.get(cadet_api, headers={
-                          'Authorization': bearer}).content)
-    login_intra = response["login"]
-    pfp_intra = response["image"]["versions"]["medium"]
-    request.session["intra_login"] = login_intra
-    request.session["intra_pfp"] = pfp_intra
-    user = User.objects.get_or_create(
-        display_name='', login_intra=login_intra, avatar_image_url=pfp_intra)
-    return redirect('/pong')
-
-
-def logout_view(request):
-    request.session["intra_login"] = ""
-    request.session["intra_pfp"] = ""
-    return HttpResponse('')
-    # return redirect('/pong')
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        request.session["user_id"] = ""
+        return HttpResponse('')
