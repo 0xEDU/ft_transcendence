@@ -1,0 +1,11 @@
+{% load static i18n %}
+
+<div class="d-flex">
+	<div class="d-flex flex-column">
+		<h1 class="text-white {{ h1_margin }}"> {{ h1_text }} </h1>
+		{% if user_image %}
+		<img src="{{ user_image }}">
+		{% endif %}
+		<a {{ anchor_function }} class="btn btn-outline-light"> {{ anchor_text }} </a>
+	</div>
+</div>
