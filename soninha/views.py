@@ -9,14 +9,6 @@ from django.http import HttpResponse, JsonResponse
 from soninha.models import User
 
 
-class UserAuthenticatedView(View):
-    def get(self, request, *args, **kwargs):
-        if "user_id" in request.session:
-            return JsonResponse({'ok': 'User authenticated'})
-        else:
-            return JsonResponse({'error': 'User not authenticated'})
-
-
 class UserTemplateView(TemplateView):
     template_name = "soninha/partials/user.html"
 
