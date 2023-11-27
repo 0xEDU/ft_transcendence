@@ -14,15 +14,15 @@
 <body>
   <main class="bg-black vh-100">
     <div class="d-flex text-white justify-content-evenly">
-      <h2>{{player1}}</h2>
-      <h2>{{player2}}</h2>
+      <h2>{{ player1 }}</h2>
+      <h2>{{ player2 }}</h2>
     </div>
     {% comment %} <p style="color: #fff"> Match history </p> {% endcomment %}
     <div class="d-flex h-75">
       <canvas class="" id="game"
-        data-match-id={{match_id}}
-        data-player1={{player1}}
-        data-player2={{player2}}>
+        data-match-id={{ match_id }}
+        data-player1={{ player1 }}
+        data-player2={{ player2 }}>
       </canvas>
       <article class="mx-2 container w-25 mh-100">
         <ul class="list-group overflow-auto w-100 h-100" style>
