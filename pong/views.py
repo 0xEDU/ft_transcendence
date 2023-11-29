@@ -60,15 +60,30 @@ class MatchView(View):
 # This view is called when the game starts, it get/create users,
 # create a match and a score, then pass it as context to our template
 class GameView(View):
-    def post(self, request, *args, **kwargs):
-        player1, created1 = User.objects.get(login_intra=request.POST['player1'])
-        player2, created2 = User.objects.get(login_intra=request.POST['player2'])
+    def get(self, request, *args, **kwargs):
+        player1 = User.objects.get(login_intra="etachott")
+        player2 = User.objects.get(login_intra="roaraujo")
         match = Match.objects.create()
         Score.objects.create(player=player1, match=match, score=0)
         Score.objects.create(player=player2, match=match, score=0)
         match.players.add(player1, player2)
         context = {
-            "records": request.session["matches_record"],
+            "records": [],
+            "player1": player1.display_name, 
+            "player2": player2.display_name,
+            "match_id": match.id
+        }
+        return render(request, 'pong/pages/game.html', context)
+
+    def post(self, request, *args, **kwargs):
+        player1, _ = User.objects.get(login_intra=request.POST['player1'])
+        player2, _ = User.objects.get(login_intra=request.POST['player2'])
+        match = Match.objects.create()
+        Score.objects.create(player=player1, match=match, score=0)
+        Score.objects.create(player=player2, match=match, score=0)
+        match.players.add(player1, player2)
+        context = {
+            "records": [],
             "player1": request.POST['player1'], 
             "player2": request.POST['player2'],
             "match_id": match.id

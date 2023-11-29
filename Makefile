@@ -65,6 +65,24 @@ fclean-app: clean-app
 
 frestart-app: fclean-app start-app
 
+# BLOCKCHAIN ----------------------------------------------------------------- #
+start-ganache: docker-compose.yml
+	docker-compose up --build --detach ganache
+
+stop-ganache: docker-compose.yml
+	@./_compose_scripts/conditional-stop-container.sh ganache
+
+restart-ganache: docker-compose.yml
+	docker-compose up --build --detach --force-recreate ganache
+
+clean-ganache: chmod-scripts
+	@./_compose_scripts/conditional-stop-container.sh ganache
+	@./_compose_scripts/conditional-delete-container.sh ganache
+
+fclean-ganache: clean-ganache
+	@./_compose_scripts/conditional-delete-image.sh ganache
+
+frestart-ganache: fclean-ganache start-ganache
 
 # AUXILIAR ------------------------------------------------------------------- #
 chmod-scripts: $(DOCKER_SCRIPTS)
