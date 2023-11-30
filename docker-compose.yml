@@ -8,18 +8,18 @@ services:
         - '8545:8545'
     networks:
       - ft_transcendence
-  # ganache:
-  #   image: ganache:latest
-  #   container_name: ganache
-  #   restart: always
-  #   build: 
-  #     context: ./ganache
-  #   ports:
-  #       - '8545:8545'
-  #   networks:
-  #     - ft_transcendence
-  #   volumes:
-  #     - ganache-vol:/ganache_data
+
+  contract-deployer:
+    image: contract-deployer:latest
+    container_name: contract-deployer
+    networks:
+      - ft_transcendence
+    build: 
+      context: ./blockchain
+    depends_on:
+      - ganache
+    volumes:
+      - ./blockchain/tournament/build/contracts:/tournament/build/contracts
 
   postgres:
     image: postgres:16-alpine

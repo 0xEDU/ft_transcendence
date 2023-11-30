@@ -1,12 +1,9 @@
-FROM node:20.9
+FROM node:20.10.0-bullseye
 
-RUN npm install -g ganache truffle
-RUN apt update && apt install vim -y
+COPY tournament /tournament
 
-EXPOSE 8545
+WORKDIR /tournament
 
-COPY ./tournament /ganache-server/tournament
-WORKDIR /ganache-server/tournament
-RUN truffle compile
-RUN truffle migrate
-ENTRYPOINT ["ganache", "--server.host='0.0.0.0'", "--server.port=8545", "--database.dbPath=/ganache-server/ganache-volume"]
+RUN npm install -g truffle
+
+ENTRYPOINT [ "truffle", "migrate" ]
