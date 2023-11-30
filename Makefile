@@ -20,7 +20,7 @@ restart: stop start
 
 clean: clean-db clean-app
 
-fclean: fclean-db fclean-app
+fclean: fclean-db fclean-app fclean-ganache fclean-contract-deployer
 	@printf "⚠️ $(BOLD_YELLOW)[WARNING]$(RESET) If you're $(BOLD_YELLOW)SURE$(RESET) you want to delete the volumes, do it manually.\n"
 
 frestart: fclean start
@@ -65,6 +65,43 @@ fclean-app: clean-app
 
 frestart-app: fclean-app start-app
 
+# BLOCKCHAIN ----------------------------------------------------------------- #
+start-ganache: docker-compose.yml
+	docker-compose up --build --detach ganache
+
+stop-ganache: docker-compose.yml
+	@./_compose_scripts/conditional-stop-container.sh ganache
+
+restart-ganache: docker-compose.yml
+	docker-compose up --build --detach --force-recreate ganache
+
+clean-ganache: chmod-scripts
+	@./_compose_scripts/conditional-stop-container.sh ganache
+	@./_compose_scripts/conditional-delete-container.sh ganache
+
+fclean-ganache: clean-ganache
+	@./_compose_scripts/conditional-delete-image.sh ganache
+
+frestart-ganache: fclean-ganache start-ganache
+
+# BLOCKCHAIN ----------------------------------------------------------------- #
+start-contract-deployer: docker-compose.yml
+	docker-compose up --build --detach contract-deployer
+
+stop-contract-deployer: docker-compose.yml
+	@./_compose_scripts/conditional-stop-container.sh contract-deployer
+
+restart-contract-deployer: docker-compose.yml
+	docker-compose up --build --detach --force-recreate contract-deployer
+
+clean-contract-deployer: chmod-scripts
+	@./_compose_scripts/conditional-stop-container.sh contract-deployer
+	@./_compose_scripts/conditional-delete-container.sh contract-deployer
+
+fclean-contract-deployer: clean-contract-deployer
+	@./_compose_scripts/conditional-delete-image.sh contract-deployer
+
+frestart-contract-deployer: fclean-contract-deployer start-contract-deployer
 
 # AUXILIAR ------------------------------------------------------------------- #
 chmod-scripts: $(DOCKER_SCRIPTS)
