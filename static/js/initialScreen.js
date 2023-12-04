@@ -1,0 +1,1 @@
+window.onload = () => document.getElementById('initialScreenDiv').scrollIntoView();
