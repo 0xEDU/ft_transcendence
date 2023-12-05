@@ -1,6 +1,6 @@
 version: '3'
 services:
-  ganache:
+  ganache-transcendence:
     image: trufflesuite/ganache:latest
     container_name: ganache
     restart: always
@@ -9,7 +9,7 @@ services:
     networks:
       - ft_transcendence
 
-  contract-deployer:
+  contract-deployer-transcendence:
     image: contract-deployer:latest
     container_name: contract-deployer
     networks:
@@ -21,7 +21,7 @@ services:
     volumes:
       - ./blockchain/tournament/build/contracts:/tournament/build/contracts
 
-  postgres:
+  postgres-transcendence:
     image: postgres:16-alpine
     container_name: postgres
     env_file: .env  
@@ -33,7 +33,7 @@ services:
     volumes:
       - postgres-vol:/var/lib/postgresql
 
-  django:
+  django-transcendence:
     image: django
     container_name: django
     command: python manage.py runserver_plus --cert-file cert.pem --key-file key.pem 0.0.0.0:8000
@@ -57,10 +57,10 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '~/goinfre/ft_transcendence_data/postgres'
+      device: '~/goinfre/ft_transcendence/postgres'
   ganache-vol:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '~/goinfre/ft_transcendence_data/ganache'
+      device: '~/goinfre/ft_transcendence/ganache'
