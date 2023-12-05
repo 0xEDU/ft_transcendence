@@ -71,7 +71,6 @@ div#text-svgs {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 20px;
     margin-top: 10px;
 }
 
@@ -82,12 +81,20 @@ div#on-off-toggle {
 }
 
 div#on-word {
+    width: 3vw;
+    height: 2vh;
     margin-bottom: 12vh;
     margin-top: 7vh;
+    min-width: 40px;
+    min-height: 12px;
 }
 
 div#off-word {
+    width: 3vw;
+    height: 2vh;
     margin-top: 0vh;
+    min-width: 40px;
+    min-height: 12px;
 }
 
 #power-word svg {
