@@ -7,7 +7,6 @@ const logoutCallback = () => {
         .then(() => displayUser())
 }
 
-// We might need and endpoint that return texts based on locale for the translations
 const displayUser = async () => {
     const id = 'userDiv'
     fetch('/auth/user/')
@@ -20,6 +19,7 @@ const displayUser = async () => {
     })
 }
 
+// main
 document.addEventListener("DOMContentLoaded", () => {
     displayUser()
 });
