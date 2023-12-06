@@ -124,7 +124,28 @@ fetch-translation-hooks:
 compile-translations:
 	django-admin compilemessages
 
+check-python:
+	@command -v python3 >/dev/null 2>&1 || { echo >&2 "Python 3 is required but not installed. Aborting."; exit 1; }
+
+create-venv: check-python
+	python3 -m venv $(VENV_DIR)
+
+delete-venv:
+	rm -rf $(VENV_DIR)
+
+install:
+	@read -p "Have you already activated the virtual environment? (y/n): " choice; \
+	if [ "$$choice" = "y" ] || [ "$$choice" = "Y" ]; then \
+		pip install -r requirements.txt; \
+	else \
+		echo "Please activate the virtual environment first."; \
+	fi
+
+# ---------------------------------------------------------------------------- #
+
 .PHONY: start stop restart clean fclean frestart \
 		db-start db-stop db-restart db-clean db-fclean db-frestart \
 		app-start app-stop app-restart app-clean app-fclean app-frestart \
-		chmod-scripts volumes
+		ganache-start ganache-stop ganache-restart ganache-clean ganache-fclean ganache-frestart \
+		contract-deployer-start contract-deployer-stop contract-deployer-restart contract-deployer-clean contract-deployer-fclean contract-deployer-frestart \
+		chmod-scripts volumes fetch-translation-hooks compile-translations check-python create-venv delete-venv install
