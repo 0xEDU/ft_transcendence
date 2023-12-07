@@ -10,6 +10,11 @@
 
 body {
     background: var(--background-color);
+    overflow: hidden;
+}
+
+section#home {
+    position: relative;
 }
 
 section {
@@ -110,7 +115,7 @@ div#off-word {
     justify-content: center;
 }
 
-svg#power-svg {
+svg#power-button-svg {
     width: 5vw;
     height: 20vh;
     margin-top: 4vh;
