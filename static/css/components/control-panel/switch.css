@@ -1,0 +1,13 @@
+#switch-component {
+    display: flex;
+    flex-direction: column;
+}
+
+#switch-body {
+    display: flex;
+}
+
+#switch-body .left-side {
+    justify-self: center;
+    align-self: center;
+}

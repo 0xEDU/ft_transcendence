@@ -11,16 +11,15 @@
 </head>
 <body>
     {% comment %} Fixed-position elements {% endcomment %}
-    {% comment %} COMING SOON {% endcomment %}
+    {% include "components/control-panel/base.html" %}
 
     {% comment %} SPA layout {% endcomment %}
     <section id="profile">
         <h1>profile section</h1>
     </section>
-    <section id="home">
-        <h1>home section</h1>
+    <section id="login">
+        <h1>login section</h1>
         {% include "components/pong-logo.html" %}
-        {% include "components/control-panel/base.html" %}
         {% include "components/wood-grain-panel.html" %}
     </section>
     <section id="stats">
@@ -32,8 +31,8 @@
     <section id="arena">
         <h1>arena section</h1>
     </section>
-    <section id="credits">
-        <h1>credits section</h1>
+    <section id="kudos">
+        <h1>kudos section</h1>
     </section>
 
     <script src="{% static 'js/move-svg-circle.js' %}"></script>
