@@ -1,59 +1,5 @@
-:root {
-    --background-color: #1C1A1A;
-    --ORANGE: #F6790B;
-}
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background: var(--background-color);
-    overflow: hidden;
-}
-
-section#home {
-    position: relative;
-}
-
-section {
-    width: 100vw;
-    height: 100vh;
-}
-
-section#home div#first {
-    display: flex;
-    justify-content: center;
-}
-
-#woodpanel {
-    background: url(../../../images/woodgrain.jpg) center 70%;
-    width: 100vw;
-    height: 20vh;
-    bottom: 0;
-    position: absolute;
-}
-
-section#home svg#pong-title-svg {
-    margin-top: 7vh;
-}
-
-section#home svg#atari-svg {
-    margin-bottom: 4vh;
-    bottom: 0;
-    position: absolute;
-    right: 3%;
-}
-
-section#home div#second {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 50vh;
-}
-
-div#orange-frame {
+div#control-panel {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -115,7 +61,7 @@ div#off-word {
     justify-content: center;
 }
 
-svg#power-button-svg {
+svg#control-panel-svg {
     width: 5vw;
     height: 20vh;
     margin-top: 4vh;

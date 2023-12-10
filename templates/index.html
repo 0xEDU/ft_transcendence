@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>PONG</title>
+</head>
+<body>
+    {% comment %} Fixed-position elements {% endcomment %}
+    {% comment %} COMING SOON {% endcomment %}
+
+    {% comment %} SPA layout {% endcomment %}
+    <section id="profile">
+        <h1>profile section</h1>
+    </section>
+    <section id="home">
+        <h1>home section</h1>
+        {% include "components/pong-logo.html" %}
+        {% include "components/control-panel.html" %}
+        {% include "components/wood-grain-panel.html" %}
+    </section>
+    <section id="stats">
+        <h1>stats section</h1>
+    </section>
+    <section id="lobby">
+        <h1>lobby section</h1>
+    </section>
+    <section id="arena">
+        <h1>arena section</h1>
+    </section>
+    <section id="credits">
+        <h1>credits section</h1>
+    </section>
+
+    <script src="{% static 'js/move-svg-circle.js' %}"></script>
+</body>
+</html>

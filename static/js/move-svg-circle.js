@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         behavior: 'smooth'
     });
 
-    var powerCircle = document.querySelector('#power-button-svg circle');
+    var powerCircle = document.querySelector('#control-panel-svg circle');
     powerCircle.addEventListener('click', function() {
         var currentY = parseFloat(powerCircle.getAttribute('cy'));
         var newY = (currentY === 147.54) ? 54.54 : 147.54;
