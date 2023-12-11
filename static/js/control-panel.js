@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial positioning of viewport
     window.scrollTo({
         top: loginSection.offsetTop,
+        left: loginSection.offsetLeft,
         behavior: 'smooth'
     });
 
@@ -28,12 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (state.position == "login") {
             window.scrollTo({
                 top: profileSection.offsetTop,
+                left: profileSection.offsetLeft,
                 behavior: 'smooth'
             });
             state.position = "profile";
         } else {
             window.scrollTo({
                 top: loginSection.offsetTop,
+                left: loginSection.offsetLeft,
                 behavior: 'smooth'
             });
             state.position = "login";
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Decides where to move the board to
         window.scrollTo({
             top: profileSection.offsetTop,
+            left: profileSection.offsetLeft,
             behavior: 'smooth'
         });
         state.position = "profile";
@@ -60,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Decides where to move the board to
         window.scrollTo({
             top: statsSection.offsetTop,
+            left: statsSection.offsetLeft,
             behavior: 'smooth'
         });
         state.position = "stats";
@@ -72,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Decides where to move the board to
         window.scrollTo({
             top: lobbySection.offsetTop,
+            left: lobbySection.offsetLeft,
             behavior: 'smooth'
         });
         state.position = "lobby";
@@ -84,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Decides where to move the board to
         window.scrollTo({
             top: kudosSection.offsetTop,
+            left: kudosSection.offsetLeft,
             behavior: 'smooth'
         });
         state.position = "kudos";
