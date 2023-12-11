@@ -11,11 +11,18 @@
 body {
     background: var(--background-color);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body, html {
+    height: 100%;
 }
 
 section {
-    width: 100vw;
+    min-width: 100vw;
     height: 100vh;
+    flex: 1;
 }
 
 section h1 {
@@ -26,3 +33,7 @@ section#login {
     position: relative;
 }
 
+.board-row {
+    height: 100%;
+    display: flex;
+}

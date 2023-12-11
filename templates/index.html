@@ -14,26 +14,42 @@
     {% include "components/control-panel/base.html" %}
 
     {% comment %} SPA layout {% endcomment %}
-    <section id="profile">
-        <h1>profile section</h1>
-    </section>
-    <section id="login">
-        <h1>login section</h1>
-        {% include "components/pong-logo.html" %}
-        {% include "components/wood-grain-panel.html" %}
-    </section>
-    <section id="stats">
-        <h1>stats section</h1>
-    </section>
-    <section id="lobby">
-        <h1>lobby section</h1>
-    </section>
-    <section id="arena">
-        <h1>arena section</h1>
-    </section>
-    <section id="kudos">
-        <h1>kudos section</h1>
-    </section>
+    <div class="board-row">
+        <section class="empty"></section>
+        <section id="kudos">
+            <h1>kudos section</h1>
+        </section>
+        <section class="empty"></section>
+        <section class="empty"></section>
+    </div>
+
+    <div class="board-row">
+        <section id="stats">
+            <h1>stats section</h1>
+        </section>
+        <section id="profile">
+            <h1>profile section</h1>
+        </section>
+        <section id="lobby">
+            <h1>lobby section</h1>
+        </section>
+        <section id="arena">
+            <h1>arena section</h1>
+        </section>
+    </div>
+
+    <div class="board-row">
+        <section class="empty"></section>
+        <section id="login">
+            <h1>login section</h1>
+            {% include "components/pong-logo.html" %}
+            {% include "components/wood-grain-panel.html" %}
+        </section>
+        <section class="empty"></section>
+        <section class="empty"></section>
+    </div>
+
+
 
     <script src="{% static 'js/control-panel.js' %}"></script>
 </body>
