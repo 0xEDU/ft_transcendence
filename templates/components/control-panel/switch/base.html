@@ -1,0 +1,31 @@
+<div id="switch-component-{{ label }}">
+    {% comment %} LABEL {% endcomment %}
+    <div class="switch-label">
+        {% if label == "login" %}
+            {% include "components/control-panel/switch/partials/label-login.html" %}
+        {% elif label == "profile" %}
+            {% include "components/control-panel/switch/partials/label-profile.html" %}
+        {% elif label == "stats" %}
+            {% include "components/control-panel/switch/partials/label-stats.html" %}
+        {% elif label == "lobby" %}
+            {% include "components/control-panel/switch/partials/label-lobby.html" %}
+        {% elif label == "kudos" %}
+            {% include "components/control-panel/switch/partials/label-kudos.html" %}
+        {% endif %}
+    </div>
+
+    <div id="switch-body">
+        {% comment %} LEFT PART {% endcomment %}
+        <div class="left-side">
+            {% if label == "login" %}
+               {% include "components/control-panel/switch/partials/on-off-indicator.html" %}
+            {% else %}
+                {% include "components/control-panel/switch/partials/range-indicator.html" %}
+            {% endif %}
+        </div>
+        {% comment %} RIGHT PART {% endcomment %}
+        <div class="right-side">
+            {% include "components/control-panel/switch/partials/switch-svg.html" %}
+        </div>
+    </div>
+</div>

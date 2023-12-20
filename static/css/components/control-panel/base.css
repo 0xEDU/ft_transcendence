@@ -1,0 +1,75 @@
+
+div#control-panel {
+    position: fixed;
+    bottom: 10vh;
+    left: 10vw;
+    z-index: 10;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    border-radius: 13px;
+    border: 2px solid var(--ORANGE);
+    background: rgba(217, 217, 217, 0);
+    width: 85vw;
+    height: 40vh;
+}
+
+div#switch-component {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+}
+
+div#left-labels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+div#on-off-toggle {
+    height: 13vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+div#on-word {
+    width: 3vw;
+    height: 2vh;
+    min-width: 20px;
+    min-height: 6px;
+}
+
+div#off-word {
+    width: 3vw;
+    height: 2vh;
+    min-width: 20px;
+    min-height: 6px;
+}
+
+#power-label svg {
+    width: 7.5vw;
+    height: 4vh;
+    min-width: 40px;
+    min-height: 8px;
+    fill: "none";
+}
+
+#switch-svg {
+    display: flex;
+    justify-content: center;
+}
+
+svg#control-panel-svg {
+    width: 5vw;
+    height: 20vh;
+    margin-top: 4vh;
+    min-width: 20px;
+    min-height: 35px;
+    flex-shrink: 0;
+}

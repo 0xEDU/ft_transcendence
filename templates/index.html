@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>PONG</title>
+</head>
+<body style="width: 4vh">
+    {% comment %} Fixed-position elements {% endcomment %}
+    {% include "components/control-panel/base.html" %}
+
+    {% comment %} SPA layout {% endcomment %}
+    <div class="board-row">
+        <section class="empty"></section>
+        <section id="kudos">
+            <h1>kudos section</h1>
+        </section>
+        <section class="empty"></section>
+        <section class="empty"></section>
+    </div>
+
+    <div class="board-row">
+        <section id="stats">
+            <h1>stats section</h1>
+        </section>
+        <section id="profile">
+            <h1>profile section</h1>
+        </section>
+        <section id="lobby">
+            <h1>lobby section</h1>
+        </section>
+        <section id="arena">
+            <h1>arena section</h1>
+        </section>
+    </div>
+
+    <div class="board-row">
+        <section class="empty"></section>
+        <section id="login">
+            <h1>login section</h1>
+            {% include "components/pong-logo.html" %}
+            {% include "components/wood-grain-panel.html" %}
+        </section>
+        <section class="empty"></section>
+        <section class="empty"></section>
+    </div>
+
+
+
+    <script src="{% static 'js/control-panel.js' %}"></script>
+</body>
+</html>

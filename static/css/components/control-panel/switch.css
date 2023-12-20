@@ -1,0 +1,28 @@
+#switch-component {
+    display: flex;
+    flex-direction: column;
+}
+
+#switch-body {
+    display: flex;
+}
+
+#switch-body .left-side {
+    justify-self: center;
+    align-self: center;
+}
+
+.switch-label svg {
+    width: 7.5vw;
+    height: 4vh;
+    min-width: 40px;
+    min-height: 8px;
+    fill: "none";
+}
+
+#range-indicator {
+    width: 1.7vw;
+    height: 16vh;
+    min-width: 5px;
+    min-height: 45px;
+}

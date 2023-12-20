@@ -1,27 +1,38 @@
-.main-div {
-    height: 100vh;
+@import 'components/control-panel/base.css';
+@import 'components/control-panel/switch.css';
+@import 'components/pong-logo.css';
+@import 'components/wood-grain-panel.css';
+
+* {
     margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--HEAVY_GRAY);
+    overflow: hidden;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background: black;
+    flex-direction: column;
 }
 
-canvas {
-    max-width: 1536px; /* Maximum width */
-    max-height: 864px; /* Maximum height */
-    width: 80%; /* Relative width */
-    height: auto; /* Maintain aspect ratio */
-    border: 1px solid white; /* Optional, for visibility */
+body, html {
+    height: 100vh;
 }
 
-.match-history {
-    width: 25%;
-    height: 100%;
-    color: #fff;
-    background-color: blue;
+section {
+    min-width: 100vw;
+    height: 100vh;
 }
 
-.match-card {
-    text-align: center;
+section h1 {
+    color: white;
+}
+
+section#login {
+    position: relative;
+}
+
+.board-row {
+    height: 100vh;
+    display: flex;
 }
