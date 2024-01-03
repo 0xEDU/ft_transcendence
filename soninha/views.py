@@ -38,7 +38,7 @@ class LoginView(View):
         url = os.getenv('TRANSCENDENCE_URL')
         url_parameters = "?grant_type=authorization_code&client_id=" + \
             uid + "&client_secret=" + secret + "&code=" + code + \
-            "&redirect_uri=http%3A%2F%2F10.11.200.14%3A8000%2Fauth%2Flogin%2F"
+            "&redirect_uri=http%3A%2F%2F10.11.7.3%3A8000%2Fauth%2Flogin%2F"
         tokenJson = json.loads(requests.post(
             intra_endpoint + '/oauth/token' + url_parameters).content)
         if "access_token" in tokenJson.keys():
@@ -52,14 +52,17 @@ class LoginView(View):
             return HttpResponse("Couldn't get intra token", status=500)
         bearer = "Bearer " + token
         cadet_api = os.getenv('INTRA_ENDPOINT') + os.getenv('CADET_API')
-        response = json.loads(requests.get(cadet_api, headers={
-                              'Authorization': bearer}).content)
+        raw_response = requests.get(cadet_api, headers={
+                              'Authorization': bearer}).content
+        response = json.loads(raw_response)
         login_intra = response["login"]
         pfp_intra = response["image"]["versions"]["medium"]
+        if not pfp_intra:
+            pfp_intra = "/static/images/default_user_image.svg"
         new_user, _ = User.objects.get_or_create(
-            display_name='', login_intra=login_intra, avatar_image_url=pfp_intra)
+            display_name=login_intra, login_intra=login_intra, avatar_image_url=pfp_intra)
         request.session["user_id"] = new_user.id
-        return redirect('/pong')  # This will return the html
+        return redirect('/')  # This will return the html
 
 
 class LogoutView(View):
