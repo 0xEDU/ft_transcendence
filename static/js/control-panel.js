@@ -1,25 +1,31 @@
+import emptyElement from "./tinyDOM/emptyElement.js"
+
 const state = {
-    position: "login",
+    position: "",
     isLoggedIn: false,
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     let loginSection = document.getElementById('login');
     let profileSection = document.getElementById('profile');
     let statsSection = document.getElementById('stats');
     let lobbySection = document.getElementById('lobby');
     let kudosSection = document.getElementById('kudos');
 
-    // Initial positioning of viewport
+    // Decide the initial positioning of viewport
+    state.isLoggedIn = (document.getElementById('userImage') !== null);
+    state.position = (state.isLoggedIn) ? "profile" : "login";
+    const defaultScreen = (state.isLoggedIn) ? profileSection : loginSection;
     window.scrollTo({
-        top: loginSection.offsetTop,
-        left: loginSection.offsetLeft,
+        top: defaultScreen.offsetTop,
+        left: defaultScreen.offsetLeft,
         behavior: 'smooth'
     });
 
     // Configure behaviour of panel switches
     let loginSwitch = document.getElementById('switch-component-login');
-    loginSwitch.addEventListener('click', function() {
+    loginSwitch.addEventListener('click', function () {
+
         // Trigger button animation
         let currentY = parseFloat(loginSwitch.getAttribute('cy'));
         let newY = (currentY === 147.54) ? 54.54 : 147.54;
@@ -27,12 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Decides where to move the board to
         if (state.position == "login") {
-            window.scrollTo({
-                top: profileSection.offsetTop,
-                left: profileSection.offsetLeft,
-                behavior: 'smooth'
-            });
-            state.position = "profile";
+            // Login/Intra authentication
+            window.location.href = document.getElementById('redirectUrl').textContent;
         } else {
             window.scrollTo({
                 top: loginSection.offsetTop,
@@ -41,11 +43,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             state.position = "login";
             state.isLoggedIn = false;
+            fetch("/auth/logout")
+                .then(() => emptyElement('userDiv'));
         }
     });
 
     let profileSwitch = document.getElementById('switch-component-profile');
-    profileSwitch.addEventListener('click', function() {
+    profileSwitch.addEventListener('click', function () {
         // Trigger button animation
 
         // Decides where to move the board to
@@ -58,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let statsSwitch = document.getElementById('switch-component-stats');
-    statsSwitch.addEventListener('click', function() {
+    statsSwitch.addEventListener('click', function () {
         // Trigger button animation
 
         // Decides where to move the board to
@@ -71,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let lobbySwitch = document.getElementById('switch-component-lobby');
-    lobbySwitch.addEventListener('click', function() {
+    lobbySwitch.addEventListener('click', function () {
         // Trigger button animation
 
         // Decides where to move the board to
@@ -84,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let kudosSwitch = document.getElementById('switch-component-kudos');
-    kudosSwitch.addEventListener('click', function() {
+    kudosSwitch.addEventListener('click', function () {
         // Trigger button animation
 
         // Decides where to move the board to
