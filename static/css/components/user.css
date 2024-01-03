@@ -1,0 +1,19 @@
+div#userInfoContainer {
+    margin-left: 10vw;
+}
+
+img#userImage {
+	border-radius: 7px;
+	border: 1px solid #ccc;
+	object-fit: cover;
+}
+
+p#userLogin {
+	font-size: 4em;
+	font-weight: bold;
+}
+
+p#userDisplayName {
+	font-size: 2em;
+	font-weight: bold;
+}
