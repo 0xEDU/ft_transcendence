@@ -1,5 +1,5 @@
 div#userDiv {
-	margin-top: 10vh;	
+	margin-top: 8vh;	
 }
 
 div#userInfoContainer {
@@ -25,5 +25,25 @@ p#userDisplayName {
 
 p#userStats {
 	font-size: 1.5em;
+	font-weight: bold;
 	margin-right: 3rem !important;
+}
+
+div#achievementsAndFriends {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	color: #FCFCFC;
+	margin-top: 5em;
+}
+
+div#friends {
+	margin-left: 3em;
+}
+
+p#userAchievementsText,
+p#friendsText {
+	color: #FCFCFC;
+	font-size: 2em;
+	font-weight: bold;
 }
