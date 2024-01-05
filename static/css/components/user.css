@@ -11,9 +11,19 @@ img#userImage {
 p#userLogin {
 	font-size: 4em;
 	font-weight: bold;
+	margin: 0;
 }
 
 p#userDisplayName {
 	font-size: 2em;
 	font-weight: bold;
+}
+
+div#userStatsDiv {
+	margin-top: 2.7rem !important;
+}
+
+p#userStats {
+	font-size: 1.5em;
+	margin-right: 3rem !important;
 }
