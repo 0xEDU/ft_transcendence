@@ -35,10 +35,10 @@ class LoginView(View):
         intra_endpoint = os.getenv('INTRA_ENDPOINT')
         uid = os.getenv('INTRA_UID')
         secret = os.getenv('INTRA_SECRET')
-        url = os.getenv('TRANSCENDENCE_URL')
+        redirect_uri = os.getenv('TRANSCENDENCE_IP')
         url_parameters = "?grant_type=authorization_code&client_id=" + \
             uid + "&client_secret=" + secret + "&code=" + code + \
-            "&redirect_uri=http%3A%2F%2F10.11.7.3%3A8000%2Fauth%2Flogin%2F"
+            "&redirect_uri=http%3A%2F%2F" + redirect_uri + "%3A8000%2Fauth%2Flogin%2F"
         tokenJson = json.loads(requests.post(
             intra_endpoint + '/oauth/token' + url_parameters).content)
         if "access_token" in tokenJson.keys():
