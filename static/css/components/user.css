@@ -1,5 +1,9 @@
+div#userDiv {
+	margin-top: 10vh;	
+}
+
 div#userInfoContainer {
-    margin-left: 10vw;
+    margin-left: 15vw;
 }
 
 img#userImage {

@@ -1,14 +1,14 @@
 {% load static i18n %}
 <link rel="stylesheet" href="{% static 'css/components/user.css' %}" />
 
-<div id="userDiv" class="d-flex mt-5">
+<div id="userDiv" class="d-flex">
 	<div id="userInfoContainer" class="d-flex flex-column">
 		{% if user_image %}
 		<div id="userImageDiv" class="d-flex justify-content-center align-items-center">
 			<img id="userImage" width=221 height=221 src="{{ user_image }}">
 			<div id="userInfoDiv" class="d-flex flex-column justify-content-center text-white ms-5">
-				<p id="userLogin"> {{ user_login }} </p>
-				<p id="userDisplayName"> {{ user_display_name }} </p>
+				<p id="userLogin">{{ user_login }}</p>
+				<p id="userDisplayName">{{ user_display_name }}</p>
 				<div id="userStatsDiv" class="d-flex mt-3">
 					<p id="userStats"> 🙌 {{ user_helps }}  </p>
 					<p id="userStats"> 📍 {{ user_ball_distance }}  </p>
