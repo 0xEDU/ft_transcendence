@@ -1,15 +1,16 @@
+"""Views for the soninha app."""
 import os
-import requests
 import json
+import requests
 from django.views import View
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
-from django.http import HttpResponse, JsonResponse
-
+from django.http import HttpResponse
 from soninha.models import User
 
 
 class UserTemplateView(TemplateView):
+    """Returns the user template."""
     template_name = "soninha/partials/user.html"
 
     def get_context_data(self, **kwargs):
@@ -31,21 +32,26 @@ class UserTemplateView(TemplateView):
 
 
 class LoginView(View):
+    """Returns the login view. Might be removed."""
+
     def _get_token(self, code):
+        """Returns the intra token."""
+
         intra_endpoint = os.getenv('INTRA_ENDPOINT')
         uid = os.getenv('INTRA_UID')
         secret = os.getenv('INTRA_SECRET')
-        url = os.getenv('TRANSCENDENCE_URL')
         url_parameters = "?grant_type=authorization_code&client_id=" + \
             uid + "&client_secret=" + secret + "&code=" + code + \
             "&redirect_uri=http%3A%2F%2F10.11.200.14%3A8000%2Fauth%2Flogin%2F"
-        tokenJson = json.loads(requests.post(
-            intra_endpoint + '/oauth/token' + url_parameters).content)
-        if "access_token" in tokenJson.keys():
-            return tokenJson["access_token"]
+        token_json = json.loads(requests.post(
+            intra_endpoint + '/oauth/token' + url_parameters, timeout=5).content)
+        if "access_token" in token_json.keys():
+            return token_json["access_token"]
         return ""
 
     def get(self,  request, *args, **kwargs):
+        """Get method."""
+
         code = request.GET.get('code', '')
         token = self._get_token(code)
         if not token:
@@ -53,7 +59,7 @@ class LoginView(View):
         bearer = "Bearer " + token
         cadet_api = os.getenv('INTRA_ENDPOINT') + os.getenv('CADET_API')
         response = json.loads(requests.get(cadet_api, headers={
-                              'Authorization': bearer}).content)
+            'Authorization': bearer}, timeout=5).content)
         login_intra = response["login"]
         pfp_intra = response["image"]["versions"]["medium"]
         new_user, _ = User.objects.get_or_create(
@@ -63,6 +69,9 @@ class LoginView(View):
 
 
 class LogoutView(View):
+    """Logout view."""
+
     def get(self, request, *args, **kwargs):
+        """Get method."""
         request.session["user_id"] = ""
         return HttpResponse('')
