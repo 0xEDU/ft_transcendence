@@ -1,8 +1,8 @@
+"""URLs for the pong app."""
 from django.urls import path
 from .views import home_view, GameView, MatchView
 
-app_name = "pong"
-
+app_name = "pong" # pylint: disable=invalid-name
 urlpatterns = [
     path('', home_view, name='home'),
     path('game', GameView.as_view(), name='game'),
