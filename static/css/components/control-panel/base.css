@@ -15,12 +15,6 @@ div#control-panel {
     height: 14vh;
 }
 
-div#switch-component {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 div#left-labels {
     display: flex;
     flex-direction: column;
