@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <title>PONG</title>
 </head>
@@ -28,7 +29,8 @@
             <h1>stats section</h1>
         </section>
         <section id="profile">
-            <h1>profile section</h1>
+            {% comment %} <h1>profile section</h1> {% endcomment %}
+            {% include "soninha/partials/user.html" %}
         </section>
         <section id="lobby">
             <h1>lobby section</h1>
@@ -50,7 +52,7 @@
     </div>
 
 
-
-    <script src="{% static 'js/control-panel.js' %}"></script>
+    <a id="redirectUrl" style="display: none;">{{ redirect_url }}</a>
+    <script type="module" src="{% static 'js/control-panel.js' %}"></script>
 </body>
 </html>

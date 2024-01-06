@@ -1,5 +1,7 @@
+import emptyElement from "./tinyDOM/emptyElement.js"
+
 const state = {
-    position: "login",
+    position: "",
     isLoggedIn: false,
 };
 
@@ -24,15 +26,17 @@ function scrollToSection(sectionName, behaviour) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Elements selection
     var publicArea = ["login"]
     var restrictedArea = ["profile", "stats", "lobby", "kudos"]
 
     let controlPanel = document.getElementById('control-panel')
 
-    // Initial positioning of viewport
-    scrollToSection("login");
+    // Decide the initial positioning of viewport
+    state.isLoggedIn = (document.getElementById('userImage') !== null);
+    const defaultScreen = (state.isLoggedIn) ? "profile" : "login";
+    scrollToSection(defaultScreen);
 
     // Setup of navigation via control panel
     controlPanel.addEventListener('click', function(event) {
@@ -46,11 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (publicArea.includes(clickedSwitchName)) {
                 if (state.isLoggedIn == false) {
                     // Do the authentication magic
-                    state.isLoggedIn = true;
-                    scrollToSection("profile")
+                    // opens the link to the intra login page in the current window
+                    window.location.href = document.getElementById('redirectUrl').textContent;
                 }
                 else {
                     // Do the logging out magic
+                    fetch("/auth/logout")
+                        .then(() => emptyElement('userDiv'));
                     state.isLoggedIn = false;
                     scrollToSection("login")
                 }
@@ -61,5 +67,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-});
-
+})

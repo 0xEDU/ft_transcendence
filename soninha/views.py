@@ -40,13 +40,14 @@ class LoginView(View):
         intra_endpoint = os.getenv('INTRA_ENDPOINT')
         uid = os.getenv('INTRA_UID')
         secret = os.getenv('INTRA_SECRET')
+        redirect_uri = os.getenv('TRANSCENDENCE_IP')
         url_parameters = "?grant_type=authorization_code&client_id=" + \
             uid + "&client_secret=" + secret + "&code=" + code + \
-            "&redirect_uri=http%3A%2F%2F10.11.200.14%3A8000%2Fauth%2Flogin%2F"
-        token_json = json.loads(requests.post(
-            intra_endpoint + '/oauth/token' + url_parameters, timeout=5).content)
-        if "access_token" in token_json.keys():
-            return token_json["access_token"]
+            "&redirect_uri=http%3A%2F%2F" + redirect_uri + "%3A8000%2Fauth%2Flogin%2F"
+        tokenJson = json.loads(requests.post(
+            intra_endpoint + '/oauth/token' + url_parameters).content)
+        if "access_token" in tokenJson.keys():
+            return tokenJson["access_token"]
         return ""
 
     def get(self,  request, *args, **kwargs):
@@ -62,10 +63,12 @@ class LoginView(View):
             'Authorization': bearer}, timeout=5).content)
         login_intra = response["login"]
         pfp_intra = response["image"]["versions"]["medium"]
+        if not pfp_intra:
+            pfp_intra = "/static/images/default_user_image.svg"
         new_user, _ = User.objects.get_or_create(
-            display_name='', login_intra=login_intra, avatar_image_url=pfp_intra)
+            display_name=login_intra, login_intra=login_intra, avatar_image_url=pfp_intra)
         request.session["user_id"] = new_user.id
-        return redirect('/pong')  # This will return the html
+        return redirect('/')  # This will return the html
 
 
 class LogoutView(View):
