@@ -1,15 +1,16 @@
+"""Views for the soninha app."""
 import os
-import requests
 import json
+import requests
 from django.views import View
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
-from django.http import HttpResponse, JsonResponse
-
+from django.http import HttpResponse
 from soninha.models import User
 
 
 class UserTemplateView(TemplateView):
+    """Returns the user template."""
     template_name = "soninha/partials/user.html"
 
     def get_context_data(self, **kwargs):
@@ -31,7 +32,11 @@ class UserTemplateView(TemplateView):
 
 
 class LoginView(View):
+    """Returns the login view. Might be removed."""
+
     def _get_token(self, code):
+        """Returns the intra token."""
+
         intra_endpoint = os.getenv('INTRA_ENDPOINT')
         uid = os.getenv('INTRA_UID')
         secret = os.getenv('INTRA_SECRET')
@@ -46,15 +51,16 @@ class LoginView(View):
         return ""
 
     def get(self,  request, *args, **kwargs):
+        """Get method."""
+
         code = request.GET.get('code', '')
         token = self._get_token(code)
         if not token:
             return HttpResponse("Couldn't get intra token", status=500)
         bearer = "Bearer " + token
         cadet_api = os.getenv('INTRA_ENDPOINT') + os.getenv('CADET_API')
-        raw_response = requests.get(cadet_api, headers={
-                              'Authorization': bearer}).content
-        response = json.loads(raw_response)
+        response = json.loads(requests.get(cadet_api, headers={
+            'Authorization': bearer}, timeout=5).content)
         login_intra = response["login"]
         pfp_intra = response["image"]["versions"]["medium"]
         if not pfp_intra:
@@ -66,6 +72,9 @@ class LoginView(View):
 
 
 class LogoutView(View):
+    """Logout view."""
+
     def get(self, request, *args, **kwargs):
+        """Get method."""
         request.session["user_id"] = ""
         return HttpResponse('')

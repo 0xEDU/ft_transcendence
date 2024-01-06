@@ -1,9 +1,12 @@
+"""Core views."""
 from django.shortcuts import render
 from soninha.models import User
 from soninha.views import UserTemplateView
 import os
 
 def home(request):
+    """Renders the home page."""
+
     intra_uid = os.getenv('INTRA_UID') 
     redirect_uri = os.getenv('TRANSCENDENCE_IP')
     context = {
