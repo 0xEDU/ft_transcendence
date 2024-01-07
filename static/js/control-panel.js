@@ -5,7 +5,7 @@ const state = {
     isLoggedIn: false,
 };
 
-function scrollToSection(sectionName, behaviour) {
+function scrollToSection(sectionName, behaviour = "smooth") {
     if (typeof sectionName === 'string') {
         let targetSection = document.getElementById(sectionName);
 
@@ -33,10 +33,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let controlPanel = document.getElementById('control-panel')
 
-    // Decide the initial positioning of viewport
+    // Decide the initial positioning of viewport on first load of the webpage
     state.isLoggedIn = (document.getElementById('userImage') !== null);
     const defaultScreen = (state.isLoggedIn) ? "profile" : "login";
-    scrollToSection(defaultScreen);
+    scrollToSection(defaultScreen, "instant");
 
     // Setup of navigation via control panel
     controlPanel.addEventListener('click', function(event) {
