@@ -1,0 +1,6 @@
+p#matchesHistoryText,
+p#tournamentsText, 
+p#userStatsText {
+	font-size: 2em;
+	font-weight: bold;
+}
