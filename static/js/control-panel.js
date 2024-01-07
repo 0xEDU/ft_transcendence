@@ -26,6 +26,7 @@ function scrollToSection(sectionName, behaviour = "smooth") {
     }
 }
 
+// Handles main navigation logic of our SPA
 document.addEventListener('DOMContentLoaded', function () {
     // Elements selection
     var publicArea = ["login"]
@@ -36,6 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Decide the initial positioning of viewport on first load of the webpage
     state.isLoggedIn = (document.getElementById('userImage') !== null);
     const defaultScreen = (state.isLoggedIn) ? "profile" : "login";
+    if (state.isLoggedIn === true) {
+        console.log('TODO: faz o toggLes');
+    }
     scrollToSection(defaultScreen, "instant");
 
     // Setup of navigation via control panel
@@ -47,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Extract the switch name from the data attribute or any other identifier
             var clickedSwitchName = clickedSwitch.getAttribute('name');
 
-            if (publicArea.includes(clickedSwitchName)) {
+            if (clickedSwitchName == "login") {
                 if (state.isLoggedIn == false) {
                     // Do the authentication magic
                     // opens the link to the intra login page in the current window
@@ -58,6 +62,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     fetch("/auth/logout")
                         .then(() => emptyElement('userDiv'));
                     state.isLoggedIn = false;
+                    // controlPanel.classList.toggle('shrink');
+                    controlPanel.querySelectorAll('.switch-component').forEach(function (element) {
+                        if (element.getAttribute('name') !== 'login')
+                            element.classList.toggle('hidden');
+                    })
                     scrollToSection("login")
                 }
             }
