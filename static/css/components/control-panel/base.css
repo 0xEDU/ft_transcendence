@@ -59,7 +59,7 @@ div#switch-svg {
     height: 5%;
 }
 
-svg#control-panel-svg {
+#switch-svg svg {
     width: 5vw;
     height: 10vh;
     margin-top: 1.1vh;
