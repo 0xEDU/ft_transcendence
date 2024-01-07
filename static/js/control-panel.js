@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (state.isLoggedIn == false) {
                     // Do the authentication magic
                     // opens the link to the intra login page in the current window
-                    window.location.href = document.getElementById('redirectUrl').textContent;
+                    window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
                 }
                 else {
                     // Do the logging out magic
