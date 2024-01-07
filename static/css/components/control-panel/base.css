@@ -67,10 +67,3 @@ svg#control-panel-svg {
     min-height: 35px;
     flex-shrink: 0;
 }
-
-svg#range-indicator {
-    height: 8vh;
-    margin-top: 2vh;
-    min-width: 20px;
-    min-height: 35px;
-}

@@ -1,8 +1,8 @@
-#switch-body {
+.switch-body {
     display: flex;
 }
 
-#switch-body .left-side {
+.switch-body .left-side {
     justify-self: center;
     align-self: center;
 }
@@ -16,9 +16,9 @@
     display: flex;
 }
 
-#range-indicator {
-    width: 1.7vw;
-    height: 16vh;
-    min-width: 5px;
-    min-height: 45px;
+.range-indicator {
+    height: 8vh;
+    margin-top: 2vh;
+    min-width: 20px;
+    min-height: 35px;
 }
