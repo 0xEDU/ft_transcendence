@@ -26,6 +26,14 @@ function scrollToSection(sectionName, behaviour = "smooth") {
     }
 }
 
+function toggleControlPanelSize(controlPanel) {
+    controlPanel.classList.toggle('shrink');
+    controlPanel.querySelectorAll('.switch-component').forEach(function (element) {
+        if (element.getAttribute('name') !== 'login')
+            element.classList.toggle('hidden');
+    })
+}
+
 // Handles main navigation logic of our SPA
 document.addEventListener('DOMContentLoaded', function () {
     // Elements selection
@@ -34,13 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let controlPanel = document.getElementById('control-panel')
 
-    // Decide the initial positioning of viewport on first load of the webpage
+    // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
     state.isLoggedIn = (document.getElementById('userImage') !== null);
-    const defaultScreen = (state.isLoggedIn) ? "profile" : "login";
+    scrollToSection("login", "instant");
     if (state.isLoggedIn === true) {
-        console.log('TODO: faz o toggLes');
+        setTimeout(function() { // timeout simulates the time elapsed from the animation, remove later!
+            toggleControlPanelSize(controlPanel);
+            scrollToSection("profile");
+        }, 2000);
     }
-    scrollToSection(defaultScreen, "instant");
 
     // Setup of navigation via control panel
     controlPanel.addEventListener('click', function(event) {
@@ -59,15 +69,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 else {
                     // Do the logging out magic
-                    fetch("/auth/logout")
-                        .then(() => emptyElement('userDiv'));
                     state.isLoggedIn = false;
-                    // controlPanel.classList.toggle('shrink');
-                    controlPanel.querySelectorAll('.switch-component').forEach(function (element) {
-                        if (element.getAttribute('name') !== 'login')
-                            element.classList.toggle('hidden');
-                    })
-                    scrollToSection("login")
+                    toggleControlPanelSize(controlPanel)
+                    setTimeout(() => {
+                        fetch("/auth/logout")
+                        .then(() => emptyElement('userDiv'));
+                        scrollToSection("login")
+                    }, 2000);
                 }
             }
             if (restrictedArea.includes(clickedSwitchName)) {

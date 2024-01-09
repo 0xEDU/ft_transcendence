@@ -1,4 +1,4 @@
-<div class="switch-component" name="{{ label }}">
+<div class="switch-component {% if label != "login" %}hidden{% endif %}" name="{{ label }}">
     {% comment %} LABEL {% endcomment %}
     <div class="switch-label">
         {% if label == "login" %}

@@ -15,6 +15,13 @@ div#control-panel {
     height: 14vh;
 }
 
+div#control-panel.shrink {
+    width: 25vw;
+    height: 30vh;
+    bottom: 30vh;
+    left: 37.5vw;
+}
+
 div#left-labels {
     display: flex;
     flex-direction: column;
