@@ -1,5 +1,13 @@
+import insertElement from "./tinyDOM/insertElement.js";
+import deleteElement from "./tinyDOM/deleteElement.js";
+import emptyElement from "./tinyDOM/emptyElement.js";
+
 let currentStatPage = "matchesHistoryText"
-const statPages = ["matchesHistoryText", "tournamentsText", "userStatsText"]
+const statPages = {
+	"matchesHistoryText": "/stats/matches-history",
+	"tournamentsText": "/stats/tournaments",
+	"userStatsText": "/stats/user-stats",
+}
 
 function removeHighlight() {
 	document.getElementById(currentStatPage).style.textDecoration = "none";
@@ -9,16 +17,32 @@ function highlightCurrentPage() {
 	document.getElementById(currentStatPage).style.textDecoration = "underline";
 }
 
+function fetchStatsPage(page) {
+	fetch(page)
+		.then(response => response.text())
+		.then(text => {
+			emptyElement("statsDiv");
+			insertElement("statsDiv", text);
+		})
+}
+
 document.addEventListener("DOMContentLoaded", function() {
+	// Highlight 'Matches History' by default
 	const statsNav = document.getElementById("statsNav");
 	highlightCurrentPage();
+	fetchStatsPage(statPages[currentStatPage]);
 
-	// Highlight the current 'page' when clicked
-	statsNav.addEventListener("click", function(event) {
-		if (event.target.id !== currentStatPage && statPages.includes(event.target.id)) {
+
+	// Update the current 'page' when clicked
+	statsNav.addEventListener("click", async function(event) {
+		if (event.target.id !== currentStatPage && Object.keys(statPages).includes(event.target.id)) {
 			removeHighlight();
 			currentStatPage = event.target.id;
 			highlightCurrentPage();
+			const response = await fetch(statPages[currentStatPage])
+			// console.log(response.text())
+			emptyElement("statsDiv");
+			insertElement("statsDiv", await response.text());
 		}
 	})
 })
