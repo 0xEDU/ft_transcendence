@@ -1,10 +1,15 @@
-.switch-body {
-    display: flex;
+.switch-component {
+    margin-right: 10%;
+
+    opacity: 1;
+    visibility: visible;
+
+    transition: all 1s ease-in-out;
 }
 
-.switch-body .left-side {
-    justify-self: center;
-    align-self: center;
+.switch-component.hiding {
+    opacity: 0;
+    visibility: hidden;
 }
 
 .switch-label svg {
@@ -16,22 +21,18 @@
     display: flex;
 }
 
+.switch-body {
+    display: flex;
+}
+
+.switch-body .left-side {
+    justify-self: center;
+    align-self: center;
+}
+
 .range-indicator {
     height: 8vh;
     margin-top: 2vh;
     min-width: 20px;
     min-height: 35px;
-}
-
-.switch-component {
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 1s;
-    transition: opacity 1s ease-in-out, visibility 1s ease-in-out, background-color 1s ease-in-out;
-}
-
-.switch-component.hiding {
-    /* background-color: magenta; */
-    opacity: 0;
-    visibility: hidden;
 }
