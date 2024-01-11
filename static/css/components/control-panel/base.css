@@ -13,6 +13,8 @@ div#control-panel {
     background: rgba(217, 217, 217, 0);
     width: 85vw;
     height: 14vh;
+
+    transition: width 0.3s ease-in-out;
 }
 
 div#control-panel.shrink {
