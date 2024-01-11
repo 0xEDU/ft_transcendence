@@ -19,10 +19,17 @@ function highlightCurrentPage() {
 
 function fetchStatsPage(page) {
 	fetch(page)
-		.then(response => response.text())
+		.then(response => {
+			if (response.status !== 200)
+				return emptyElement("statsDiv");
+			else
+				return response.text();
+		})
 		.then(text => {
-			emptyElement("statsDiv");
-			insertElement("statsDiv", text);
+			if (text) {
+				emptyElement("statsDiv");
+				insertElement("statsDiv", text);
+			}
 		})
 }
 
@@ -39,10 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			removeHighlight();
 			currentStatPage = event.target.id;
 			highlightCurrentPage();
-			const response = await fetch(statPages[currentStatPage])
-			// console.log(response.text())
-			emptyElement("statsDiv");
-			insertElement("statsDiv", await response.text());
+			fetchStatsPage(statPages[currentStatPage]);
 		}
 	})
 })
