@@ -28,10 +28,30 @@ function scrollToSection(sectionName, behaviour = "smooth") {
 
 function toggleControlPanelSize(controlPanel) {
     controlPanel.classList.toggle('shrink');
-    controlPanel.querySelectorAll('.switch-component').forEach(function (element) {
-        if (element.getAttribute('name') !== 'login')
+    controlPanel.querySelectorAll('.switch-component').forEach(function (element, index) {
+        if (element.getAttribute('name') !== 'login') {
             element.classList.toggle('hiding');
-    })
+            setTimeout(function () {
+                if (element.classList.contains('hiding')) {
+                    console.log("vai botar none")
+                    element.style.display = 'none';
+                }
+                else {
+                    console.log("vai botar block")
+                    element.style.display = 'block';
+                }
+            }, 200 * index)
+            // element.addEventListener('transitionend', function() {
+            //     // Toggles the property "display: none;"
+            //     // That is because the vanishing animation makes the switches invisible, BUT they still take up space in the DOM.
+            //     // It is then necessary to toggle the "display" property
+            //     if (element.classList.contains('hiding')) 
+            //         element.style.display = 'none';
+            //     else
+            //     element.style.display = 'block';
+            // })
+        }
+    }, { once: true })
 }
 
 // Handles main navigation logic of our SPA
