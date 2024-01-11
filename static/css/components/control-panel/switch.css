@@ -22,3 +22,17 @@
     min-width: 20px;
     min-height: 35px;
 }
+
+.switch-component {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 1s;
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out, background-color 1s ease-in-out;
+}
+
+.switch-component.hiding {
+    /* background-color: magenta; */
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}

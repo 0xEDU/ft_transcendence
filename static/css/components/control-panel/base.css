@@ -14,14 +14,14 @@ div#control-panel {
     width: 85vw;
     height: 14vh;
 
-    transition: width 0.3s ease-in-out;
+    transition: width 1s ease-in-out, bottom 1s ease-in-out;
 }
 
 div#control-panel.shrink {
     width: 25vw;
-    height: 30vh;
+    /* height: 30vh; */
     bottom: 30vh;
-    left: 37.5vw;
+    /* left: 37.5vw; */
 }
 
 div#left-labels {

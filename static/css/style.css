@@ -36,7 +36,3 @@ section#login {
     height: 100vh;
     display: flex;
 }
-
-.hidden {
-    display: none;
-}
