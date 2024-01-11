@@ -107,4 +107,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    // Reposition viewport to the current board position when windows is resized:
+    window.addEventListener('resize', function() {
+        scrollToSection(state.position, "instant")
+    });
 })
