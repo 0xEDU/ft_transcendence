@@ -20,3 +20,13 @@ class TournamentsTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class UserStatsTemplateView(TemplateView):
+    """Returns the user stats template."""
+
+    template_name = "stats/components/user-stats.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

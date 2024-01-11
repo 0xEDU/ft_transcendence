@@ -7,4 +7,6 @@ urlpatterns = [
          name='matchHistory'),
     path('tournaments/', views.TournamentsTemplateView.as_view(),
          name='tournaments'),
+    path('user-stats/', views.UserStatsTemplateView.as_view(),
+         name='userStats'),
 ]
