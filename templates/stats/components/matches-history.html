@@ -6,19 +6,13 @@
         <div id="coopHistoryDiv">
             <table>
                 <tbody>
-                    {% for i in table_rows_count %}
+                    {% for cell_row in cell_rows %}
                     <tr>
-                        {% for j in table_columns_count %}
-                            <td id="coopSquare" style={{ color }}></td>
+                        {% for cell in cell_row %}
+                            <td id="coopSquare" style={{ cell.color }}></td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
-                    {% comment %} Last tr is 2-squares short {% endcomment %}
-                    <tr>
-                        {% for j in table_last_column_count %}
-                            <td id="coopSquare" style="{{ color }}"></td>
-                        {% endfor %}
-                    </tr>
                 </tbody>
             </table>
         </div>
