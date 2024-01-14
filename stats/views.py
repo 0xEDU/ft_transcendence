@@ -3,6 +3,8 @@ from django.views.generic import TemplateView
 from pong.models import Score
 from dataclasses import dataclass
 
+ROWS_SIZE = 15
+TOTAL_NUM_OF_CELLS = 88
 COOP_COLORS = {
     "none": "#fff",
     "low": "#ffe988",
@@ -38,16 +40,15 @@ class MatchesHistoryTemplateView(TemplateView):
             else:
                 return COOP_COLORS["high"]
 
-        rows_size = [15, 15, 15, 13]
         current_user_id = self.request.session["user_id"]
         scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
         scores = list(map(lambda score: CellObject(
-            match_date=score.match.match_date,
+            match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
             score=score.score,
             color=f"background-color:{calculate_color(score.score)}"
         ), scores))
-        scores = scores + [CellObject] * (sum(rows_size) - len(scores))
-        scores = [scores[i:i + size] for i, size in enumerate(rows_size)]
+        scores = scores + [CellObject()] * (TOTAL_NUM_OF_CELLS - len(scores))
+        scores = [scores[i:i + ROWS_SIZE] for i in range(0, len(scores), ROWS_SIZE)]
         return scores
 
     def get_context_data(self, **kwargs):
