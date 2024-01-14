@@ -9,7 +9,7 @@
                     {% for cell_row in cell_rows %}
                     <tr>
                         {% for cell in cell_row %}
-                            <td id="coopSquare" style={{ cell.color }}></td>
+                            <td id="coopSquare" title="{{ cell.match_date }}" style={{ cell.color }}></td>
                         {% endfor %}
                     </tr>
                     {% endfor %}

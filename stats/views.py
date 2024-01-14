@@ -17,7 +17,7 @@ COOP_COLORS = {
 class CellObject:
     """Dataclass for the cell object."""
 
-    match_date: str = ""
+    match_date: str = "No match"
     score: int = 0
     color: str = f"background-color:{COOP_COLORS['none']}"
 
@@ -43,7 +43,7 @@ class MatchesHistoryTemplateView(TemplateView):
         current_user_id = self.request.session["user_id"]
         scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
         scores = list(map(lambda score: CellObject(
-            match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
+            match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M") + f"\nScore: {score.score}",
             score=score.score,
             color=f"background-color:{calculate_color(score.score)}"
         ), scores))
