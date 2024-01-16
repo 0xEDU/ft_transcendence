@@ -16,7 +16,7 @@ div#control-panel {
     background: rgba(217, 217, 217, 0);
     height: 15vh;
 
-    transition: border 1s ease-in-out, bottom 1s ease-in-out, height 1s ease-in-out, margin 1s ease-in-out;
+    transition: border 1s ease-in-out, bottom 1s ease-in-out, height 1s ease-in-out, margin 1s ease-in-out, padding 1s ease-in-out;
 }
 
 div#control-panel.shrink {
@@ -24,6 +24,7 @@ div#control-panel.shrink {
     bottom: 30vh;
     height: 30vh;
     margin: 0 40%;
+    padding: 0 6%;
 }
 
 div#left-labels {
