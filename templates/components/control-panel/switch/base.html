@@ -15,10 +15,6 @@
     </div>
 
     <div class="switch-body">
-        {% comment %} RIGHT PART {% endcomment %}
-        <div class="right-side">
-            {% include "components/control-panel/switch/partials/switch-svg.html" %}
-        </div>
         {% comment %} LEFT PART {% endcomment %}
         <div class="left-side">
             {% if label == "login" %}
@@ -26,6 +22,10 @@
             {% else %}
                 {% include "components/control-panel/switch/partials/range-indicator.html" %}
             {% endif %}
+        </div>
+        {% comment %} RIGHT PART {% endcomment %}
+        <div class="right-side">
+            {% include "components/control-panel/switch/partials/switch-svg.html" %}
         </div>
     </div>
 </div>
