@@ -27,13 +27,6 @@ div#control-panel.shrink {
     padding: 0 6%;
 }
 
-div#left-labels {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px;
-}
-
 div#on-off-toggle {
     height: 8vh;
     display: flex;
@@ -65,10 +58,6 @@ div#off-word {
     min-width: 40px;
     min-height: 8px;
     fill: "none";
-}
-
-div#switch-svg {
-    height: 5%;
 }
 
 #switch-svg svg {
