@@ -1,9 +1,14 @@
 .switch-component {
+    height: 100%;
     margin-right: 10%;
 
     opacity: 1;
     visibility: visible;
     transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+
+    /* DEBUGGING */
+    /* padding: 3px; */
+    border: solid 1px magenta;
 }
 
 .switch-component.hiding {
@@ -13,20 +18,39 @@
 
 .switch-head {
     width: 7.5vw;
-    height: 4vh;
+    height: 10%; /* This + .switch-body's height add up to 100% */
     min-width: 40px;
     min-height: 8px;
     fill: "none";
     display: flex;
+
+    /* DEBUGGING */
+    /* padding: 3px; */
+    border: solid 1px orangered;
 }
 
 .switch-body {
     display: flex;
+    height: 90%; /* This + .switch-head's height add up to 100% */
+
+    /* DEBUGGING */
+    /* padding: 3px; */
+    border: solid 1px gold;
 }
 
 .switch-body .left-side {
     justify-self: center;
     align-self: center;
+
+    /* DEBUGGING */
+    /* padding: 3px; */
+    border: solid 1px greenyellow;
+}
+
+.switch-body .right-side {
+    /* DEBUGGING */
+    /* padding: 3px; */
+    border: solid 1px cyan;
 }
 
 .range-indicator {
