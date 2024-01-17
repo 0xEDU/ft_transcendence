@@ -11,7 +11,7 @@
     visibility: hidden;
 }
 
-.switch-label svg {
+.switch-head {
     width: 7.5vw;
     height: 4vh;
     min-width: 40px;

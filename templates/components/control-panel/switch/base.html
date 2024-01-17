@@ -1,6 +1,6 @@
 <div class="switch-component {% if label != "login" %}hiding{% endif %}" {% if label != "login" %}style="display:none;"{% endif %} name="{{ label }}">
     {% comment %} LABEL {% endcomment %}
-    <div class="switch-label">
+    <div class="switch-head">
         {% if label == "login" %}
             {% include "components/control-panel/switch/partials/label-login.html" %}
         {% elif label == "profile" %}
