@@ -27,37 +27,16 @@ div#control-panel.shrink {
     padding: 0 6%;
 }
 
-div#on-off-toggle {
-    height: 8vh;
+div#on-off-labels {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    justify-content: space-evenly;
 }
 
-div#on-word {
-    width: 3vw;
-    min-width: 20px;
-    min-height: 6px;
-}
-
-div#off-word {
-    width: 3vw;
-    height: 2vh;
-    min-width: 20px;
-    min-height: 6px;
-}
-
-#power-label svg,
-#home-label svg,
-#stats-label svg,
-#lobby-label svg,
-#kudos-label svg {
-    width: 5.5vw;
-    height: 1.2vh;
-    min-width: 40px;
-    min-height: 8px;
-    fill: "none";
+div#on-off-labels > * {
+   height: 50%;
 }
 
 #switch-svg svg {

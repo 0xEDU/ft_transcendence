@@ -7,8 +7,7 @@
     transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
 
     /* DEBUGGING */
-    /* padding: 3px; */
-    border: solid 1px magenta;
+    /* border: solid 1px magenta; */
 }
 
 .switch-component.hiding {
@@ -17,40 +16,37 @@
 }
 
 .switch-head {
-    width: 7.5vw;
-    height: 10%; /* This + .switch-body's height add up to 100% */
+    height: 20%; /* This + .switch-body's height add up to 100% */
     min-width: 40px;
     min-height: 8px;
     fill: "none";
     display: flex;
+    justify-content: center;
 
     /* DEBUGGING */
-    /* padding: 3px; */
-    border: solid 1px orangered;
+    /* border: solid 1px orangered; */
 }
 
 .switch-body {
     display: flex;
-    height: 90%; /* This + .switch-head's height add up to 100% */
+    height: 80%; /* This + .switch-head's height add up to 100% */
 
     /* DEBUGGING */
-    /* padding: 3px; */
-    border: solid 1px gold;
+    /* border: solid 1px gold; */
 }
 
 .switch-body .left-side {
-    justify-self: center;
-    align-self: center;
+    width: 40%; /* This + .switch-body .right-side's width add up to 100% */
 
     /* DEBUGGING */
-    /* padding: 3px; */
-    border: solid 1px greenyellow;
+    /* border: solid 1px greenyellow; */
 }
 
 .switch-body .right-side {
+    width: 60%; /* This + .switch-body .left-side's width add up to 100% */
+
     /* DEBUGGING */
-    /* padding: 3px; */
-    border: solid 1px cyan;
+    /* border: solid 1px cyan; */
 }
 
 .range-indicator {
