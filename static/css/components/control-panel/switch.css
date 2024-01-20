@@ -48,10 +48,7 @@
 }
 
 .range-indicator {
-    height: 8vh;
-    margin-top: 2vh;
-    min-width: 20px;
-    min-height: 35px;
+    padding: 40% 0 0 20%;
 }
 
 div#on-off-labels {
