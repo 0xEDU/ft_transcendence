@@ -8,6 +8,7 @@ class Match(models.Model):
 
     match_date = models.DateTimeField(auto_now_add=True)
     players = models.ManyToManyField(User, through="Score")
+    type = models.CharField(max_length=10, null=True)
 
 
 class Score(models.Model):
