@@ -58,7 +58,7 @@ class MatchesHistoryTemplateView(TemplateView):
     def _get_latest_coop_scores(self):
         """Returns the latest scores as a list."""
 
-        def calculate_color(score):
+        def __calculate_color(score):
             if score <= 0:
                 return COOP_COLORS["none"]
             elif score <= 5:
@@ -69,11 +69,12 @@ class MatchesHistoryTemplateView(TemplateView):
                 return COOP_COLORS["high"]
 
         current_user_id = self.request.session["user_id"]
-        scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
+        scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
+                  .exclude(match__type="versus"))
         scores = list(map(lambda score: CoopCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M") + f"\nScore: {score.score}",
             score=score.score,
-            color=f"background-color:{calculate_color(score.score)}"
+            color=f"background-color:{__calculate_color(score.score)}"
         ), scores))
         scores = scores + [CoopCellObject()] * (TOTAL_NUM_OF_CELLS - len(scores))
         scores = [scores[i:i + ROWS_SIZE] for i in range(0, len(scores), ROWS_SIZE)]
@@ -82,7 +83,7 @@ class MatchesHistoryTemplateView(TemplateView):
     def _get_latest_versus_scores(self):
         """Returns the latest scores as a list."""
 
-        def calculate_color(score):
+        def __calculate_color(score):
             if score == 0:
                 return VERSUS_COLORS["none"]
             elif score == 5:
@@ -91,10 +92,11 @@ class MatchesHistoryTemplateView(TemplateView):
                 return VERSUS_COLORS["loss"]
 
         current_user_id = self.request.session["user_id"]
-        scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
+        scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
+                  .exclude(match__type="coop"))
         scores = list(map(lambda score: VersusCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
-            color=f"background-color:{calculate_color(score.score)}"
+            color=f"background-color:{__calculate_color(score.score)}"
         ), scores))
         scores = scores + [VersusCellObject()] * (TOTAL_NUM_OF_CELLS - len(scores))
         scores = [scores[i:i + ROWS_SIZE] for i in range(0, len(scores), ROWS_SIZE)]
@@ -103,25 +105,30 @@ class MatchesHistoryTemplateView(TemplateView):
     def _get_latest_matches(self):
         """Returns the latest matches as a list."""
 
-        def __get_match_description(match_id: int) -> str:
+        def __get_match_description(match, player1_score, player2_name) -> str:
             # Replace with your logic to generate match description
-            return f"Some description for match {match_id}"
+            if match.type == "coop":
+                return f"🤝 joined forces with {player2_name}"
+            if match.type == "versus" and player1_score == 5:
+                return f"🥇 won against {player2_name}"
+            if match.type == "versus":
+                return f"🥈 lost to {player2_name}"
 
-        def __format_match_row_object(match, player1_score, player2_score) -> MatchRowObject:
+        def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
             match_hour = match.match_date.strftime("%H:%M")
             match_date = match.match_date.strftime("%d/%m/%y")
             score_str = f"{player1_score} x {player2_score}"
-            return MatchRowObject(__get_match_description(match.id), score_str, match_hour, match_date)
+            return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
+                                  match_date)
 
         current_user_id = self.request.session["user_id"]
         player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
         player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
                           .exclude(player_id=current_user_id))
-        # Create a dictionary of player1_scores by match_id
         player1_scores_dict = {score.match_id: score for score in player1_scores}
-        # Create a list of MatchRowObject
         match_row_objects: List[MatchRowObject] = [
-            __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score)
+            __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score,
+                                      score.player.display_name)
             for score in player2_scores if score.match_id in player1_scores_dict
         ]
         return match_row_objects
