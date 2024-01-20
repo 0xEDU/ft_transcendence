@@ -18,3 +18,17 @@ table {
 div#coopHistoryDiv {
 	margin-bottom: 15vh;
 }
+
+div#matchRow {
+	width: 72vh;
+	background-color: #3a3535;
+}
+
+p#matchText {
+	min-width: 26vh;
+}
+
+p#matchScore {
+	min-width: 10vh;
+	text-align: center;
+}

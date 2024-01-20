@@ -33,6 +33,13 @@
         </div>
     </div>
     <div id="matchesDiv">
-        triple dale
+        {% for match in match_rows %}
+            <div id="matchRow" class="d-flex justify-content-between text-white align-items-center px-1 mb-2">
+                <p id="matchText" class="m-0">{{ match.description }}</p>
+                <p id="matchScore" class="m-0">{{ match.score }}</p>
+                <p class="m-0">{{ match.match_hour }}</p>
+                <p class="m-0">{{ match.match_date }}</p>
+            </div>
+        {% endfor %}
     </div>
 </div>
