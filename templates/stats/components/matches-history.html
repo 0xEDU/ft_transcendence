@@ -3,7 +3,7 @@
 
 <div id="matchesHistoryDiv" class="text-white d-flex justify-content-around">
     <div id="historyDiv" class="d-flex flex-column mt-5">
-        <p class="m-0 ms-1">CO-OP</p>
+        <p class="m-0 ms-1 fw-bold">CO-OP</p>
         <div id="coopHistoryDiv" class="d-flex flex-column">
             <table>
                 <tbody>
@@ -17,7 +17,7 @@
                 </tbody>
             </table>
         </div>
-        <p class="m-0 ms-1">CLASSIC</p>
+        <p class="m-0 ms-1 fw-bold">CLASSIC</p>
         <div id="versusHistoryDiv">
             <table>
                 <tbody>
@@ -34,11 +34,11 @@
     </div>
     <div id="matchesDiv">
         {% for match in match_rows %}
-            <div id="matchRow" class="d-flex justify-content-between text-white align-items-center px-1 mb-2">
+            <div id="matchRow" class="d-flex justify-content-between text-white fw-bold align-items-center px-2 py-2 mb-2">
                 <p id="matchText" class="m-0">{{ match.description }}</p>
                 <p id="matchScore" class="m-0">{{ match.score }}</p>
-                <p class="m-0">{{ match.match_hour }}</p>
-                <p class="m-0">{{ match.match_date }}</p>
+                <p id="matchHour" class="m-0">{{ match.match_hour }}</p>
+                <p id="matchDate" class="m-0">{{ match.match_date }}</p>
             </div>
         {% endfor %}
     </div>

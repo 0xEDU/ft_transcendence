@@ -1,34 +1,40 @@
 p#matchesHistoryText,
-p#tournamentsText, 
+p#tournamentsText,
 p#userStatsText {
-	font-size: 2em;
-	font-weight: bold;
+    font-size: 2em;
+    font-weight: bold;
 }
 
 td#coopSquare {
-	width: 20px;
-	height: 20px;
-	border: 5px solid var(--HEAVY_GRAY);
+    width: 20px;
+    height: 20px;
+    border: 5px solid var(--HEAVY_GRAY);
 }
 
 table {
-	border-spacing: 30px;
+    border-spacing: 30px;
 }
 
 div#coopHistoryDiv {
-	margin-bottom: 15vh;
+    margin-bottom: 15vh;
 }
 
 div#matchRow {
-	width: 72vh;
-	background-color: #3a3535;
+    min-width: 100px;
+    width: 95vh;
+    background-color: #3a3535;
+    font-size: 1.5em;
 }
 
 p#matchText {
-	min-width: 26vh;
+    min-width: 10vh;
+    width: 35vh;
 }
 
-p#matchScore {
-	min-width: 10vh;
-	text-align: center;
+p#matchScore,
+p#matchHour,
+p#matchDate {
+    min-width: 2vh;
+    width: 20vh;
+    text-align: center;
 }
