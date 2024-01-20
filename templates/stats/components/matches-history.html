@@ -1,23 +1,35 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/components/stats.css' %}">
 
-<div id="matchesHistoryDiv" class="text-white d-flex">
-    <div id="historyDiv" class="">
-        <div id="coopHistoryDiv">
+<div id="matchesHistoryDiv" class="text-white d-flex justify-content-around">
+    <div id="historyDiv" class="d-flex flex-column mt-5">
+        <p class="m-0 ms-1">CO-OP</p>
+        <div id="coopHistoryDiv" class="d-flex flex-column">
             <table>
                 <tbody>
-                    {% for cell_row in cell_rows %}
+                {% for coop_cell_row in coop_cell_rows %}
                     <tr>
-                        {% for cell in cell_row %}
-                            <td id="coopSquare" title="{{ cell.match_date }}" style={{ cell.color }}></td>
+                        {% for coop_cell in coop_cell_row %}
+                            <td id="coopSquare" title="{{ coop_cell.match_date }}" style={{ coop_cell.color }}></td>
                         {% endfor %}
                     </tr>
-                    {% endfor %}
+                {% endfor %}
                 </tbody>
             </table>
         </div>
+        <p class="m-0 ms-1">CLASSIC</p>
         <div id="versusHistoryDiv">
-            double dale
+            <table>
+                <tbody>
+                {% for versus_cell_row in versus_cell_rows %}
+                    <tr>
+                        {% for versus_cell in versus_cell_row %}
+                            <td id="coopSquare" title="{{ versus_cell.match_date }}" style={{ versus_cell.color }}></td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     <div id="matchesDiv">

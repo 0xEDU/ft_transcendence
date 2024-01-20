@@ -14,3 +14,7 @@ td#coopSquare {
 table {
 	border-spacing: 30px;
 }
+
+div#coopHistoryDiv {
+	margin-bottom: 15vh;
+}
