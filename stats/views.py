@@ -1,8 +1,11 @@
 """Views for the stats app."""
+from typing import List
+
 from django.views.generic import TemplateView
 from pong.models import Score
 from dataclasses import dataclass
 
+# Constants
 ROWS_SIZE = 15
 TOTAL_NUM_OF_CELLS = 88
 COOP_COLORS = {
@@ -18,6 +21,7 @@ VERSUS_COLORS = {
 }
 
 
+# Dataclasses
 @dataclass
 class CoopCellObject:
     """Dataclass for the cell object."""
@@ -35,6 +39,17 @@ class VersusCellObject:
     color: str = f"background-color:{VERSUS_COLORS['none']}"
 
 
+@dataclass
+class MatchRowObject:
+    """Dataclass for the match object."""
+
+    description: str
+    score: str
+    match_hour: str
+    match_date: str
+
+
+# Views
 class MatchesHistoryTemplateView(TemplateView):
     """Returns the matches history template."""
 
@@ -85,12 +100,39 @@ class MatchesHistoryTemplateView(TemplateView):
         scores = [scores[i:i + ROWS_SIZE] for i in range(0, len(scores), ROWS_SIZE)]
         return scores
 
+    def _get_latest_matches(self):
+        """Returns the latest matches as a list."""
+
+        def __get_match_description(match_id: int) -> str:
+            # Replace with your logic to generate match description
+            return f"Some description for match {match_id}"
+
+        def __format_match_row_object(match, player1_score, player2_score) -> MatchRowObject:
+            match_hour = match.match_date.strftime("%H:%M")
+            match_date = match.match_date.strftime("%d/%m/%y")
+            score_str = f"{player1_score} x {player2_score}"
+            return MatchRowObject(__get_match_description(match.id), score_str, match_hour, match_date)
+
+        current_user_id = self.request.session["user_id"]
+        player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
+        player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
+                          .exclude(player_id=current_user_id))
+        # Create a dictionary of player1_scores by match_id
+        player1_scores_dict = {score.match_id: score for score in player1_scores}
+        # Create a list of MatchRowObject
+        match_row_objects: List[MatchRowObject] = [
+            __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score)
+            for score in player2_scores if score.match_id in player1_scores_dict
+        ]
+        return match_row_objects
+
     def get_context_data(self, **kwargs):
         """Returns the context data."""
 
         context = super().get_context_data(**kwargs)
         context["coop_cell_rows"] = self._get_latest_coop_scores()
         context["versus_cell_rows"] = self._get_latest_versus_scores()
+        context["match_rows"] = self._get_latest_matches()
         return context
 
 
