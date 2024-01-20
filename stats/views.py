@@ -11,10 +11,15 @@ COOP_COLORS = {
     "medium": "#ffde4f",
     "high": "#facb03",
 }
+VERSUS_COLORS = {
+    "none": "#fff",
+    "win": "#00ff00",
+    "loss": "#ff0000",
+}
 
 
 @dataclass
-class CellObject:
+class CoopCellObject:
     """Dataclass for the cell object."""
 
     match_date: str = "No match"
@@ -22,12 +27,20 @@ class CellObject:
     color: str = f"background-color:{COOP_COLORS['none']}"
 
 
+@dataclass
+class VersusCellObject:
+    """Dataclass for the cell object."""
+
+    match_date: str = "No match"
+    color: str = f"background-color:{VERSUS_COLORS['none']}"
+
+
 class MatchesHistoryTemplateView(TemplateView):
     """Returns the matches history template."""
 
     template_name = "stats/components/matches-history.html"
 
-    def get_latest_scores(self):
+    def _get_latest_coop_scores(self):
         """Returns the latest scores as a list."""
 
         def calculate_color(score):
@@ -42,12 +55,33 @@ class MatchesHistoryTemplateView(TemplateView):
 
         current_user_id = self.request.session["user_id"]
         scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-        scores = list(map(lambda score: CellObject(
+        scores = list(map(lambda score: CoopCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M") + f"\nScore: {score.score}",
             score=score.score,
             color=f"background-color:{calculate_color(score.score)}"
         ), scores))
-        scores = scores + [CellObject()] * (TOTAL_NUM_OF_CELLS - len(scores))
+        scores = scores + [CoopCellObject()] * (TOTAL_NUM_OF_CELLS - len(scores))
+        scores = [scores[i:i + ROWS_SIZE] for i in range(0, len(scores), ROWS_SIZE)]
+        return scores
+
+    def _get_latest_versus_scores(self):
+        """Returns the latest scores as a list."""
+
+        def calculate_color(score):
+            if score == 0:
+                return VERSUS_COLORS["none"]
+            elif score == 5:
+                return VERSUS_COLORS["win"]
+            else:
+                return VERSUS_COLORS["loss"]
+
+        current_user_id = self.request.session["user_id"]
+        scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
+        scores = list(map(lambda score: VersusCellObject(
+            match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
+            color=f"background-color:{calculate_color(score.score)}"
+        ), scores))
+        scores = scores + [VersusCellObject()] * (TOTAL_NUM_OF_CELLS - len(scores))
         scores = [scores[i:i + ROWS_SIZE] for i in range(0, len(scores), ROWS_SIZE)]
         return scores
 
@@ -55,7 +89,8 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the context data."""
 
         context = super().get_context_data(**kwargs)
-        context["cell_rows"] = self.get_latest_scores()
+        context["coop_cell_rows"] = self._get_latest_coop_scores()
+        context["versus_cell_rows"] = self._get_latest_versus_scores()
         return context
 
 
