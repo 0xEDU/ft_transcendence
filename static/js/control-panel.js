@@ -33,11 +33,9 @@ function toggleControlPanelSize(controlPanel) {
             element.classList.toggle('hiding');
             setTimeout(function () {
                 if (element.classList.contains('hiding')) {
-                    console.log("vai botar none")
                     element.style.display = 'none';
                 }
                 else {
-                    console.log("vai botar block")
                     element.style.display = 'block';
                 }
             }, 200 * index)
