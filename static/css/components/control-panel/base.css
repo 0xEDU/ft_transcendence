@@ -27,3 +27,6 @@ div#control-panel.shrink {
     padding: 0;
 }
 
+div#control-panel.shrink .right-side svg:hover {
+    cursor: pointer;
+}
