@@ -17,14 +17,11 @@
 
 .switch-head {
     height: 20%; /* This + .switch-body's height add up to 100% */
-    min-width: 40px;
-    min-height: 8px;
-    fill: "none";
     display: flex;
     justify-content: center;
 
     /* DEBUGGING */
-    /* border: solid 1px orangered; */
+    /* border: solid 1px plum; */
 }
 
 .switch-body {
@@ -45,6 +42,7 @@
 .switch-body .right-side {
     width: 60%; /* This + .switch-body .left-side's width add up to 100% */
 
+    padding-top: 5%;
     /* DEBUGGING */
     /* border: solid 1px cyan; */
 }
@@ -55,3 +53,19 @@
     min-width: 20px;
     min-height: 35px;
 }
+
+div#on-off-labels {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+div#on-off-labels > * {
+    height: 50%;
+    padding-right: 25%;
+ 
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+ }
