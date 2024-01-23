@@ -137,6 +137,8 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the context data."""
 
         context = super().get_context_data(**kwargs)
+        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+            return context
         context["coop_cell_rows"] = self._get_latest_coop_scores()
         context["versus_cell_rows"] = self._get_latest_versus_scores()
         context["match_rows"] = self._get_latest_matches()
