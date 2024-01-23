@@ -21,7 +21,8 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('admin/', admin.site.urls),
-    path('pong/', include('pong.urls')),
     path('auth/', include('soninha.urls')),
-    path("i18n/", include("django.conf.urls.i18n")),
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('pong/', include('pong.urls')),
+    path('stats/', include('stats.urls')),
 ]
