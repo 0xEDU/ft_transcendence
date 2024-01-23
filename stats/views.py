@@ -106,7 +106,6 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest matches as a list."""
 
         def __get_match_description(match, player1_score, player2_name) -> str:
-            # Replace with your logic to generate match description
             if match.type == "coop":
                 return f"🤝 joined forces with {player2_name}"
             if match.type == "versus" and player1_score == 5:
