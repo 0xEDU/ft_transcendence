@@ -16,12 +16,12 @@ table {
 }
 
 div#coopHistoryDiv {
-    margin-bottom: 15vh;
+    margin-bottom: 10vh;
 }
 
 div#matchRow {
     min-width: 100px;
-    width: 95vh;
+    width: 50vw;
     background-color: #3a3535;
     font-size: 1.5em;
 }
