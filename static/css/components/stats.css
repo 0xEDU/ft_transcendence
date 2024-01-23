@@ -5,7 +5,8 @@ p#userStatsText {
     font-weight: bold;
 }
 
-td#coopSquare {
+td#coopSquare,
+td#versusSquare {
     width: 20px;
     height: 20px;
     border: 5px solid var(--HEAVY_GRAY);
