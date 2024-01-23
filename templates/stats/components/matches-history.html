@@ -33,13 +33,19 @@
         </div>
     </div>
     <div id="matchesDiv">
-        {% for match in match_rows %}
+        {% if not match_rows %}
             <div id="matchRow" class="d-flex justify-content-between text-white fw-bold align-items-center px-2 py-2 mb-2">
-                <p id="matchText" class="m-0">{{ match.description }}</p>
-                <p id="matchScore" class="m-0">{{ match.score }}</p>
-                <p id="matchHour" class="m-0">{{ match.match_hour }}</p>
-                <p id="matchDate" class="m-0">{{ match.match_date }}</p>
+                <p id="matchText" class="m-0">No matches played yet</p>
             </div>
-        {% endfor %}
+        {% else %}
+            {% for match in match_rows %}
+                <div id="matchRow" class="d-flex justify-content-between text-white fw-bold align-items-center px-2 py-2 mb-2">
+                    <p id="matchText" class="m-0">{{ match.description }}</p>
+                    <p id="matchScore" class="m-0">{{ match.score }}</p>
+                    <p id="matchHour" class="m-0">{{ match.match_hour }}</p>
+                    <p id="matchDate" class="m-0">{{ match.match_date }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
