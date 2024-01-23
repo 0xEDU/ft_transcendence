@@ -8,15 +8,14 @@ from dataclasses import dataclass
 # Constants
 ROWS_SIZE = 15
 TOTAL_NUM_OF_CELLS = 88
-# "none": "var(--HEAVY_GRAY)",
 COOP_COLORS = {
-    "none": "#fff",
+    "none": "var(--HEAVY_GRAY)",
     "low": "#ffe988",
     "medium": "#ffde4f",
     "high": "#facb03",
 }
 VERSUS_COLORS = {
-    "none": "#fff",
+    "none": "var(--HEAVY_GRAY)",
     "win": "#00ff00",
     "loss": "#ff0000",
 }
