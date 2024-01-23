@@ -1,0 +1,10 @@
+div#lobbyDiv {
+    width: 100%;
+    height: 80%;
+}
+
+div#dottedLine {
+    border-right: 1.2vw dashed #fcfcfd;
+    height: 60%;
+    width: 0px;
+}
