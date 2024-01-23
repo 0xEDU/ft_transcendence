@@ -27,6 +27,11 @@ div#matchRow {
     font-size: 1.5em;
 }
 
+div#matchesDiv {
+    max-width: 50vw;
+    height: 60vh;
+}
+
 p#matchText {
     min-width: 10vh;
     width: 35vh;
