@@ -1,0 +1,33 @@
+<di class="modal fade" id="singleMatchModal" tabindex="-1" aria-labelledby="singleMatchModalLabel" aria-hidden="true" data-bs-theme="dark">
+  <div class="modal-dialog modal-xl">
+    <div id="modalContent" class="modal-content">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-white">
+        <h1 class="ms-3">Single Match</h1>
+        <h2 class="mb-5 ms-3">Settings</h2>
+        <div class="d-flex justify-content-evenly">
+          <div class="d-flex flex-column align-items-center">
+            <h3>Game Mode</h3>
+            <p>co-op</p>
+            <p>classic</p>
+          </div>
+          <div class="d-flex flex-column align-items-center">
+            <h3>Player</h3>
+            <p>two</p>
+            <p>four</p>
+          </div>
+          <div class="d-flex flex-column align-items-center">
+            <h3>Map</h3>
+            <p>map 1</p>
+            <p>map 2</p>
+          </div>
+        </div>
+        <div class="d-flex w-100 justify-content-center">
+          {% include 'lobby/components/play-button.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
