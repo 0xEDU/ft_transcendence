@@ -1,8 +1,9 @@
 {% load static i18n %}
 
-<link rel="stylesheet" href="{% static 'css/lobby/style.css' %}">
-<div id="lobbyDiv" class="d-flex text-white fw-bolder align-items-center justify-content-around">
-    <h1>SINGLE MATCH</h1>
-    <div id="dottedLine" class="d-flex align-items-center"></div>
-    <h1>TOURNAMENT</h1>
+<link rel="stylesheet" href="{% static 'css/lobby/style.css' %}" />
+<div id="lobbyDiv" class="d-flex text-white fw-bolder align-items-center justify-content-evenly">
+  <h1 id="singleMatchButton" type="button" data-bs-toggle="modal" data-bs-target="#singleMatchModal">SINGLE MATCH</h1>
+  <div id="dottedLine" class="d-flex align-items-center"></div>
+  <h1 id="tournamentButton" >TOURNAMENT</h1>
 </div>
+{% include 'lobby/components/single-match-modal.html' %}

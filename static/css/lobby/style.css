@@ -8,3 +8,13 @@ div#dottedLine {
     height: 60%;
     width: 0px;
 }
+
+div#modalContent {
+    background-color: #1C1A1A;
+}
+
+button#playButton {
+    height: 25vh;
+    width: 25vh;
+    border-radius: 100%;
+}
