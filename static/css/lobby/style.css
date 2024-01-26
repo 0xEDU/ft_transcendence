@@ -13,8 +13,12 @@ div#modalContent {
     background-color: #1C1A1A;
 }
 
-button#playButton {
-    height: 25vh;
-    width: 25vh;
-    border-radius: 100%;
+h3#settingName {
+    min-width: 15vw;
+    text-align: center;
+}
+
+div#playButtonDiv {
+    margin-top: 8vh;
+    margin-bottom: 6vh;
 }
