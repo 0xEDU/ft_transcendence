@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -15,6 +16,7 @@
     {% include "components/control-panel/base.html" %}
 
     {% comment %} SPA layout {% endcomment %}
+    {% comment %} Upper row {% endcomment %}
     <div class="board-row">
         <section class="empty"></section>
         <section id="kudos">
@@ -23,13 +25,13 @@
         <section class="empty"></section>
         <section class="empty"></section>
     </div>
-
+    
+    {% comment %} Middle row {% endcomment %}
     <div class="board-row">
         <section id="stats">
             {% include "stats/base.html" %}
         </section>
         <section id="profile">
-            {% comment %} <h1>profile section</h1> {% endcomment %}
             {% include "soninha/partials/user.html" %}
         </section>
         <section id="lobby">
@@ -39,11 +41,11 @@
             <h1>arena section</h1>
         </section>
     </div>
-
+    
+    {% comment %} Lower row {% endcomment %}
     <div class="board-row">
         <section class="empty"></section>
         <section id="login">
-            <h1>login section</h1>
             {% include "components/pong-logo.html" %}
             {% include "components/wood-grain-panel.html" %}
         </section>
@@ -51,8 +53,7 @@
         <section class="empty"></section>
     </div>
 
-
-    <a id="redirectUrl" style="display: none;">{{ redirect_url }}</a>
+    {% comment %} Scripts {% endcomment %}
     <script type="module" src="{% static 'js/control-panel.js' %}"></script>
 </body>
 </html>
