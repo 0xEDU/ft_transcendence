@@ -27,6 +27,38 @@ div#control-panel.shrink {
     padding: 0;
 }
 
-div#control-panel.shrink .right-side svg:hover {
+div#control-panel .right-side svg circle:hover {
     cursor: pointer;
+}
+
+@keyframes moveCircle {
+    from {
+        /* Initial state */
+        cy: 54; /* cima */
+    }
+
+    to {
+        /* Final state */
+        cy: 147; /* baixo */
+    }
+}
+
+@keyframes moveCircleReverse {
+    from {
+        /* Initial state */
+        cy: 147; /* baixo */
+    }
+    
+    to {
+        /* Final state */
+        cy: 54; /* cima */
+    }
+}
+
+div#control-panel .right-side svg circle.peg-state-off {
+    animation: moveCircle 1s ease-in-out;
+}
+
+div#control-panel .right-side svg circle.peg-state-on {
+    animation: moveCircleReverse 1s ease-in-out;
 }

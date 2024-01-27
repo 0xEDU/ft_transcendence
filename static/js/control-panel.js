@@ -39,17 +39,23 @@ function toggleControlPanelSize(controlPanel) {
                     element.style.display = 'block';
                 }
             }, 200 * index)
-            // element.addEventListener('transitionend', function() {
-            //     // Toggles the property "display: none;"
-            //     // That is because the vanishing animation makes the switches invisible, BUT they still take up space in the DOM.
-            //     // It is then necessary to toggle the "display" property
-            //     if (element.classList.contains('hiding')) 
-            //         element.style.display = 'none';
-            //     else
-            //     element.style.display = 'block';
-            // })
         }
     }, { once: true })
+}
+
+function togglePowerSwitchPegState() {
+    let togglePeg = document.querySelector('div.switch-component[name="login"]')
+    let circle = togglePeg.querySelector("div#control-panel .right-side svg circle")
+
+    if (state.isLoggedIn) {
+        circle.classList.remove("peg-state-off");
+        circle.classList.add("peg-state-on");
+        circle.setAttribute('cy', '54');
+    } else {
+        circle.classList.remove("peg-state-on");
+        circle.classList.add("peg-state-off");
+        circle.setAttribute('cy', '147');
+    }
 }
 
 // Handles main navigation logic of our SPA
@@ -63,39 +69,35 @@ document.addEventListener('DOMContentLoaded', function () {
     // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
     state.isLoggedIn = (document.getElementById('userImage') !== null);
 
-    // TODO: REMOVER
-    state.isLoggedIn = true;
-
     scrollToSection("login", "instant");
     if (state.isLoggedIn === true) {
         toggleControlPanelSize(controlPanel);
+        togglePowerSwitchPegState()
         scrollToSection("profile");
     }
 
     // Setup of navigation via control panel
     controlPanel.addEventListener('click', function(event) {
         // Find the closest switch element or null if not found
-        var clickedSwitch = event.target.closest('.switch-component');
+        var clickedSwitch = event.target.closest('div#control-panel .right-side svg circle');
 
         if (clickedSwitch) {
             // Extract the switch name from the data attribute or any other identifier
-            var clickedSwitchName = clickedSwitch.getAttribute('name');
+            var clickedSwitchName = clickedSwitch.closest('.switch-component').getAttribute('name');
 
             if (clickedSwitchName == "login") {
                 if (state.isLoggedIn == false) {
                     // Do the authentication magic
                     // opens the link to the intra login page in the current window
-                    // window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
-
-                    // TODO: remover!!!
-                    location.reload();
+                    window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
                 }
                 else {
                     // Do the logging out magic
                     state.isLoggedIn = false;
+                    togglePowerSwitchPegState()
                     toggleControlPanelSize(controlPanel)
-                    // fetch("/auth/logout")
-                    // .then(() => emptyElement('userDiv'));
+                    fetch("/auth/logout")
+                    .then(() => emptyElement('userDiv'));
                     scrollToSection("login")
                 }
             }
