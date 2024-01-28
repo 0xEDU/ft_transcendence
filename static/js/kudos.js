@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	function updateEmojiCarousel() {
 		const emoji = emojis[currentEmojiIndex];
 		emojiCarousel.innerHTML = `<div class="carousel-item active">MADE WITH { ${emoji} } </div>`;
-		currentEmojiIndex = (currentEmojiIndex + 1) % emojis.length;
+		currentEmojiIndex = Math.floor(Math.random() * emojis.length);
 	}
 
 	function updateNameCarousel() {
 		const person = people[currentNameIndex];
 		nameCarousel.innerHTML = `<div class="carousel-item active">BY { <span class="name">${person.name}</span> <img src="${person.image}" alt="${person.name}'s picture"> }</div>`;
-		currentNameIndex = (currentNameIndex + 1) % people.length;
+		currentNameIndex = Math.floor(Math.random() * people.length);
 	}
 
 	updateEmojiCarousel();
