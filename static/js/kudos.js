@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		{ name: 'etachott', image: 'static/images/etachott.jpeg' },
 		{ name: 'feralves', image: 'static/images/feralves.jpeg' },
 		{ name: 'guribeir', image: 'static/images/guribeir.png' },
-		// { name: 'roaraujo', image: 'static/images/roaraujo.jpeg' },
-		// { name: 'viferrei', image: 'static/images/viferrei.jpeg' },
+		{ name: 'roaraujo', image: 'static/images/roaraujo.jpeg' },
+		{ name: 'viferrei', image: 'static/images/viferrei.jpeg' },
 	];
 
 	let pickedEmojisHistory = [];
