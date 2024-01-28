@@ -1,0 +1,19 @@
+{% load static i18n %}
+<link rel="stylesheet" href="{% static 'css/components/kudos.css' %}" />
+
+<!-- <div class="kudosWrapper">
+	<div id="emojiCarousel" class="carousel"></div>
+	<div id="nameCarousel" class="carousel"></div>
+</div> -->
+
+<div class="kudosWrapper">
+	<div id="emojiCarousel" class="carousel">
+	  <h1>MADE WITH <span class="emoji-slot">❤️</span></h1>
+	</div>
+	<div id="nameCarousel" class="carousel">
+	  <h1>BY <span class="name-slot">roaraujo</span></h1>
+	  <img class="profile-pic" src="static/images/roaraujo.jpeg" alt="Profile Picture"> <!-- Imagem inicial -->
+	</div>
+</div>
+
+<script type="module" src="{% static 'js/kudos.js' %}"></script>
