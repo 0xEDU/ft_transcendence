@@ -1,0 +1,48 @@
+.kudosWrapper {
+	display: flex;
+	flex-direction: column;
+	height: 80%;
+	color: var(--WHITE);
+	margin-top: 15vh;
+	margin-left: 25vw;
+}
+
+.carousel {
+	font-size: 6vw;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+  
+.carousel-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 1s ease-in-out;
+	margin: 10px 0;
+}
+
+	.carousel-item.active {
+	opacity: 1;
+}
+
+.emoji {
+	font-size: 3rem;
+	margin: 10px 0;
+}
+
+.name {
+	font-size: 6vw;
+	margin: 2vw 0;
+}
+  
+.carousel-item img {
+	width: 9vw;
+	height: 9vw;
+	object-fit: cover;
+	border-radius: 5%; 
+	margin: 10px 0;
+}
