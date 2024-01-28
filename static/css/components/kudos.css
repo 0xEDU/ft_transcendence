@@ -1,21 +1,15 @@
 .kudosWrapper {
 	display: flex;
 	flex-direction: column;
-	font-weight: bold;
 	height: 80%;
-	color: white;
+	color: var(--WHITE);
 	margin-top: 15vh;
 	margin-left: 25vw;
-}
-
-#emojiCarousel {
-	margin-left: -2vw;
 }
 
 .carousel {
 	font-size: 6vw;
 	display: flex;
-	font-weight: bold;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
