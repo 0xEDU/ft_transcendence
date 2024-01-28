@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const emojiCarousel = document.getElementById('emojiCarousel');
 	const nameCarousel = document.getElementById('nameCarousel');
   
-	const emojis = ['❤️', '🤖', '🧋','💛', '🤌🏾', '🧡', '🦾', '🥵'];
+	const emojis = ['❤️', '🤖', '🧋','💛', '🤌🏾', '🧡', '🩸', '🦾', '🥵'];
 	const people = [
 		{ name: 'etachott', image: 'static/images/etachott.jpeg' },
 		{ name: 'feralves', image: 'static/images/feralves.jpeg' },
