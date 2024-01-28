@@ -1,14 +1,18 @@
 .kudosWrapper {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 	font-weight: bold;
 	height: 80%;
 	color: white;
-  }
+	margin-top: 15vh;
+	margin-left: 25vw;
+}
 
-  .carousel {
+#emojiCarousel {
+	margin-left: -2vw;
+}
+
+.carousel {
 	font-size: 6vw;
 	display: flex;
 	font-weight: bold;
@@ -17,7 +21,7 @@
 	justify-content: center;
 }
   
-  .carousel-item {
+.carousel-item {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -26,38 +30,25 @@
 	transition: opacity 1s ease-in-out;
 	margin: 10px 0;
 }
-  
-  .carousel-item.active {
+
+	.carousel-item.active {
 	opacity: 1;
 }
 
-  .emoji {
+.emoji {
 	font-size: 3rem;
 	margin: 10px 0;
 }
 
-  .name {
+.name {
 	font-size: 6vw;
 	margin: 2vw 0;
 }
   
-  /* Responsive image styling */
-  .carousel-item img {
-	width: 150px;
-	height: 150px;
+.carousel-item img {
+	width: 9vw;
+	height: 9vw;
 	object-fit: cover;
 	border-radius: 5%; 
 	margin: 10px 0;
-}
-  
-  /* Media query for responsiveness on smaller screens */
-  @media (max-width: 768px) {
-	.name, .emoji {
-	  font-size: 2rem; /* Smaller font size on mobile devices */
-	}
-  
-	.carousel-item img {
-	  width: 60px; /* Smaller images on mobile devices */
-	  height: 60px;
-	}
 }
