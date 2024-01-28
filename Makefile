@@ -1,21 +1,25 @@
+## VARS
+PYTHON_VERSION = python3.11
+
+# Services names
 DB_SERVICE_NAME = postgres-transcendence
 APP_SERVICE_NAME = django-transcendence
 GANACHE_SERVICE_NAME = ganache-transcendence
 CONTRACT_DEPLOYER_SERVICE_NAME = contract-deployer-transcendence
 SERVICES = $(DB_SERVICE_NAME) $(APP_SERVICE_NAME) $(GANACHE_SERVICE_NAME) $(CONTRACT_DEPLOYER_SERVICE_NAME)
 
-COMPOSE_SCRIPTS_DIR = _compose_scripts
-COMPOSE_SCRIPTS = conditional-delete-container.sh \
-		conditional-delete-image.sh \
-		conditional-delete-volume.sh \
-		conditional-stop-container.sh
-DOCKER_SCRIPTS = $(addprefix $(COMPOSE_SCRIPTS_DIR)/,$(COMPOSE_SCRIPTS))
+# Scripts
+DOCKER_SCRIPTS = $(addprefix _compose_scripts/,conditional-delete-container.sh conditional-delete-image.sh conditional-delete-volume.sh conditional-stop-container.sh)
 
+# Virtual environment
 VENV_DIR = .venv
 
+# Colours
 BOLD_YELLOW = \e[1;33m
+BOLD_RED = \033[1;91m
 RESET = \e[0m
 
+## RULES
 # ALL ------------------------------------------------------------------------ #
 start: docker-compose.yml
 	docker-compose up --build --detach --force-recreate
@@ -72,6 +76,7 @@ fclean-app: clean-app
 
 frestart-app: fclean-app start-app
 
+
 # BLOCKCHAIN ----------------------------------------------------------------- #
 start-ganache: docker-compose.yml
 	docker-compose up --build --detach $(GANACHE_SERVICE_NAME)
@@ -91,7 +96,8 @@ fclean-ganache: clean-ganache
 
 frestart-ganache: fclean-ganache start-ganache
 
-# BLOCKCHAIN ----------------------------------------------------------------- #
+
+# EVEN MORE BLOCKCHAIN ------------------------------------------------------- #
 start-contract-deployer: docker-compose.yml
 	docker-compose up --build --detach $(CONTRACT_DEPLOYER_SERVICE_NAME)
 
@@ -110,6 +116,7 @@ fclean-contract-deployer: clean-contract-deployer
 
 frestart-contract-deployer: fclean-contract-deployer start-contract-deployer
 
+
 # AUXILIAR ------------------------------------------------------------------- #
 chmod-scripts: $(DOCKER_SCRIPTS)
 	chmod +x $(DOCKER_SCRIPTS)
@@ -125,10 +132,10 @@ compile-translations:
 	django-admin compilemessages
 
 check-python:
-	@command -v python3 >/dev/null 2>&1 || { echo >&2 "Python 3 is required but not installed. Aborting."; exit 1; }
+	@command -v $(PYTHON_VERSION) >/dev/null 2>&1 || { echo >&2 "❌ $(BOLD_RED)[ERROR]$(RESET) $(BOLD_YELLOW)$(PYTHON_VERSION)$(RESET) is required but not installed. $(BOLD_RED)Aborting.$(RESET)"; exit 1; }
 
 create-venv: check-python
-	python3 -m venv $(VENV_DIR)
+	$(PYTHON_VERSION) -m venv $(VENV_DIR)
 
 delete-venv:
 	rm -rf $(VENV_DIR)
