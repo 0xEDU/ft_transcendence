@@ -28,7 +28,12 @@ div#control-panel.shrink {
 }
 
 div#control-panel .right-side svg circle:hover {
-    cursor: pointer;
+    cursor: grab;
+    user-select: none;
+}
+
+div#control-panel .right-side svg circle:active {
+    cursor: grabbing;
 }
 
 @keyframes moveCircle {
