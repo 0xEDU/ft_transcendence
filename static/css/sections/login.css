@@ -1,0 +1,26 @@
+section#login {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section#login #pong-title-svg {
+    height: 30%;
+    margin-top: 2%;;
+}
+
+#wood-grain-panel {
+    background: url(../../images/woodgrain.jpg) center 70%;
+    width: 100vw;
+    height: 20vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#wood-grain-panel svg#atari-svg {
+    height: 76%;
+    margin-right: 5%;
+}
