@@ -1,24 +1,68 @@
-#switch-body {
+.switch-component {
+    height: 100%;
+    margin-right: 10%;
+
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+
+    /* DEBUGGING */
+    /* border: solid 1px magenta; */
+}
+
+.switch-component.hiding {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.switch-head {
+    height: 20%; /* This + .switch-body's height add up to 100% */
     display: flex;
+    justify-content: center;
+
+    /* DEBUGGING */
+    /* border: solid 1px plum; */
 }
 
-#switch-body .left-side {
-    justify-self: center;
-    align-self: center;
-}
-
-.switch-label svg {
-    width: 7.5vw;
-    height: 4vh;
-    min-width: 40px;
-    min-height: 8px;
-    fill: "none";
+.switch-body {
     display: flex;
+    height: 80%; /* This + .switch-head's height add up to 100% */
+
+    /* DEBUGGING */
+    /* border: solid 1px gold; */
 }
 
-#range-indicator {
-    width: 1.7vw;
-    height: 16vh;
-    min-width: 5px;
-    min-height: 45px;
+.switch-body .left-side {
+    width: 40%; /* This + .switch-body .right-side's width add up to 100% */
+
+    /* DEBUGGING */
+    /* border: solid 1px greenyellow; */
 }
+
+.switch-body .right-side {
+    width: 60%; /* This + .switch-body .left-side's width add up to 100% */
+
+    padding-top: 5%;
+    /* DEBUGGING */
+    /* border: solid 1px cyan; */
+}
+
+.range-indicator {
+    padding: 40% 0 0 20%;
+}
+
+div#on-off-labels {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+div#on-off-labels > * {
+    height: 50%;
+    padding-right: 25%;
+ 
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+ }

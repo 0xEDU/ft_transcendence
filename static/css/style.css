@@ -13,6 +13,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    font-family: 'Bakbak One', sans-serif;
 }
 
 body, html {

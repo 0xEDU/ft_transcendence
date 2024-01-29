@@ -1,6 +1,6 @@
-<div class="switch-component" name="{{ label }}">
+<div class="switch-component {% if label != "login" %}hiding{% endif %}" {% if label != "login" %}style="display:none;"{% endif %} name="{{ label }}">
     {% comment %} LABEL {% endcomment %}
-    <div class="switch-label">
+    <div class="switch-head">
         {% if label == "login" %}
             {% include "components/control-panel/switch/partials/label-login.html" %}
         {% elif label == "profile" %}
@@ -14,11 +14,7 @@
         {% endif %}
     </div>
 
-    <div id="switch-body">
-        {% comment %} RIGHT PART {% endcomment %}
-        <div class="right-side">
-            {% include "components/control-panel/switch/partials/switch-svg.html" %}
-        </div>
+    <div class="switch-body">
         {% comment %} LEFT PART {% endcomment %}
         <div class="left-side">
             {% if label == "login" %}
@@ -26,6 +22,10 @@
             {% else %}
                 {% include "components/control-panel/switch/partials/range-indicator.html" %}
             {% endif %}
+        </div>
+        {% comment %} RIGHT PART {% endcomment %}
+        <div class="right-side">
+            {% include "components/control-panel/switch/partials/switch-svg.html" %}
         </div>
     </div>
 </div>

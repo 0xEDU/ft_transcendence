@@ -5,7 +5,7 @@ const state = {
     isLoggedIn: false,
 };
 
-export default function scrollToSection(sectionName, behaviour) {
+export default function scrollToSection(sectionName, behaviour = "smooth") {
     if (typeof sectionName === 'string') {
         let targetSection = document.getElementById(sectionName);
 
@@ -26,6 +26,39 @@ export default function scrollToSection(sectionName, behaviour) {
     }
 }
 
+function toggleControlPanelSize(controlPanel) {
+    controlPanel.classList.toggle('shrink');
+    controlPanel.querySelectorAll('.switch-component').forEach(function (element, index) {
+        if (element.getAttribute('name') !== 'login') {
+            element.classList.toggle('hiding');
+            setTimeout(function () {
+                if (element.classList.contains('hiding')) {
+                    element.style.display = 'none';
+                }
+                else {
+                    element.style.display = 'block';
+                }
+            }, 200 * index)
+        }
+    }, { once: true })
+}
+
+function togglePowerSwitchPegState() {
+    let togglePeg = document.querySelector('div.switch-component[name="login"]')
+    let circle = togglePeg.querySelector("div#control-panel .right-side svg circle")
+
+    if (state.isLoggedIn) {
+        circle.classList.remove("peg-state-off");
+        circle.classList.add("peg-state-on");
+        circle.setAttribute('cy', '54');
+    } else {
+        circle.classList.remove("peg-state-on");
+        circle.classList.add("peg-state-off");
+        circle.setAttribute('cy', '147');
+    }
+}
+
+// Handles main navigation logic of our SPA
 document.addEventListener('DOMContentLoaded', function () {
     // Elements selection
     var publicArea = ["login"]
@@ -33,31 +66,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let controlPanel = document.getElementById('control-panel')
 
-    // Decide the initial positioning of viewport
+    // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
     state.isLoggedIn = (document.getElementById('userImage') !== null);
-    const defaultScreen = (state.isLoggedIn) ? "profile" : "login";
-    scrollToSection(defaultScreen);
+
+    scrollToSection("login", "instant");
+    if (state.isLoggedIn === true) {
+        toggleControlPanelSize(controlPanel);
+        togglePowerSwitchPegState()
+        scrollToSection("profile");
+    }
 
     // Setup of navigation via control panel
     controlPanel.addEventListener('click', function(event) {
         // Find the closest switch element or null if not found
-        var clickedSwitch = event.target.closest('.switch-component');
+        var clickedSwitch = event.target.closest('div#control-panel .right-side svg circle');
 
         if (clickedSwitch) {
             // Extract the switch name from the data attribute or any other identifier
-            var clickedSwitchName = clickedSwitch.getAttribute('name');
+            var clickedSwitchName = clickedSwitch.closest('.switch-component').getAttribute('name');
 
-            if (publicArea.includes(clickedSwitchName)) {
+            if (clickedSwitchName == "login") {
                 if (state.isLoggedIn == false) {
                     // Do the authentication magic
                     // opens the link to the intra login page in the current window
-                    window.location.href = document.getElementById('redirectUrl').textContent;
+                    window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
                 }
                 else {
                     // Do the logging out magic
-                    fetch("/auth/logout")
-                        .then(() => emptyElement('userDiv'));
                     state.isLoggedIn = false;
+                    togglePowerSwitchPegState()
+                    toggleControlPanelSize(controlPanel)
+                    fetch("/auth/logout")
+                    .then(() => emptyElement('userDiv'));
                     scrollToSection("login")
                 }
             }
@@ -66,5 +106,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     scrollToSection(clickedSwitchName)
             }
         }
+    });
+
+    // Reposition viewport to the current board position when windows is resized:
+    window.addEventListener('resize', function() {
+        scrollToSection(state.position, "instant")
     });
 })
