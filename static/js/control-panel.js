@@ -71,9 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     scrollToSection("login", "instant");
     if (state.isLoggedIn === true) {
-        toggleControlPanelSize(controlPanel);
-        togglePowerSwitchPegState()
-        scrollToSection("profile");
+        setTimeout(() => {
+            toggleControlPanelSize(controlPanel);
+            togglePowerSwitchPegState()
+            scrollToSection("profile");
+        }, 1000);
     }
 
     // Setup of navigation via control panel
