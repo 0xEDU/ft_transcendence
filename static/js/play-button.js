@@ -1,11 +1,12 @@
 import scrollToSection from "./control-panel.js";
 
 document.addEventListener('DOMContentLoaded', function() {
-    var playButtonSvg = document.getElementById('playButtonSvg');
-    var redCircle = document.getElementById('redCircle');
-    var modalElement = document.getElementById('singleMatchModal');
+    const playButtonSvg = document.getElementById('playButtonSvg');
+    const redCircle = document.getElementById('redCircle');
+    const modalElement = document.getElementById('singleMatchModal');
+    const singleMatchForm = document.getElementById('singleMatchForm');
     
-    var modalInstance = new bootstrap.Modal(modalElement, {
+    const modalInstance = new bootstrap.Modal(modalElement, {
         // options, if any
     });
 
@@ -17,5 +18,18 @@ document.addEventListener('DOMContentLoaded', function() {
         redCircle.setAttribute('cy', '58');
         modalInstance.hide();
         scrollToSection("arena");
+    });
+
+    singleMatchForm.addEventListener("submit", (event) => {
+        const url = "/pong/form";
+        const request = new XMLHttpRequest();
+        request.open('POST', url, true);
+        request.onload = function() {
+            console.log(request.responseText);
+        };
+        
+        request.send(new FormData(event.target));
+        event.preventDefault();
+        console.log("AQ CHEGOU")
     });
 });
