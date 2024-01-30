@@ -112,3 +112,14 @@ class GameView(View):
             "match_id": match.id
         }
         return render(request, 'pong/pages/game.html', context)
+
+class GameFormView(View):
+    """
+    This view is called when the player submits
+    the information to set the game.
+    """
+    def post(self, request, *args, **kwargs):
+        """Post method."""
+
+        print(request.POST)
+        return HttpResponse("")
