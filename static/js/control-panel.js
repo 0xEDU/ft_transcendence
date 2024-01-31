@@ -44,8 +44,8 @@ function toggleControlPanelSize(controlPanel) {
 }
 
 function togglePowerSwitchPegState() {
-    let togglePeg = document.querySelector('div.switch-component[name="login"]')
-    let circle = togglePeg.querySelector("div#control-panel .right-side svg circle")
+    let togglePeg = document.querySelector('#control-panel div.switch-component[name="login"]')
+    let circle = togglePeg.querySelector(".right-side svg circle")
 
     if (state.isLoggedIn) {
         circle.classList.remove("peg-state-off");
