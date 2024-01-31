@@ -16,7 +16,8 @@
 }
 
 .switch-head {
-    height: 20%; /* This + .switch-body's height add up to 100% */
+    height: 20%;
+    /* This + .switch-body's height add up to 100% */
     display: flex;
     justify-content: center;
 
@@ -26,21 +27,24 @@
 
 .switch-body {
     display: flex;
-    height: 80%; /* This + .switch-head's height add up to 100% */
+    height: 80%;
+    /* This + .switch-head's height add up to 100% */
 
     /* DEBUGGING */
     /* border: solid 1px gold; */
 }
 
 .switch-body .left-side {
-    width: 40%; /* This + .switch-body .right-side's width add up to 100% */
+    width: 40%;
+    /* This + .switch-body .right-side's width add up to 100% */
 
     /* DEBUGGING */
     /* border: solid 1px greenyellow; */
 }
 
 .switch-body .right-side {
-    width: 60%; /* This + .switch-body .left-side's width add up to 100% */
+    width: 60%;
+    /* This + .switch-body .left-side's width add up to 100% */
 
     padding-top: 5%;
     /* DEBUGGING */
@@ -57,37 +61,41 @@ div#on-off-labels {
     flex-direction: column;
 }
 
-div#on-off-labels > * {
+div#on-off-labels>* {
     height: 50%;
     padding-right: 25%;
- 
+
     text-align: right;
     display: flex;
     justify-content: flex-end;
     align-items: center;
- }
+}
 
- @keyframes moveCircle {
+@keyframes moveCircle {
     from {
         /* Initial state */
-        cy: 54; /* cima */
+        cy: 54;
+        /* cima */
     }
 
     to {
         /* Final state */
-        cy: 147; /* baixo */
+        cy: 147;
+        /* baixo */
     }
 }
 
 @keyframes moveCircleReverse {
     from {
         /* Initial state */
-        cy: 147; /* baixo */
+        cy: 147;
+        /* baixo */
     }
-    
+
     to {
         /* Final state */
-        cy: 54; /* cima */
+        cy: 54;
+        /* cima */
     }
 }
 
