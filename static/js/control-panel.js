@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
             toggleControlPanelSize(controlPanel);
             togglePowerSwitchPegState()
             scrollToSection("profile");
-        }, 1000);
+        }, 1000); // Wait 1 second after browser loaded to perorm animation/change screen;
     }
 
     // Setup of navigation via control panel
@@ -104,8 +104,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             if (restrictedArea.includes(clickedSwitchName)) {
-                if (state.isLoggedIn == true)
-                    scrollToSection(clickedSwitchName)
+                // if (state.isLoggedIn == true)
+                //     scrollToSection(clickedSwitchName)
+                clickedSwitch.classList.toggle("buzz")
+                setTimeout(() => {
+                    clickedSwitch.classList.toggle("buzz");
+                  }, 400);
             }
         }
     });
