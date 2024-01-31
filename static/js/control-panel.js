@@ -66,6 +66,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let controlPanel = document.getElementById('control-panel')
 
+    // Dragging logic
+    let isDragging = false;
+    let startY, currentY;
+
     // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
     state.isLoggedIn = (document.getElementById('userImage') !== null);
 
@@ -79,7 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Setup of navigation via control panel
-    controlPanel.addEventListener('click', function(event) {
+    // REFACTOR: THIS DOES NOT NEED TO BE DECLARED HERE so long as the script for this is placed at the end of the HTML file, or load it with the 'defer' attribute.
+    controlPanel.addEventListener('click', function (event) {
         // Find the closest switch element or null if not found
         var clickedSwitch = event.target.closest('div#control-panel .right-side svg circle');
 
@@ -99,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     togglePowerSwitchPegState()
                     toggleControlPanelSize(controlPanel)
                     fetch("/auth/logout")
-                    .then(() => emptyElement('userDiv'));
+                        .then(() => emptyElement('userDiv'));
                     scrollToSection("login")
                 }
             }
@@ -109,9 +114,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 clickedSwitch.classList.toggle("buzz")
                 setTimeout(() => {
                     clickedSwitch.classList.toggle("buzz");
-                  }, 400);
+                }, 400);
             }
         }
     });
 
-})
+    // Mouse down event for starting the drag
+    let pegs = document.querySelectorAll('#control-panel div.switch-component .right-side svg circle')
+    pegs.forEach(peg => {
+        peg.addEventListener('mousedown', (e) => {
+            console.log("mouse down")
+            isDragging = true;
+            startY = e.clientY;
+        })
+    })
+
+    // Mouse move event for updating the drag position
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            console.log("is dragging")
+            console.log(e)
+            currentY = e.clientY;
+            const deltaY = currentY - startY;
+            // You can do something with deltaY, e.g., update button's position
+            console.log(`Dragging vertically by ${deltaY}px`);
+        }
+    });
+
+    // Mouse up event for ending the drag
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            console.log('Drag ended');
+        }
+    });
+
+    })
