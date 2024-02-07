@@ -21,15 +21,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     singleMatchForm.addEventListener("submit", (event) => {
-        const url = "/pong/form";
-        const request = new XMLHttpRequest();
-        request.open('POST', url, true);
-        request.onload = function() {
-            console.log(request.responseText);
-        };
-        
-        request.send(new FormData(event.target));
         event.preventDefault();
-        console.log("AQ CHEGOU")
+        const url = "/pong/form";
+        const formData = new FormData(event.target);
+
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.log("Error:", response);
+                return Promise.reject(response);
+            }
+            return response.text();
+        })
+        .then(responseText => {
+            console.log("Response:", responseText);
+        })
+        .catch(error => console.error('Error:', error));
     });
 });

@@ -122,4 +122,9 @@ class GameFormView(View):
         """Post method."""
 
         print(request.POST)
+        try:
+            player1 = User.objects.get(login_intra=request.POST['player1Name'])
+            player2 = User.objects.get(login_intra=request.POST['player2Name'])
+        except User.DoesNotExist:
+            return HttpResponse("Invalid user", status=400)
         return HttpResponse("")
