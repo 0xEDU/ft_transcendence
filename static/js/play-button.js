@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 deleteElement("playerNotFound");
             }
             modalInstance.hide();
+            const secondPlayerInput = document.getElementById('secondPlayer');
+            secondPlayerInput.value = '';
             scrollToSection("arena");
             return response.text();
         })
@@ -47,9 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             error.text().then(errorBody => {
                 if (!hasElement("playerInputDiv", "playerNotFound")) {
-                    appendElement("secondPlayer", errorBody)
+                    appendElement("secondPlayer", errorBody);
                 }
-            })
+            });
         });
     });
 });
