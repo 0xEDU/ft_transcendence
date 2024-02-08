@@ -1,4 +1,7 @@
 import scrollToSection from "./control-panel.js";
+import appendElement from "./tinyDOM/appendElement.js";
+import deleteElement from "./tinyDOM/deleteElement.js";
+import hasElement from "./tinyDOM/hasElement.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const playButtonSvg = document.getElementById('playButtonSvg');
@@ -16,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     playButtonSvg.addEventListener('mouseup', function() {
         redCircle.setAttribute('cy', '58');
-        modalInstance.hide();
-        scrollToSection("arena");
     });
 
     singleMatchForm.addEventListener("submit", (event) => {
@@ -31,14 +32,24 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => {
             if (!response.ok) {
-                console.log("Error:", response);
                 return Promise.reject(response);
             }
+            if (hasElement("playerInputDiv", "playerNotFound")) {
+                deleteElement("playerNotFound");
+            }
+            modalInstance.hide();
+            scrollToSection("arena");
             return response.text();
         })
         .then(responseText => {
             console.log("Response:", responseText);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            error.text().then(errorBody => {
+                if (!hasElement("playerInputDiv", "playerNotFound")) {
+                    appendElement("secondPlayer", errorBody)
+                }
+            })
+        });
     });
 });
