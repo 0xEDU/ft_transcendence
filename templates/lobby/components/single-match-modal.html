@@ -47,12 +47,12 @@
                   <label class="form-check-label" for="map2Radio">MAP 2</label>
                 </div>
               </div>
-              <div id="playerInputDiv" class="d-flex flex-column align-items-center">
-                <input type="text" class="form-control" id="firstPlayer" placeholder={{user_display_name}} disabled/>
-                <input type="hidden" name="player1Name" value={{user_display_name}}>
-                <input type="text" class="form-control" id="secondPlayer" name="player2Name" placeholder="Player 2"/>
-              </div>
             </div>
+          </div>
+          <div id="playerInputDiv" class="d-flex flex-row justify-content-between w-100">
+            <input type="text" class="form-control" id="firstPlayer" placeholder={{user_display_name}} disabled/>
+            <input type="hidden" name="player1Name" value={{user_display_name}}>
+            <input type="text" class="form-control" id="secondPlayer" name="player2Name" placeholder="Player 2"/>
           </div>
           <button type="submit" id="playButtonDiv" class=" btn d-flex w-100 justify-content-center">
               {% include 'lobby/components/play-button.html' %}
