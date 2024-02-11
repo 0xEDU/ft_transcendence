@@ -8,11 +8,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const redCircle = document.getElementById('redCircle');
     const modalElement = document.getElementById('singleMatchModal');
     const singleMatchForm = document.getElementById('singleMatchForm');
-    const fourPlayersRadio = document.getElementById('fourPlayersRadio');
     const twoPlayersRadio = document.getElementById('twoPlayersRadio');
+    const fourPlayersRadioSM = document.getElementById('fourPlayersRadioSM');
+    const fourPlayersRadioT = document.getElementById('fourPlayersRadioT');
+    const eightPlayersRadio = document.getElementById('eightPlayersRadio');
     const secondPlayerInput = document.getElementById('secondPlayer');
     const thirdPlayerInput = document.getElementById('thirdPlayer');
     const fourthPlayerInput = document.getElementById('fourthPlayer');
+    const player3And4Div = document.getElementById('player3And4Div');
+    const player5And6Div = document.getElementById('player5And6Div');
+    const player7And8Div = document.getElementById('player7And8Div');
     
     
     twoPlayersRadio.addEventListener('change', function() {
@@ -23,12 +28,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    fourPlayersRadio.addEventListener('change', function() {
-        if (fourPlayersRadio.checked) {
+    fourPlayersRadioSM.addEventListener('change', function() {
+        if (fourPlayersRadioSM.checked) {
             player3And4Div.classList.remove('visually-hidden');
         } 
     })
     
+    fourPlayersRadioT.addEventListener('change', function() {
+        if (fourPlayersRadioT.checked) {
+            player5And6Div.classList.add('visually-hidden');
+            player7And8Div.classList.add('visually-hidden');
+        } 
+    })
+
+    eightPlayersRadio.addEventListener('change', function() {
+        if (eightPlayersRadio.checked) {
+            player5And6Div.classList.remove('visually-hidden');
+            player7And8Div.classList.remove('visually-hidden');
+        }
+    })
+
     const modalInstance = new bootstrap.Modal(modalElement, {
         // options, if any
     });
