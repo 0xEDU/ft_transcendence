@@ -10,14 +10,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const singleMatchForm = document.getElementById('singleMatchForm');
     const fourPlayersRadio = document.getElementById('fourPlayersRadio');
     const twoPlayersRadio = document.getElementById('twoPlayersRadio');
+    const secondPlayerInput = document.getElementById('secondPlayer');
+    const thirdPlayerInput = document.getElementById('thirdPlayer');
+    const fourthPlayerInput = document.getElementById('fourthPlayer');
     
     
     twoPlayersRadio.addEventListener('change', function() {
         if (twoPlayersRadio.checked) {
-            const thirdPlayer = document.getElementById('thirdPlayer');
-            const fourthPlayer = document.getElementById('fourthPlayer');
-            thirdPlayer.value = '';
-            fourthPlayer.value = '';
+            thirdPlayerInput.value = '';
+            fourthPlayerInput.value = '';
             player3And4Div.classList.add('visually-hidden');
         }
     })
@@ -53,12 +54,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) {
                 return Promise.reject(response);
             }
-            if (hasElement("playerButtonDiv", "playerNotFound")) {
+            if (hasElement("playButtonDiv", "playerNotFound")) {
                 deleteElement("playerNotFound");
             }
             modalInstance.hide();
-            const secondPlayerInput = document.getElementById('secondPlayer');
             secondPlayerInput.value = '';
+            thirdPlayerInput.value = '';
+            fourthPlayerInput.value = '';
             scrollToSection("arena");
             return response.text();
         })
@@ -67,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             error.text().then(errorBody => {
-                if (!hasElement("playerButtonDiv", "playerNotFound")) {
+                if (!hasElement("playButtonDiv", "playerNotFound")) {
                     appendElement("playButtonSvg", errorBody);
                 }
             });
