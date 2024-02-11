@@ -8,6 +8,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const redCircle = document.getElementById('redCircle');
     const modalElement = document.getElementById('singleMatchModal');
     const singleMatchForm = document.getElementById('singleMatchForm');
+    const fourPlayersRadio = document.getElementById('fourPlayersRadio');
+    const twoPlayersRadio = document.getElementById('twoPlayersRadio');
+    
+    
+    twoPlayersRadio.addEventListener('change', function() {
+        if (twoPlayersRadio.checked) {
+            const thirdPlayer = document.getElementById('thirdPlayer');
+            const fourthPlayer = document.getElementById('fourthPlayer');
+            thirdPlayer.value = '';
+            fourthPlayer.value = '';
+            player3And4Div.classList.add('visually-hidden');
+        }
+    })
+
+    fourPlayersRadio.addEventListener('change', function() {
+        if (fourPlayersRadio.checked) {
+            player3And4Div.classList.remove('visually-hidden');
+        } 
+    })
     
     const modalInstance = new bootstrap.Modal(modalElement, {
         // options, if any
@@ -34,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) {
                 return Promise.reject(response);
             }
-            if (hasElement("playerInputDiv", "playerNotFound")) {
+            if (hasElement("playerButtonDiv", "playerNotFound")) {
                 deleteElement("playerNotFound");
             }
             modalInstance.hide();
@@ -48,8 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             error.text().then(errorBody => {
-                if (!hasElement("playerInputDiv", "playerNotFound")) {
-                    appendElement("secondPlayer", errorBody);
+                if (!hasElement("playerButtonDiv", "playerNotFound")) {
+                    appendElement("playButtonSvg", errorBody);
                 }
             });
         });
