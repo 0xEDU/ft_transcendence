@@ -49,10 +49,24 @@
               </div>
             </div>
           </div>
-          <div id="playerInputDiv" class="d-flex flex-row justify-content-between w-100">
-            <input type="text" class="form-control" id="firstPlayer" placeholder={{user_display_name}} disabled/>
-            <input type="hidden" name="player1Name" value={{user_display_name}}>
-            <input type="text" class="form-control" id="secondPlayer" name="player2Name" placeholder="Player 2"/>
+          <div id="playerInputDiv" class="container-fluid my-5">
+            <div class="row row-cols-2">
+              <div class="col">
+                <input type="text" class="form-control" id="firstPlayer" placeholder={{user_display_name}} disabled/>
+                <input type="hidden" name="player1Name" value={{user_display_name}}>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="secondPlayer" name="player2Name" placeholder="Player 2"/>
+              </div>
+            </div>
+            <div id="player3And4Div" class="row row-cols-2 visually-hidden">
+              <div class="col">
+                <input type="text" class="form-control" id="thirdPlayer" name="player3Name" placeholder="Player 3"/>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="fourthPlayer" name="player4Name" placeholder="Player 4"/>
+              </div>
+            </div>
           </div>
           <button type="submit" id="playButtonDiv" class=" btn d-flex w-100 justify-content-center">
               {% include 'lobby/components/play-button.html' %}
