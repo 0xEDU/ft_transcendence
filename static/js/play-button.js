@@ -52,48 +52,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const twoPlayersRadio = document.getElementById('twoPlayersRadio');
     const eightPlayersRadio = document.getElementById('eightPlayersRadio');
 
-    const secondPlayerInput = document.getElementById('secondPlayer');
-    const thirdPlayerInput = document.getElementById('thirdPlayer');
-    const fourthPlayerInput = document.getElementById('fourthPlayer');
-    const fifthPlayerInput = document.getElementById('fifthPlayer');
-    const sixthPlayerInput = document.getElementById('sixthPlayer');
-    const seventhPlayerInput = document.getElementById('seventhPlayer');
-    const eighthPlayerInput = document.getElementById('eighthPlayer');
+    const playerInputIds = ['secondPlayer', 'thirdPlayer', 'fourthPlayer', 'fifthPlayer', 'sixthPlayer', 'seventhPlayer', 'eighthPlayer'];
+    const playerInputs = []
+    playerInputIds.forEach(id => playerInputs.push({id: id, element: document.getElementById(id)}));
+    const findPlayerInput = (id) => playerInputs.find(player => player.id === id).element;
+    const clearPlayerInputs = (...inputs) => inputs.forEach(input => findPlayerInput(input).value = '');
 
-    const player3And4Div = document.getElementById('player3And4Div');
-    const player5And6Div = document.getElementById('player5And6Div');
-    const player7And8Div = document.getElementById('player7And8Div');
+    const playerDivNames = ['player3And4Div', 'player5And6Div', 'player7And8Div'];
+    const playerDivs = [];
+    playerDivNames.forEach(id => playerDivs.push({id: id, element: document.getElementById(id)}));
+    const findPlayerDiv = (id) => playerDivs.find(div => div.id === id).element;
+    const addHiddenClass = (...divs) => divs.forEach(div => findPlayerDiv(div).classList.add('visually-hidden'));
+    const removeHiddenClass = (...divs) => divs.forEach(div => findPlayerDiv(div).classList.remove('visually-hidden'));
     
     
     twoPlayersRadio.addEventListener('change', function() {
         if (twoPlayersRadio.checked) {
-            thirdPlayerInput.value = '';
-            fourthPlayerInput.value = '';
-            player3And4Div.classList.add('visually-hidden');
+            clearPlayerInputs('thirdPlayer', 'fourthPlayer');
+            addHiddenClass('player3And4Div');
         }
     })
 
     smObj.fourPlayersRadio.addEventListener('change', function() {
-        if (fourPlayersRadioSM.checked) {
-            player3And4Div.classList.remove('visually-hidden');
+        if (smObj.fourPlayersRadio.checked) {
+            removeHiddenClass('player3And4Div');
         } 
     })
     
     tObj.fourPlayersRadio.addEventListener('change', function() {
-        if (fourPlayersRadioT.checked) {
-            fifthPlayerInput.value = '';
-            sixthPlayerInput.value = '';
-            seventhPlayerInput.value = '';
-            eighthPlayerInput.value = '';
-            player5And6Div.classList.add('visually-hidden');
-            player7And8Div.classList.add('visually-hidden');
+        if (tObj.fourPlayersRadio.checked) {
+            clearPlayerInputs('fifthPlayer', 'sixthPlayer', 'seventhPlayer', 'eighthPlayer');
+            addHiddenClass('player5And6Div', 'player7And8Div');
         } 
     })
 
     eightPlayersRadio.addEventListener('change', function() {
         if (eightPlayersRadio.checked) {
-            player5And6Div.classList.remove('visually-hidden');
-            player7And8Div.classList.remove('visually-hidden');
+            removeHiddenClass('player5And6Div', 'player7And8Div');
         }
     })
 
