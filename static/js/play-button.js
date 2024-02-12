@@ -109,9 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 deleteElement("playerNotFound");
             }
             modalObj.modalInstance.hide();
-            secondPlayerInput.value = '';
-            thirdPlayerInput.value = '';
-            fourthPlayerInput.value = '';
+            clearPlayerInputs('secondPlayer', 'thirdPlayer', 'fourthPlayer');
             scrollToSection("arena");
             return response.text();
         })
