@@ -112,3 +112,21 @@ class GameView(View):
             "match_id": match.id
         }
         return render(request, 'pong/pages/game.html', context)
+
+class GameFormView(View):
+    """
+    This view is called when the player submits
+    the information to set the game.
+    """
+    def post(self, request, *args, **kwargs):
+        """Post method."""
+
+        print(request.POST)
+        try:
+            player1 = User.objects.get(login_intra=request.POST['player1Name'])
+            player2 = User.objects.get(login_intra=request.POST['player2Name'])
+        except User.DoesNotExist:
+            return render(request, 'components/errors/player_not_registered.html', {
+                'error_message': "Invalid user"
+            }, status=400)
+        return HttpResponse("")

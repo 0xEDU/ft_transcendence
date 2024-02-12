@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
     <title>PONG</title>
 </head>
 <body style="width: 4vh">
@@ -38,7 +39,7 @@
             {% include "soninha/partials/user.html" %}
         </section>
         <section id="lobby">
-            <h1>lobby section</h1>
+            {% include "lobby/base.html" %}
         </section>
         <section id="arena">
             <h1>arena section</h1>
@@ -58,5 +59,6 @@
 
     {% comment %} Scripts {% endcomment %}
     <script type="module" src="{% static 'js/control-panel.js' %}"></script>
+    <script type="module" src="{% static 'js/play-button.js' %}"></script>
 </body>
 </html>
