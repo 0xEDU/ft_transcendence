@@ -15,11 +15,11 @@ services:
     networks:
       - ft_transcendence
     build: 
-      context: ./blockchain
+      context: ./truffle
     depends_on:
       - ganache-transcendence
     volumes:
-      - ./blockchain/tournament/build/contracts:/tournament/build/contracts
+      - ./truffle/tournament/build/contracts:/tournament/build/contracts
 
   postgres-transcendence:
     image: postgres:16-alpine
