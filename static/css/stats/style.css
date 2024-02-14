@@ -44,3 +44,23 @@ p#matchDate {
     width: 20vh;
     text-align: center;
 }
+
+div#tournamentCard {
+    background-color: #3a3535;
+}
+
+div#tournamentStatsDiv {
+    background-color: #3a3535;
+}
+
+img#winnerImg {
+    border: 1px solid #fcc914;
+}
+
+img#runnerUpImg {
+    border: 1px solid #f0e4e4;
+}
+
+img#thirdPlaceImg {
+    border: 1px solid #bc6b3d;
+}
