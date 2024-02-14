@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Dragging logic
     let isDragging = false;
     let startY, currentY;
+    let selectedPegToDrag;
 
     // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
     state.isLoggedIn = (document.getElementById('userImage') !== null);
@@ -111,10 +112,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (restrictedArea.includes(clickedSwitchName)) {
                 // if (state.isLoggedIn == true)
                 //     scrollToSection(clickedSwitchName)
-                clickedSwitch.classList.toggle("buzz")
-                setTimeout(() => {
-                    clickedSwitch.classList.toggle("buzz");
-                }, 400);
+
+                // activate buzzing animation (clicking does nothing!!)
+                // but i'm deactivating it for tests lel
+                // clickedSwitch.classList.toggle("buzz")
+                // setTimeout(() => {
+                //     clickedSwitch.classList.toggle("buzz");
+                // }, 400);
             }
         }
     });
@@ -123,21 +127,23 @@ document.addEventListener('DOMContentLoaded', function () {
     let pegs = document.querySelectorAll('#control-panel div.switch-component .right-side svg circle')
     pegs.forEach(peg => {
         peg.addEventListener('mousedown', (e) => {
-            console.log("mouse down")
             isDragging = true;
             startY = e.clientY;
+            selectedPegToDrag = e.target;
         })
     })
 
     // Mouse move event for updating the drag position
     document.addEventListener('mousemove', (e) => {
         if (isDragging) {
-            console.log("is dragging")
-            console.log(e)
             currentY = e.clientY;
             const deltaY = currentY - startY;
-            // You can do something with deltaY, e.g., update button's position
-            console.log(`Dragging vertically by ${deltaY}px`);
+            let pegGrooveHeight = document.querySelector('#control-panel div.switch-component .right-side').offsetHeight / 2
+            let displacementPctg = deltaY / pegGrooveHeight
+            if (displacementPctg >= 0 && displacementPctg <= 1) {
+                selectedPegToDrag.setAttribute('cy', String(54 + (147 - 54) * displacementPctg))
+            }
+
         }
     });
 
@@ -145,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('mouseup', () => {
         if (isDragging) {
             isDragging = false;
-            console.log('Drag ended');
+            selectedPegToDrag = null;
         }
     });
 
