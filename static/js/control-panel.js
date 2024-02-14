@@ -1,11 +1,11 @@
 import emptyElement from "./tinyDOM/emptyElement.js"
 
-const state = {
+export const state = {
     position: "",
     isLoggedIn: false,
 };
 
-function scrollToSection(sectionName, behaviour = "smooth") {
+export function scrollToSection(sectionName, behaviour = "smooth") {
     if (typeof sectionName === 'string') {
         let targetSection = document.getElementById(sectionName);
 
