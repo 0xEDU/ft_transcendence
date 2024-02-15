@@ -67,9 +67,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let controlPanel = document.getElementById('control-panel')
 
     // Dragging logic
-    let isDragging = false;
-    let startY, currentY;
-    let selectedPegToDrag;
+    let isDragging, activateFullMotion = false;
+    let startY, selectedPegToDrag;
 
     // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
     state.isLoggedIn = (document.getElementById('userImage') !== null);
@@ -80,12 +79,13 @@ document.addEventListener('DOMContentLoaded', function () {
             toggleControlPanelSize(controlPanel);
             togglePowerSwitchPegState()
             scrollToSection("profile");
-        }, 1000); // Wait 1 second after browser loaded to perorm animation/change screen;
+        }, 1000); // Wait 1 second after browser loaded to perform animation/change screen;
     }
 
     // Setup of navigation via control panel
     // REFACTOR: THIS DOES NOT NEED TO BE DECLARED HERE so long as the script for this is placed at the end of the HTML file, or load it with the 'defer' attribute.
     controlPanel.addEventListener('click', function (event) {
+        console.log("this was a freaking click")
         // Find the closest switch element or null if not found
         var clickedSwitch = event.target.closest('div#control-panel .right-side svg circle');
 
@@ -127,32 +127,48 @@ document.addEventListener('DOMContentLoaded', function () {
     let pegs = document.querySelectorAll('#control-panel div.switch-component .right-side svg circle')
     pegs.forEach(peg => {
         peg.addEventListener('mousedown', (e) => {
+            console.log("this was a freaking mousedown")
             isDragging = true;
+            document.body.style.cursor = 'grabbing'
             startY = e.clientY;
             selectedPegToDrag = e.target;
+            selectedPegToDrag.classList.remove('performFullMotion')
+            selectedPegToDrag.classList.remove('returnToTop')
         })
     })
 
     // Mouse move event for updating the drag position
     document.addEventListener('mousemove', (e) => {
         if (isDragging) {
-            currentY = e.clientY;
+            console.log("this was a freaking mousemove")
+            let currentY = e.clientY;
             const deltaY = currentY - startY;
             let pegGrooveHeight = document.querySelector('#control-panel div.switch-component .right-side').offsetHeight / 2
             let displacementPctg = deltaY / pegGrooveHeight
-            if (displacementPctg >= 0 && displacementPctg <= 1) {
-                selectedPegToDrag.setAttribute('cy', String(54 + (147 - 54) * displacementPctg))
+            activateFullMotion = false
+            if (displacementPctg >= 0 && displacementPctg <= 0.9) {
+                selectedPegToDrag.setAttribute('cy', String(54 + displacementPctg * (147 - 54)))
+                if (displacementPctg > 0.5)
+                    activateFullMotion = true
             }
-
         }
     });
 
     // Mouse up event for ending the drag
     document.addEventListener('mouseup', () => {
+        console.log("this was a freaking mouseup")
         if (isDragging) {
             isDragging = false;
-            selectedPegToDrag = null;
+            document.body.style.cursor = 'default'
+            if (activateFullMotion) {
+                selectedPegToDrag.classList.add('performFullMotion')
+            } else {
+                selectedPegToDrag.classList.add('returnToTop')
+            }
+            setTimeout(() => {
+                selectedPegToDrag.setAttribute('cy', '54')
+            }, 300);
         }
     });
-
-    })
+    
+})
