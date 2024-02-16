@@ -99,6 +99,16 @@ div#control-panel .right-side svg circle.performIncompleteMotion {
     animation: rangeSwitchIncompleteMotion 0.4s;
 }
 
+@keyframes rangeSwitchReverseIncompleteMotion {
+    0% { cy: 147; }
+    50% { cy: 121; }
+    100% { cy: 147; }
+}
+
+div#control-panel .right-side svg circle.performReverseIncompleteMotion {
+    animation: rangeSwitchReverseIncompleteMotion 0.4s;
+}
+
 @keyframes rangeSwitchFullMotion {
     50% { cy: 147; }
     100% { cy: 54; }

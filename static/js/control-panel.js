@@ -73,39 +73,57 @@ document.addEventListener('DOMContentLoaded', function () {
     if (state.isLoggedIn === true) {
         setTimeout(() => {
             toggleControlPanelSize(controlPanel);
-            togglePowerSwitchPegState()
+            togglePowerSwitchPegState();
             scrollToSection("profile");
         }, 1000); // Wait 1 second after browser loaded to perform animation/change screen;
     }
 
     // Setup of navigation via control panel
-    // REFACTOR: THIS DOES NOT NEED TO BE DECLARED HERE so long as the script for this is placed at the end of the HTML file, or load it with the 'defer' attribute.
+    // If a peg is merely clicked, it shouldn't scroll anywhere, and an animation is triggered indicating that further action should be performed.
     controlPanel.addEventListener('click', function (event) {
         // Find the closest switch element or null if not found
         var clickedSwitch = event.target.closest('div#control-panel .right-side svg circle');
 
         if (clickedSwitch) {
-            // Extract the switch name from the data attribute or any other identifier
-            var clickedSwitchName = clickedSwitch.closest('.switch-component').getAttribute('name');
-
-            if (clickedSwitchName == "login") {
-                if (state.isLoggedIn == false) {
-                    // Do the authentication magic
-                    // opens the link to the intra login page in the current window
-                    window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
-                }
-                else {
-                    // Do the logging out magic
-                    state.isLoggedIn = false;
-                    togglePowerSwitchPegState()
-                    toggleControlPanelSize(controlPanel)
-                    fetch("/auth/logout")
-                        .then(() => emptyElement('userDiv'));
-                    scrollToSection("login")
-                }
+            let switchName = clickedSwitch.closest('.switch-component').getAttribute('name')
+            if (switchName == 'login') {
+                clickedSwitch.classList.remove("peg-state-on");
+                clickedSwitch.classList.remove("peg-state-off");
+                if (state.isLoggedIn == true)
+                    clickedSwitch.classList.add("performIncompleteMotion")
+                else
+                    clickedSwitch.classList.add("performReverseIncompleteMotion")
+            } else {
+                clickedSwitch.classList.add("performIncompleteMotion")
             }
+            setTimeout(() => {
+                clickedSwitch.classList.remove("performIncompleteMotion");
+                clickedSwitch.classList.remove("performReverseIncompleteMotion");
+            }, 400);
         }
     });
+
+/*
+    // Extract the switch name from the data attribute or any other identifier
+    var clickedSwitchName = clickedSwitch.closest('.switch-component').getAttribute('name');
+
+    if (clickedSwitchName == "login") {
+        if (state.isLoggedIn == false) {
+            // Do the authentication magic
+            // opens the link to the intra login page in the current window
+            window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
+        }
+        else {
+            // Do the logging out magic
+            state.isLoggedIn = false;
+            togglePowerSwitchPegState()
+            toggleControlPanelSize(controlPanel)
+            fetch("/auth/logout")
+                .then(() => emptyElement('userDiv'));
+            scrollToSection("login")
+        }
+    }
+*/
 
     // Mouse down event for starting the drag
     let pegs = document.querySelectorAll('#control-panel div.switch-component .right-side svg circle')
@@ -126,8 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (clicked) {
             let currentY = e.clientY;
             deltaY = currentY - startY;
-            if (Math.abs(deltaY) > 5)
-                isDragging = true;
+            isDragging = (Math.abs(deltaY) > 5)
         }
         if (isDragging) {
             let pegGrooveHeight = document.querySelector('#control-panel div.switch-component .right-side').offsetHeight / 2
@@ -141,31 +158,28 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Mouse up event for ending the drag
-    pegs.forEach(peg => {
-        peg.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                if (activateFullMotion) {
-                    selectedPegToDrag.classList.add('performFullMotion')
-                    setTimeout(() => {
-                        scrollToSection(selectedPegToDrag.closest('.switch-component').getAttribute('name'))
-                    }, 500);
-                } else {
-                    selectedPegToDrag.classList.add('returnToTop')
-                }
-            } else {
-                selectedPegToDrag.classList.add("performIncompleteMotion")
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            if (activateFullMotion) {
+                selectedPegToDrag.classList.add('performFullMotion')
                 setTimeout(() => {
-                    selectedPegToDrag.classList.remove("performIncompleteMotion");
-                }, 400);
+                    scrollToSection(selectedPegToDrag.closest('.switch-component').getAttribute('name'))
+                }, 500);
+            } else {
+                selectedPegToDrag.classList.add('returnToTop')
             }
-            activateFullMotion = false
-            setTimeout(() => {
-                selectedPegToDrag.setAttribute('cy', '54')
-            }, 300);
-            clicked = false
-            document.body.style.cursor = 'auto'
-        });
-    })
-    
-})
+        }
+        setTimeout(() => {
+            if (selectedPegToDrag) {
+                if (state.isLoggedIn)
+                    selectedPegToDrag.setAttribute('cy', '54')
+                else
+                    selectedPegToDrag.setAttribute('cy', '147')
+            }
+        }, 300);
+        activateFullMotion = false
+        clicked = false
+        document.body.style.cursor = 'auto'
+    });
+});
