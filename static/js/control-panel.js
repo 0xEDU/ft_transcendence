@@ -60,14 +60,10 @@ function togglePowerSwitchPegState() {
 
 // Handles main navigation logic of our SPA
 document.addEventListener('DOMContentLoaded', function () {
-    // Elements selection
-    var publicArea = ["login"]
-    var restrictedArea = ["profile", "stats", "lobby", "kudos"]
-
     let controlPanel = document.getElementById('control-panel')
 
     // Dragging logic
-    let isDragging, activateFullMotion = false;
+    let isDragging, activateFullMotion, clicked = false;
     let startY, selectedPegToDrag;
 
     // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
@@ -85,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Setup of navigation via control panel
     // REFACTOR: THIS DOES NOT NEED TO BE DECLARED HERE so long as the script for this is placed at the end of the HTML file, or load it with the 'defer' attribute.
     controlPanel.addEventListener('click', function (event) {
-        console.log("this was a freaking click")
         // Find the closest switch element or null if not found
         var clickedSwitch = event.target.closest('div#control-panel .right-side svg circle');
 
@@ -109,17 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     scrollToSection("login")
                 }
             }
-            if (restrictedArea.includes(clickedSwitchName)) {
-                // if (state.isLoggedIn == true)
-                //     scrollToSection(clickedSwitchName)
-
-                // activate buzzing animation (clicking does nothing!!)
-                // but i'm deactivating it for tests lel
-                // clickedSwitch.classList.toggle("buzz")
-                // setTimeout(() => {
-                //     clickedSwitch.classList.toggle("buzz");
-                // }, 400);
-            }
         }
     });
 
@@ -127,8 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let pegs = document.querySelectorAll('#control-panel div.switch-component .right-side svg circle')
     pegs.forEach(peg => {
         peg.addEventListener('mousedown', (e) => {
-            console.log("this was a freaking mousedown")
-            isDragging = true;
+            clicked = true
             document.body.style.cursor = 'grabbing'
             startY = e.clientY;
             selectedPegToDrag = e.target;
@@ -139,14 +122,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mouse move event for updating the drag position
     document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            console.log("this was a freaking mousemove")
+        let deltaY;
+        if (clicked) {
             let currentY = e.clientY;
-            const deltaY = currentY - startY;
+            deltaY = currentY - startY;
+            if (Math.abs(deltaY) > 5)
+                isDragging = true;
+        }
+        if (isDragging) {
             let pegGrooveHeight = document.querySelector('#control-panel div.switch-component .right-side').offsetHeight / 2
             let displacementPctg = deltaY / pegGrooveHeight
-            activateFullMotion = false
-            if (displacementPctg >= 0 && displacementPctg <= 0.9) {
+            if (displacementPctg > 0 && displacementPctg <= 0.9) {
                 selectedPegToDrag.setAttribute('cy', String(54 + displacementPctg * (147 - 54)))
                 if (displacementPctg > 0.5)
                     activateFullMotion = true
@@ -155,20 +141,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Mouse up event for ending the drag
-    document.addEventListener('mouseup', () => {
-        console.log("this was a freaking mouseup")
-        if (isDragging) {
-            isDragging = false;
-            document.body.style.cursor = 'default'
-            if (activateFullMotion) {
-                selectedPegToDrag.classList.add('performFullMotion')
+    pegs.forEach(peg => {
+        peg.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                if (activateFullMotion) {
+                    selectedPegToDrag.classList.add('performFullMotion')
+                    setTimeout(() => {
+                        scrollToSection(selectedPegToDrag.closest('.switch-component').getAttribute('name'))
+                    }, 500);
+                } else {
+                    selectedPegToDrag.classList.add('returnToTop')
+                }
             } else {
-                selectedPegToDrag.classList.add('returnToTop')
+                selectedPegToDrag.classList.add("performIncompleteMotion")
+                setTimeout(() => {
+                    selectedPegToDrag.classList.remove("performIncompleteMotion");
+                }, 400);
             }
+            activateFullMotion = false
             setTimeout(() => {
                 selectedPegToDrag.setAttribute('cy', '54')
             }, 300);
-        }
-    });
+            clicked = false
+            document.body.style.cursor = 'auto'
+        });
+    })
     
 })

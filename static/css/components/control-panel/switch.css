@@ -89,20 +89,14 @@ div#control-panel .right-side svg circle.peg-state-on {
     animation: switchToOn 1s ease-in-out;
 }
 
-@keyframes buzz {
-    0% { cy: calc(54 + 5); }
-    12.5% { cy: calc(54 + 5 + 5); }
-    25% { cy: calc(54 - 5 + 5); }
-    37.5% { cy: calc(54 + 5 + 5); }
-    50% { cy: calc(54 - 5 + 5); }
-    62.5% { cy: calc(54 + 5 + 5); }
-    75% { cy: calc(54 - 5 + 5); }
-    87.5% { cy: calc(54 + 5 + 5); }
-    100% { cy: calc(54 + 5); }
+@keyframes rangeSwitchIncompleteMotion {
+    0% { cy: 54; }
+    50% { cy: 80; }
+    100% { cy: 54; }
 }
 
-div#control-panel .right-side svg circle.buzz {
-    animation: buzz 0.4s infinite ease;
+div#control-panel .right-side svg circle.performIncompleteMotion {
+    animation: rangeSwitchIncompleteMotion 0.4s;
 }
 
 @keyframes rangeSwitchFullMotion {
