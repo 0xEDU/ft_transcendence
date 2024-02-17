@@ -149,18 +149,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isDragging) {
             let pegGrooveHeight = document.querySelector('#control-panel div.switch-component .right-side').offsetHeight / 2
             let displacementPctg = deltaY / pegGrooveHeight
-            if (state.isLoggedIn) {
-                if (displacementPctg > 0 && displacementPctg <= 0.9) {
-                    selectedPegToDrag.setAttribute('cy', String(54 + displacementPctg * (147 - 54)))
-                    if (displacementPctg > 0.5)
-                        activateFullMotion = true
-                }
-            } else {
-                if (displacementPctg < 0 && displacementPctg >= - 0.9) {
-                    selectedPegToDrag.setAttribute('cy', String(147 + displacementPctg * (147 - 54)))
-                    if (displacementPctg < - 0.5)
-                        activateFullMotion = true
-                }
+            // Decide whether the user mouse movement is enough to activate the peg's action
+            if (Math.abs(displacementPctg) > 0 && Math.abs(displacementPctg) <= 0.9) {
+                selectedPegToDrag.setAttribute('cy', String((state.isLoggedIn ? 54 : 147) + displacementPctg * (147 - 54)))
+                if (displacementPctg < - 0.5 || displacementPctg > 0.5)
+                    activateFullMotion = true
             }
         }
     });
