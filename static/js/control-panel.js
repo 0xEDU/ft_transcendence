@@ -103,28 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-/*
-    // Extract the switch name from the data attribute or any other identifier
-    var clickedSwitchName = clickedSwitch.closest('.switch-component').getAttribute('name');
-
-    if (clickedSwitchName == "login") {
-        if (state.isLoggedIn == false) {
-            // Do the authentication magic
-            // opens the link to the intra login page in the current window
-            window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
-        }
-        else {
-            // Do the logging out magic
-            state.isLoggedIn = false;
-            togglePowerSwitchPegState()
-            toggleControlPanelSize(controlPanel)
-            fetch("/auth/logout")
-                .then(() => emptyElement('userDiv'));
-            scrollToSection("login")
-        }
-    }
-*/
-
     // Mouse down event for starting the drag
     let pegs = document.querySelectorAll('#control-panel div.switch-component .right-side svg circle')
     pegs.forEach(peg => {
@@ -149,8 +127,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isDragging) {
             let pegGrooveHeight = document.querySelector('#control-panel div.switch-component .right-side').offsetHeight / 2
             let displacementPctg = deltaY / pegGrooveHeight
+
             // Decide whether the user mouse movement is enough to activate the peg's action
-            if (Math.abs(displacementPctg) > 0 && Math.abs(displacementPctg) <= 0.9) {
+            const isWithinLoggedInRange = state.isLoggedIn && (displacementPctg > 0 && displacementPctg <= 0.9);
+            const isWithinLoggedOutRange = !state.isLoggedIn && (displacementPctg >= -0.9 && displacementPctg < 0);
+            if (isWithinLoggedInRange || isWithinLoggedOutRange) {
                 selectedPegToDrag.setAttribute('cy', String((state.isLoggedIn ? 54 : 147) + displacementPctg * (147 - 54)))
                 if (displacementPctg < - 0.5 || displacementPctg > 0.5)
                     activateFullMotion = true
