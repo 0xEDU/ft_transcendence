@@ -118,6 +118,15 @@ div#control-panel .right-side svg circle.performFullMotion {
     animation: rangeSwitchFullMotion 0.5s;
 }
 
+@keyframes rangeSwitchReverseFullMotion {
+    50% { cy: 54; }
+    100% { cy: 147; }
+}
+
+div#control-panel .right-side svg circle.performReverseFullMotion {
+    animation: rangeSwitchReverseFullMotion 0.5s;
+}
+
 @keyframes returnToTop {
     to {
         cy: 54;
@@ -126,4 +135,14 @@ div#control-panel .right-side svg circle.performFullMotion {
 
 div#control-panel .right-side svg circle.returnToTop {
     animation: returnToTop 0.3s;
+}
+
+@keyframes returnToBottom {
+    to {
+        cy: 147;
+    }
+}
+
+div#control-panel .right-side svg circle.returnToBottom {
+    animation: returnToBottom 0.3s;
 }

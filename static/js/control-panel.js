@@ -149,25 +149,54 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isDragging) {
             let pegGrooveHeight = document.querySelector('#control-panel div.switch-component .right-side').offsetHeight / 2
             let displacementPctg = deltaY / pegGrooveHeight
-            if (displacementPctg > 0 && displacementPctg <= 0.9) {
-                selectedPegToDrag.setAttribute('cy', String(54 + displacementPctg * (147 - 54)))
-                if (displacementPctg > 0.5)
-                    activateFullMotion = true
+            if (state.isLoggedIn) {
+                if (displacementPctg > 0 && displacementPctg <= 0.9) {
+                    selectedPegToDrag.setAttribute('cy', String(54 + displacementPctg * (147 - 54)))
+                    if (displacementPctg > 0.5)
+                        activateFullMotion = true
+                }
+            } else {
+                if (displacementPctg < 0 && displacementPctg >= - 0.9) {
+                    selectedPegToDrag.setAttribute('cy', String(147 + displacementPctg * (147 - 54)))
+                    if (displacementPctg < - 0.5)
+                        activateFullMotion = true
+                }
             }
         }
     });
 
     // Mouse up event for ending the drag
     document.addEventListener('mouseup', () => {
+        let pegName = selectedPegToDrag.closest('.switch-component').getAttribute('name')
         if (isDragging) {
             isDragging = false;
             if (activateFullMotion) {
-                selectedPegToDrag.classList.add('performFullMotion')
-                setTimeout(() => {
-                    scrollToSection(selectedPegToDrag.closest('.switch-component').getAttribute('name'))
-                }, 500);
+                if (pegName != "login") {
+                    selectedPegToDrag.classList.add('performFullMotion')
+                    setTimeout(() => {
+                        scrollToSection(pegName)
+                    }, 500);
+                } else {
+                    if (state.isLoggedIn == false) {
+                        // Do the authentication magic
+                        // opens the link to the intra login page in the current window
+                        window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
+                    }
+                    else {
+                        // Do the logging out magic
+                        state.isLoggedIn = false;
+                        togglePowerSwitchPegState()
+                        toggleControlPanelSize(controlPanel)
+                        fetch("/auth/logout")
+                            .then(() => emptyElement('userDiv'));
+                        scrollToSection("login")
+                    }
+                }
             } else {
-                selectedPegToDrag.classList.add('returnToTop')
+                if (state.isLoggedIn)
+                    selectedPegToDrag.classList.add('returnToTop')
+                else
+                    selectedPegToDrag.classList.add('returnToBottom')
             }
         }
         setTimeout(() => {
