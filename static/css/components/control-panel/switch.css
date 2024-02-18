@@ -71,24 +71,6 @@ div#on-off-labels>* {
     align-items: center;
 }
 
-@keyframes switchToOff {
-    from { cy: 54; } /* cima */
-    to { cy: 147; } /* baixo */
-}
-
-@keyframes switchToOn {
-    from { cy: 147; } /* baixo */
-    to { cy: 54; } /* cima */
-}
-
-div#control-panel .right-side svg circle.peg-state-off {
-    animation: switchToOff 1s ease-in-out;
-}
-
-div#control-panel .right-side svg circle.peg-state-on {
-    animation: switchToOn 1s ease-in-out;
-}
-
 @keyframes rangeSwitchIncompleteMotion {
     0% { cy: 54; }
     50% { cy: 80; }
