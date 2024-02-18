@@ -25,4 +25,5 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('pong/', include('pong.urls')),
     path('stats/', include('stats.urls')),
+    path('blockchain/', include('blockchain.urls')),
 ]

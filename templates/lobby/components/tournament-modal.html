@@ -1,0 +1,97 @@
+<div class="modal fade" id="tournamentModal" tabindex="-1" aria-labelledby="tournamentModalLabel" aria-hidden="true" data-bs-theme="dark">
+  <div class="modal-dialog modal-xl">
+    <div id="tModalContent" class="modal-content">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="tournamentForm" action="/pong/form" method="POST">
+        {% csrf_token %}
+        <div class="modal-body text-white pt-0">
+          <h1 class="ms-3 mb-5 w-100 text-center">TOURNAMENT</h1>
+          <div class="d-flex justify-content-evenly">
+            <div class="d-flex flex-column align-items-center">
+              <h3 class="settingName">GAME MODE</h3>
+              <div class="d-flex flex-column align-items-start">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gameModeDefault" id="coopRadio" checked />
+                  <label class="form-check-label" for="coopRadio">CO-OP</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gameModeDefault" id="classicRadio" />
+                  <label class="form-check-label" for="classicRadio">CLASSIC</label>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column align-items-center">
+              <h3 class="settingName">PLAYER</h3>
+              <div class="d-flex flex-column align-items-start">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="playerDefault" id="tFourPlayersRadio" checked />
+                  <label class="form-check-label" for="tFourPlayersRadio">FOUR</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="playerDefault" id="eightPlayersRadio" />
+                  <label class="form-check-label" for="eightPlayersRadio">EIGHT</label>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column align-items-center">
+              <h3 class="settingName">MAP</h3>
+              <div class="d-flex flex-column align-items-start">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="mapDefault" id="tMap1Radio" checked />
+                  <label class="form-check-label" for="tMap1Radio">MAP 1</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="mapDefault" id="tMap2Radio" />
+                  <label class="form-check-label" for="tMap2Radio">MAP 2</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="playerInputDiv" class="container-fluid my-5">
+            <div class="row row-cols-2">
+              <div class="col">
+                <input type="text" class="form-control" id="firstPlayer" placeholder={{user_display_name}} disabled/>
+                <input type="hidden" name="player1Name" value={{user_display_name}}>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="secondPlayer" name="player2Name" placeholder="Player 2"/>
+              </div>
+            </div>
+            <div id="player3And4Div" class="row row-cols-2 mt-3">
+              <div class="col">
+                <input type="text" class="form-control" id="thirdPlayer" name="player3Name" placeholder="Player 3"/>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="fourthPlayer" name="player4Name" placeholder="Player 4"/>
+              </div>
+            </div>
+            <div id="player5And6Div" class="row row-cols-2 visually-hidden mt-3">
+              <div class="col">
+                <input type="text" class="form-control" id="fifthPlayer" name="player5Name" placeholder="Player 5"/>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="sixthPlayer" name="player6Name" placeholder="Player 6"/>
+              </div>
+            </div>
+            <div id="player7And8Div" class="row row-cols-2 visually-hidden mt-3">
+              <div class="col">
+                <input type="text" class="form-control" id="seventhPlayer" name="player7Name" placeholder="Player 7"/>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="eighthPlayer" name="player8Name" placeholder="Player 8"/>
+              </div>
+            </div>
+          </div>
+          </div>
+          <button type="submit" id="tPlayButtonDiv" class="btn d-flex flex-column w-100 align-items-center">
+            {% with play_button_id="tPlayButtonSvg" red_circle_id="tRedCircle" filter_id="tFilter" %}
+              {% include 'lobby/components/play-button.html' %}
+            {% endwith %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

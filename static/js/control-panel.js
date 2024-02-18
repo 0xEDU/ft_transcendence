@@ -5,7 +5,7 @@ export const state = {
     isLoggedIn: false,
 };
 
-export function scrollToSection(sectionName, behaviour = "smooth") {
+export default function scrollToSection(sectionName, behaviour = "smooth") {
     if (typeof sectionName === "string") {
         let targetSection = document.getElementById(sectionName);
 

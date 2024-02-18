@@ -14,18 +14,15 @@ img#userImage {
 
 p#userLogin {
 	font-size: 4em;
-	font-weight: bold;
 	margin-bottom: 0;
 }
 
 p#userDisplayName {
 	font-size: 2em;
-	font-weight: bold;
 }
 
 p#userStats {
 	font-size: 1.5em;
-	font-weight: bold;
 	margin-right: 3rem !important;
 }
 
@@ -45,5 +42,4 @@ p#userAchievementsText,
 p#friendsText {
 	color: #FCFCFC;
 	font-size: 2em;
-	font-weight: bold;
 }
