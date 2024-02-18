@@ -17,11 +17,14 @@ def home(request):
         "user_number_of_friends": 12,
     }
     session = request.session
+    user_is_logged_in = False
     if "user_id" in session and session["user_id"] != "":
         user = User.objects.get(pk=session["user_id"])
         context["user_login"] = user.login_intra
         context["user_display_name"] = user.display_name
         context["user_image"] = user.avatar_image_url
+        user_is_logged_in = True
     else:
         context["h1_text"] = "You are not logged"
+    context["user_is_logged_in"] = user_is_logged_in
     return render(request, 'index.html', context)
