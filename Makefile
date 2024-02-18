@@ -12,7 +12,7 @@ SERVICES = $(DB_SERVICE_NAME) $(APP_SERVICE_NAME) $(GANACHE_SERVICE_NAME) $(CONT
 DOCKER_SCRIPTS = $(addprefix _compose_scripts/,conditional-delete-container.sh conditional-delete-image.sh conditional-delete-volume.sh conditional-stop-container.sh)
 
 # Virtual environment
-VENV_DIR = .venv
+VENV_DIR = ../ft_transcendence-venv
 
 # Colours
 BOLD_YELLOW = \e[1;33m
@@ -28,6 +28,12 @@ stop:
 	docker-compose down
 
 restart: stop start
+
+run:
+	$(PYTHON_VERSION) manage.py runserver
+
+migrate:
+	$(PYTHON_VERSION) manage.py migrate
 
 clean: clean-db clean-app
 
@@ -150,7 +156,7 @@ install:
 
 # ---------------------------------------------------------------------------- #
 
-.PHONY: start stop restart clean fclean frestart \
+.PHONY: start stop restart run migrate clean fclean frestart \
 		db-start db-stop db-restart db-clean db-fclean db-frestart \
 		app-start app-stop app-restart app-clean app-fclean app-frestart \
 		ganache-start ganache-stop ganache-restart ganache-clean ganache-fclean ganache-frestart \
