@@ -15,7 +15,7 @@
     <script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
     <title>PONG</title>
 </head>
-<body style="width: 4vh">
+<body>
     {% comment %} Fixed-position elements {% endcomment %}
     {% include "components/control-panel/base.html" %}
 
@@ -58,7 +58,8 @@
     </div>
 
     {% comment %} Scripts {% endcomment %}
-    <script type="module" src="{% static 'js/control-panel.js' %}"></script>
+    <script type="module" src="{% static 'js/script.js' %}" defer></script>
+    <script type="module" src="{% static 'js/control-panel.js' %}" defer></script>
     <script type="module" src="{% static 'js/play-button.js' %}"></script>
 </body>
 </html>

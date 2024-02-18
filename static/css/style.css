@@ -1,7 +1,6 @@
 @import 'components/control-panel/base.css';
 @import 'components/control-panel/switch.css';
-@import 'components/pong-logo.css';
-@import 'components/wood-grain-panel.css';
+@import 'sections/login.css';
 
 * {
     margin: 0;
@@ -26,11 +25,7 @@ section {
 }
 
 section h1 {
-    color: white;
-}
-
-section#login {
-    position: relative;
+    color: var(--OFF_WHITE);
 }
 
 .board-row {
