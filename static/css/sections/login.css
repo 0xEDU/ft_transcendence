@@ -8,7 +8,24 @@ section#login {
 
 section#login #pong-title-svg {
     height: 30%;
-    margin-top: 2%;;
+    margin-top: 2%;
+
+    transition: height 1s ease-in-out, margin-top 1s ease-in-out;
+}
+
+section#login #pong-title-svg.minimise {
+    height: 15%;
+    margin-top: 10%;
+}
+
+@keyframes bounce {
+    50% {
+        transform: translateY(-70%);
+    }
+}
+
+.bounce {
+    animation: bounce 0.8s ease-in-out infinite;
 }
 
 #wood-grain-panel {

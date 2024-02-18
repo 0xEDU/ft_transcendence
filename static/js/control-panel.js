@@ -75,6 +75,7 @@ function toggleControlPanelSize(controlPanel) {
 // Handles main navigation logic of our SPA
 document.addEventListener("DOMContentLoaded", function () {
     let controlPanel = document.getElementById("control-panel");
+    let pongLogo = document.getElementById("pong-title-svg");
 
     // Dragging logic
     let isDragging,
@@ -89,12 +90,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     scrollToSection("login", "instant");
     if (state.isLoggedIn === true) {
+        // Trigger continuity animation then navigates to Home
+        pongLogo.classList.add("minimise");
+        pongLogo.classList.add("bounce");
         setTimeout(() => {
-            // prolly here meddles with pong pinging animation
-            // ...
+            pongLogo.classList.remove("bounce")
+            pongLogo.classList.remove("minimise")
+
             toggleControlPanelSize(controlPanel);
             scrollToSection("profile");
-        }, 1000); // Wait 1 second after browser loaded to perform animation/change screen;
+        }, 3000);
     }
 
     // Setup of navigation via control panel
@@ -218,10 +223,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         selectedPegToDrag.setAttribute("cy", "54");
                     }, 300);
 
-                    // Do the authentication magic -- opens the link to the intra login page in the current window
-                    window.location.href = document.getElementById(
-                        "intraLoginRedirectUrl"
-                    ).textContent;
+                    pongLogo.classList.add("minimise")
+                    pongLogo.classList.add("bounce")
+                    setTimeout(() => {
+                        // Do the authentication magic -- opens the link to the intra login page in the current window
+                        window.location.href = document.getElementById(
+                            "intraLoginRedirectUrl"
+                        ).textContent;
+                    }, 2000);
+
                 }
             } else {
                 if (state.isLoggedIn) {
