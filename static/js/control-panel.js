@@ -204,10 +204,58 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 selectedPegToDrag.classList.add('returnToTop');
             }
+            setTimeout(() => {
+                selectedPegToDrag.setAttribute('cy', '54');
+            }, 300);
         }
-        setTimeout(() => {
-            selectedPegToDrag.setAttribute('cy', '54');
-        }, 300);
+        if (selectedPegToDrag && pegName === "login" && isDragging) {
+            selectedPegToDrag.classList.remove("returnToBottom")
+            selectedPegToDrag.classList.remove("returnToTop")
+            selectedPegToDrag.classList.remove("peg-state-off")
+            selectedPegToDrag.classList.remove("peg-state-on")
+            if (activateFullMotion) {
+                if (state.isLoggedIn) {
+                    // LOG USER OUT
+                    // Do the logging out magic
+                    fetch("/auth/logout")
+                        .then(() => emptyElement('userDiv'));
+                    state.isLoggedIn = false;
+
+                    // Trigger animations
+                    selectedPegToDrag.classList.add("returnToBottom")
+                    setTimeout(() => {
+                        selectedPegToDrag.setAttribute('cy', '147');
+                        toggleControlPanelSize(controlPanel);
+                        scrollToSection("login");
+                    }, 300);
+                }
+                else {
+                    // Trigger animations
+                    selectedPegToDrag.classList.add("returnToTop")
+                    setTimeout(() => {
+                        selectedPegToDrag.setAttribute('cy', '54');
+                    }, 300);
+
+                    // Do the authentication magic -- opens the link to the intra login page in the current window
+                    window.location.href = document.getElementById('intraLoginRedirectUrl').textContent;
+                }
+            } else {
+                if (state.isLoggedIn) {
+                    selectedPegToDrag.classList.add('returnToTop')
+                    setTimeout(() => {
+                        selectedPegToDrag.setAttribute('cy', '54');
+                    }, 300);
+                }
+                else {
+                    selectedPegToDrag.classList.add('returnToBottom')
+                    setTimeout(() => {
+                        selectedPegToDrag.setAttribute('cy', '147');
+                    }, 300);
+                }
+            }
+        }
+
+        // General reset
         activateFullMotion = false;
         clicked = false;
         isDragging = false;
