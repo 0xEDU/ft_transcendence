@@ -1,5 +1,5 @@
 ## VARS
-PYTHON_VERSION = python3.11
+PYTHON_VERSION = python3.10
 
 # Services names
 DB_SERVICE_NAME = postgres-transcendence
