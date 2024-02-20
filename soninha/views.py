@@ -11,7 +11,7 @@ from soninha.models import User
 
 class UserTemplateView(TemplateView):
     """Returns the user template."""
-    template_name = "soninha/partials/user.html"
+    template_name = "soninha/profile-section.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
