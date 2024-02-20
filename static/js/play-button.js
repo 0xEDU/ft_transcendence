@@ -1,4 +1,4 @@
-import scrollToSection from "./control-panel.js";
+import { scrollToSection } from "./control-panel.js";
 import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
