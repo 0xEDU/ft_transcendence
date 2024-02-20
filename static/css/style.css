@@ -1,6 +1,7 @@
 @import 'components/control-panel/base.css';
 @import 'components/control-panel/switch.css';
 @import 'sections/login.css';
+@import 'sections/profile.css';
 
 * {
     margin: 0;

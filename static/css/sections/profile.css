@@ -1,0 +1,21 @@
+div#profile-picture {
+    position: relative;
+}
+
+#profile-picture .btn {
+    color: var(--WHITE);
+    position: absolute;
+    bottom:0;
+    right:0;
+    padding: 0 7% 7% 0;
+}
+
+#profile-picture .btn i {
+    font-size: 1.75rem;
+    
+    transition: font-size 0.1s linear;
+}
+
+#profile-picture .btn i:hover {
+    font-size: 2.5rem;
+}

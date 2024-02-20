@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bakbak+One&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -36,7 +37,7 @@
             {% include "stats/base.html" %}
         </section>
         <section id="profile">
-            {% include "soninha/partials/user.html" %}
+            {% include "soninha/profile-section.html" %}
         </section>
         <section id="lobby">
             {% include "lobby/base.html" %}
