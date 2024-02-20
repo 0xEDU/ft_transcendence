@@ -58,7 +58,7 @@ clean-db: chmod-scripts
 	@./_compose_scripts/conditional-delete-container.sh $(DB_SERVICE_NAME)
 
 fclean-db: clean-db
-	@./_compose_scripts/conditional-delete-image.sh $(DB_SERVICE_NAME)
+	@./_compose_scripts/conditional-delete-image.sh postgres
 
 frestart-db: fclean-db start-db
 
@@ -78,7 +78,7 @@ clean-app: chmod-scripts
 	@./_compose_scripts/conditional-delete-container.sh $(APP_SERVICE_NAME)
 
 fclean-app: clean-app
-	@./_compose_scripts/conditional-delete-image.sh $(APP_SERVICE_NAME)
+	@./_compose_scripts/conditional-delete-image.sh django
 
 frestart-app: fclean-app start-app
 
