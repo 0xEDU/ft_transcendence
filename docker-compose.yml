@@ -45,6 +45,7 @@ services:
       - ft_transcendence
     depends_on:
       - postgres-transcendence
+      - contract-deployer-transcendence
 
 networks:
   ft_transcendence:
