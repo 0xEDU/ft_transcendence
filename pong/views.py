@@ -118,15 +118,27 @@ class GameFormView(View):
     This view is called when the player submits
     the information to set the game.
     """
-    def post(self, request, *args, **kwargs):
+
+    def _validate_incoming_request(self, incoming_request):
+        players = incoming_request['players']
+        player_quantity = incoming_request['playerQuantity']
+        if len(players) != player_quantity:
+            raise ValueError("Invalid number of players")
+        players_set = set(players)
+        if len(players_set) != player_quantity:
+            raise ValueError("Repeated players")
+
+    def post(self, request):
         """Post method."""
 
         print(json.loads(request.body))
-        # try:
+        incoming_request = json.loads(request.body)
+        try:
+            self._validate_incoming_request(incoming_request)
         #     player1 = User.objects.get(login_intra=request.POST['player1Name'])
         #     player2 = User.objects.get(login_intra=request.POST['player2Name'])
-        # except User.DoesNotExist:
-        #     return render(request, 'components/errors/player_not_registered.html', {
-        #         'error_message': "Invalid user"
-        #     }, status=400)
+        except (User.DoesNotExist, ValueError) as error:
+            return render(request, 'components/errors/player_error.html', {
+                'error_message': error
+            }, status=400)
         return HttpResponse("")
