@@ -5,7 +5,7 @@ FROM python:3.11.3
 ENV TRANSCENDENCE_DIR=/ft_transcendence
 ENV TRANSCENDENCE_PROTOCOL=https
 ENV POSTGRES_PORT=5432
-ENV POSTGRES_HOST=postgres
+ENV POSTGRES_HOST=postgres-transcendence
 
 # set work directory
 RUN mkdir -p $TRANSCENDENCE_DIR
