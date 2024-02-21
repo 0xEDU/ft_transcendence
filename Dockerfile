@@ -1,5 +1,5 @@
 # base image
-FROM python:3.11.3
+FROM python:3.10
 
 # setup environment variable
 ENV TRANSCENDENCE_DIR=/ft_transcendence
