@@ -21,7 +21,7 @@ RESET = \e[0m
 
 ## RULES
 # ALL ------------------------------------------------------------------------ #
-start: docker-compose.yml
+start: volumes docker-compose.yml
 	docker-compose up --build --detach --force-recreate
 
 stop:

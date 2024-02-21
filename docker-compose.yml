@@ -36,7 +36,6 @@ services:
   django-transcendence:
     image: django
     container_name: django-transcendence
-    command: python manage.py runserver_plus --cert-file cert.pem --key-file key.pem 0.0.0.0:8000
     build: ./
     ports:
       - '8000:8000'
@@ -45,6 +44,7 @@ services:
       - ft_transcendence
     depends_on:
       - postgres-transcendence
+      - contract-deployer-transcendence
 
 networks:
   ft_transcendence:
