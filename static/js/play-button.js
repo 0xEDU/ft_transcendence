@@ -99,11 +99,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(event.target);
         const gameData = {
             "gameType": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
-            "gameMode": formData.get('gameMode'),
+            "gameMode": formData.get('gameModeDefault'),
             "players": Array.from(formData.keys()).filter(key => 
                 key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== ""),
         }
         console.log(event.target);
+        console.log(formData);
 
         fetch(url, {
             method: 'POST',
