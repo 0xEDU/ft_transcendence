@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const gameData = {
             "gameType": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
             "gameMode": formData.get('gameModeDefault'),
+            "playerQuantity": formData.get('playerDefault'),
             "players": Array.from(formData.keys()).filter(key => 
                 key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== ""),
         }
