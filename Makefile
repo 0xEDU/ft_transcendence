@@ -1,5 +1,5 @@
 ## VARS
-PYTHON_VERSION = python3.11
+PYTHON_VERSION = python3.10
 
 # Services names
 DB_SERVICE_NAME = postgres-transcendence
@@ -12,7 +12,7 @@ SERVICES = $(DB_SERVICE_NAME) $(APP_SERVICE_NAME) $(GANACHE_SERVICE_NAME) $(CONT
 DOCKER_SCRIPTS = $(addprefix _compose_scripts/,conditional-delete-container.sh conditional-delete-image.sh conditional-delete-volume.sh conditional-stop-container.sh)
 
 # Virtual environment
-VENV_DIR = .venv
+VENV_DIR = ../ft_transcendence-venv
 
 # Colours
 BOLD_YELLOW = \e[1;33m
@@ -21,13 +21,19 @@ RESET = \e[0m
 
 ## RULES
 # ALL ------------------------------------------------------------------------ #
-start: docker-compose.yml
+start: volumes docker-compose.yml
 	docker-compose up --build --detach --force-recreate
 
 stop:
 	docker-compose down
 
 restart: stop start
+
+run:
+	$(PYTHON_VERSION) manage.py runserver
+
+migrate:
+	$(PYTHON_VERSION) manage.py migrate
 
 clean: clean-db clean-app
 
@@ -52,7 +58,7 @@ clean-db: chmod-scripts
 	@./_compose_scripts/conditional-delete-container.sh $(DB_SERVICE_NAME)
 
 fclean-db: clean-db
-	@./_compose_scripts/conditional-delete-image.sh $(DB_SERVICE_NAME)
+	@./_compose_scripts/conditional-delete-image.sh postgres
 
 frestart-db: fclean-db start-db
 
@@ -72,7 +78,7 @@ clean-app: chmod-scripts
 	@./_compose_scripts/conditional-delete-container.sh $(APP_SERVICE_NAME)
 
 fclean-app: clean-app
-	@./_compose_scripts/conditional-delete-image.sh $(APP_SERVICE_NAME)
+	@./_compose_scripts/conditional-delete-image.sh django
 
 frestart-app: fclean-app start-app
 
@@ -150,7 +156,7 @@ install:
 
 # ---------------------------------------------------------------------------- #
 
-.PHONY: start stop restart clean fclean frestart \
+.PHONY: start stop restart run migrate clean fclean frestart \
 		db-start db-stop db-restart db-clean db-fclean db-frestart \
 		app-start app-stop app-restart app-clean app-fclean app-frestart \
 		ganache-start ganache-stop ganache-restart ganache-clean ganache-fclean ganache-frestart \
