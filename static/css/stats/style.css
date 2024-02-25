@@ -64,3 +64,7 @@ img#runnerUpImg {
 img#thirdPlaceImg {
     border: 1px solid #bc6b3d;
 }
+
+div#tournamentContainerDiv {
+    background-color: var(--HEAVY_GRAY);
+}
