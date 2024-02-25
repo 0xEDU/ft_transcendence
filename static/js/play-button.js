@@ -2,6 +2,8 @@ import scrollToSection from "./control-panel.js";
 import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
+import insertElement from "./tinyDOM/insertElement.js";
+import pongMain from "./pong.js"
 
 class ModalObj {
     constructor(form, modalElement, modalInstance, playButtonSvg, playButtonDiv, fourPlayersRadio, redCircle) {
@@ -119,6 +121,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(responseText => {
             console.log("Response:", responseText);
+            insertElement("gameDiv", responseText);
+            pongMain();
+            
         })
         .catch(error => {
             error.text().then(errorBody => {

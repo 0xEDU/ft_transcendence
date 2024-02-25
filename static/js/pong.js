@@ -6,6 +6,7 @@ let canvas;
 let ctx;
 let game_main;
 let gameInterval;
+let pongString;
 
 // ball variables
 const ballWidth = 20;
@@ -348,15 +349,16 @@ const keyUpHandler = (e) => {
 }
 
 // main
-document.addEventListener("DOMContentLoaded", () => {
+export default function pongMain() {
 	canvas = document.getElementById("pongGameCanvas");
 	game_main = document.getElementById("gameDiv");
 	ctx = canvas.getContext("2d");
+	pongString = canvas.dataset.pong;
 	setCanvasSize();
 	randomizeBallMovement();
 	stateMachine.handleStateChange();
-});
+	window.addEventListener("resize", setCanvasSize, false);
+	document.addEventListener("keydown", keyDownHandler, false);
+	document.addEventListener("keyup", keyUpHandler, false);
+};
 
-window.addEventListener("resize", setCanvasSize, false);
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
