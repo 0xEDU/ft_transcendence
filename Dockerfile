@@ -10,7 +10,7 @@ ENV POSTGRES_HOST=postgres-transcendence
 COPY requirements.txt $TRANSCENDENCE_DIR/
 
 # install dependencies
-RUN pip install --upgrade pip && pip install --no-compile -r $TRANSCENDENCE_DIR/requirements.txt
+RUN pip install --no-cache-dir --no-compile -q -r $TRANSCENDENCE_DIR/requirements.txt
 
 # set work directory
 RUN mkdir -p $TRANSCENDENCE_DIR; apk add --no-cache openssl
