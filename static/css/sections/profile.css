@@ -19,3 +19,7 @@ div#profilePicture {
 #profilePicture:hover .btn i {
     font-size: 2.5rem;
 }
+
+section#profile .modal-footer {
+    border-top: none; /* Remove the top border of the modal footer */
+}
