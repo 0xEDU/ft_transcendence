@@ -14,6 +14,7 @@ body {
     display: flex;
     flex-direction: column;
     font-family: 'Bakbak One', sans-serif;
+    color: var(--OFF_WHITE);
 }
 
 body, html {
@@ -23,10 +24,6 @@ body, html {
 section {
     min-width: 100vw;
     height: 100vh;
-}
-
-section h1 {
-    color: var(--OFF_WHITE);
 }
 
 .board-row {
