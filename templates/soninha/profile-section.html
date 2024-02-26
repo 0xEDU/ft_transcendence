@@ -2,32 +2,33 @@
 <link rel="stylesheet" href="{% static 'css/components/user.css' %}" />
 
 <div id="userDiv" class="d-flex">
-	<div id="userInfoContainer" class="d-flex flex-column">
-		{% if user_image %}
-		<div class="d-flex justify-content-center align-items-center">
-			<div id="profile-picture">
-				<img id="userImage" width=221 height=221 src="{{ user_image }}">
-				<button class="btn"><i class="fa fa-pencil"></i></button>
-			</div>
-			<div id="userInfoDiv" class="d-flex flex-column justify-content-center text-white ms-5">
-				<p id="userLogin">{{ user_login }}</p>
-				<p id="userDisplayName">{{ user_display_name }}</p>
-				<div id="userStatsDiv" class="d-flex mt-3">
-					<p id="userStats"> 🙌 {{ user_helps }}  </p>
-					<p id="userStats"> 📍 {{ user_ball_distance }}  </p>
-					<p id="userStats"> 🕰️ {{ user_time_played }}  </p>
-					<p id="userStats"> 👯 {{ user_number_of_friends }}  </p>
-				</div>
-			</div>
-		</div>
-		<div id="achievementsAndFriends">
-			<div id="achievements">
-				<p id="userAchievementsText">ACHIEVEMENTS</p>
-			</div>
-			<div id="friends">
-				<p id="friendsText">MATES ALONG THE WAY</p>
-			</div>
-		</div>
-		{% endif %}
-	</div>
+  <div id="userInfoContainer" class="d-flex flex-column">
+    {% if user_image %}
+      <div class="d-flex justify-content-center align-items-center">
+        <div id="profilePicture">
+          <div id="userImage" class="roundedSquareImage" style="background-image: url('{{ user_image }}');"></div>
+          <!-- Button to trigger modal -->
+          <button class="btn" data-bs-toggle="modal" data-bs-target="#profilePictureEditionModal"><i class="fa fa-pencil"></i></button>
+        </div>
+        <div id="userInfoDiv" class="d-flex flex-column justify-content-center text-white ms-5">
+          <p id="userLogin">{{ user_login }}</p>
+          <p id="userDisplayName">{{ user_display_name }}</p>
+          <div id="userStatsDiv" class="d-flex mt-3">
+            <p id="userStats">🙌 {{ user_helps }}</p>
+            <p id="userStats">📍 {{ user_ball_distance }}</p>
+            <p id="userStats">🕰️ {{ user_time_played }}</p>
+            <p id="userStats">👯 {{ user_number_of_friends }}</p>
+          </div>
+        </div>
+      </div>
+      <div id="achievementsAndFriends">
+        <div id="achievements">
+          <p id="userAchievementsText">ACHIEVEMENTS</p>
+        </div>
+        <div id="friends">
+          <p id="friendsText">MATES ALONG THE WAY</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
 </div>
