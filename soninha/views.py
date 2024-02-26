@@ -5,7 +5,7 @@ import requests
 from django.views import View
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from soninha.models import User
 
 
@@ -78,3 +78,21 @@ class LogoutView(View):
         """Get method."""
         request.session["user_id"] = ""
         return HttpResponse('')
+
+
+def update_profile_picture(request):
+    if request.method == 'POST':
+        # form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
+        print(">> bateu no post")
+        # if form.is_valid():
+        #     # Save the uploaded image to the user's profile picture field
+        #     form.save()
+        return JsonResponse({'success': True})
+        # else:
+        #     # If form is not valid, return error messages
+        #     errors = form.errors.get('__all__')  # Get non-field-specific errors
+        #     if not errors:
+        #         errors = 'Invalid form submission. Please try again.'
+        #     return JsonResponse({'success': False, 'errors': errors}, status=400)
+    print(">> não eh um post")
+    return JsonResponse({'success': False})
