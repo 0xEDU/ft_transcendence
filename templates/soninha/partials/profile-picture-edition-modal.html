@@ -21,15 +21,7 @@
         </div>
 
         <!-- Form -->
-        <form method="post" action="{% url 'auth:profile_picture' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="mb-5">
-            <input id="profilePicEditionInput" class="form-control" type="file" id="formFile">
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">{% translate "Upload Picture" %}</button>
-          </div>
-        </form>
+        {% include "soninha/partials/profile-picture-edition-form.html" %}
       </div>
 
     </div>
