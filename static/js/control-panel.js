@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // If a peg is merely clicked, it shouldn't scroll anywhere, and an animation is triggered indicating that further action should be performed.
     controlPanel.addEventListener("click", function (event) {
         // Find the closest switch element or null if not found
-        var clickedSwitch = event.target.closest(
+        let clickedSwitch = event.target.closest(
             "div#control-panel .right-side svg circle"
         );
         let switchName;

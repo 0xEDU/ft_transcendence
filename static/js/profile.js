@@ -1,9 +1,9 @@
 document.getElementById('profilePicEditionInput').addEventListener('change', function (event) {
     // When the user selects a new picture from the file system, 
-    var file = event.target.files[0];
-    var reader = new FileReader();
-    var currentProfilePicDiv = document.getElementById('currentProfilePicture');
-    var oldPicUrl = currentProfilePicDiv.style.backgroundImage;
+    let file = event.target.files[0];
+    let reader = new FileReader();
+    let currentProfilePicDiv = document.getElementById('currentProfilePicture');
+    let oldPicUrl = currentProfilePicDiv.style.backgroundImage;
     console.log(oldPicUrl)
 
     if (file && file.type.startsWith('image/')) {
