@@ -1,5 +1,8 @@
 #!/bin/sh
 
+#Add a little sleep to wait for postgres start
+sleep 15
+
 # Apply database migrations
 echo "Apply database migrations"
 python manage.py migrate
