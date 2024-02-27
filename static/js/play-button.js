@@ -2,6 +2,8 @@ import scrollToSection from "./control-panel.js";
 import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
+import insertElement from "./tinyDOM/insertElement.js";
+import pongMain from "./pong.js"
 
 class ModalObj {
     constructor(form, modalElement, modalInstance, playButtonSvg, playButtonDiv, fourPlayersRadio, redCircle) {
@@ -27,6 +29,8 @@ function curry(f) {
         }
     }
 }
+
+export const showControlPanel = () => document.getElementById("control-panel").classList.remove('visually-hidden');
 
 document.addEventListener('DOMContentLoaded', function() {
     const smObj = new ModalObj(
@@ -64,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const findPlayerDiv = (id) => playerDivs.find(div => div.id === id).element;
     const addHiddenClass = (...divs) => divs.forEach(div => findPlayerDiv(div).classList.add('visually-hidden'));
     const removeHiddenClass = (...divs) => divs.forEach(div => findPlayerDiv(div).classList.remove('visually-hidden'));
+    const hideControlPanel = () => document.getElementById("control-panel").classList.add('visually-hidden');
     
     
     twoPlayersRadio.addEventListener('change', function() {
@@ -126,10 +131,14 @@ document.addEventListener('DOMContentLoaded', function() {
             modalObj.modalInstance.hide();
             clearPlayerInputs('secondPlayer', 'thirdPlayer', 'fourthPlayer');
             scrollToSection("arena");
+            hideControlPanel();
             return response.text();
         })
         .then(responseText => {
             console.log("Response:", responseText);
+            insertElement("gameDiv", responseText);
+            pongMain();
+            
         })
         .catch(error => {
             error.text().then(errorBody => {

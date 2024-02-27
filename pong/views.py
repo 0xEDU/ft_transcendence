@@ -2,7 +2,7 @@
 import json
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from soninha.models import User
 from pong.models import Match, Score
 
@@ -73,29 +73,36 @@ class MatchView(View):
             return HttpResponse('Something went wrong in the Match View')
 
 
-class GameView(View):
+class GameTemplateView(TemplateView):
     """
     This view is called when the game starts, it get/create users,
     create a match and a score, then pass it as context to our template
     """
+    template_name = "arena/components/game.html"
 
-    def get(self, request, *args, **kwargs):
-        """Get method."""
+    def get_context_data(self, **kwargs):
+        """Returns the context data."""
 
-        player1 = User.objects.get(login_intra="etachott")
-        player2 = User.objects.get(login_intra="roaraujo")
-        match = Match.objects.create()
-        Score.objects.create(player=player1, match=match, score=0)
-        Score.objects.create(player=player2, match=match, score=0)
-        match.players.add(player1, player2)
-        context = {
-            "records": [],
-            "player1": player1.display_name,
-            "player2": player2.display_name,
-            "match_id": match.id
-        }
-        return render(request, 'pong/pages/game.html', context)
+        context = super().get_context_data(**kwargs)
+        return context
+    
+    # def get(self, request, *args, **kwargs):
+    #     """Get method."""
 
+    #     player1 = User.objects.get(login_intra="etachott")
+    #     player2 = User.objects.get(login_intra="roaraujo")
+    #     match = Match.objects.create()
+    #     Score.objects.create(player=player1, match=match, score=0)
+    #     Score.objects.create(player=player2, match=match, score=0)
+    #     match.players.add(player1, player2)
+    #     context = {
+    #         "records": [],
+    #         "player1": player1.display_name,
+    #         "player2": player2.display_name,
+    #         "match_id": match.id
+    #     }
+    #     return render(request, 'pong/pages/game.html', context)
+    
     def post(self, request, *args, **kwargs):
         """Post method."""
 
@@ -145,5 +152,5 @@ class GameFormView(View):
             return render(request, 'components/errors/player_error.html', {
                 'error_message': error
             }, status=400)
-        # request.session['current_game'] = incoming_request
-        return GameView.post(self, request, *[], **{})
+        request.method = "GET"
+        return GameTemplateView.as_view()(request)
