@@ -95,11 +95,26 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleFormSubmit(modalObj, event) {
         event.preventDefault();
         const url = "/pong/form";
+        const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const formData = new FormData(event.target);
+        const gameData = {
+            "gameType": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
+            "gameMode": formData.get('gameModeDefault'),
+            "playerQuantity": Number(formData.get('playerDefault')),
+            "mapSkin": formData.get('mapDefault'),
+            "players": Array.from(formData.keys()).filter(key => 
+                key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== ""),
+        }
+        console.log(event.target);
+        console.log(formData);
 
         fetch(url, {
             method: 'POST',
-            body: formData
+            body: JSON.stringify(gameData),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
         })
         .then(response => {
             if (!response.ok) {
