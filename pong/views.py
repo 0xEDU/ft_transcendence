@@ -1,7 +1,7 @@
 """Views for the pong app."""
 import json
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import View, TemplateView
 from soninha.models import User
 from pong.models import Match, Score
@@ -102,23 +102,55 @@ class GameTemplateView(TemplateView):
     #         "match_id": match.id
     #     }
     #     return render(request, 'pong/pages/game.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        """Post method."""
 
+        # player1, _ = User.objects.get(login_intra=request.POST['player1'])
+        # player2, _ = User.objects.get(login_intra=request.POST['player2'])
+        # match = Match.objects.create()
+        # Score.objects.create(player=player1, match=match, score=0)
+        # Score.objects.create(player=player2, match=match, score=0)
+        # match.players.add(player1, player2)
+        # context = {
+        #     "records": [],
+        #     "player1": request.POST['player1'],
+        #     "player2": request.POST['player2'],
+        #     "match_id": match.id
+        # }
+        print(json.loads(request.body))
+        return HttpResponse("")
 
 class GameFormView(View):
     """
     This view is called when the player submits
     the information to set the game.
     """
-    def post(self, request, *args, **kwargs):
+
+    def _validate_incoming_request(self, incoming_request):
+        players = incoming_request['players']
+        player_quantity = incoming_request['playerQuantity']
+        if len(players) != player_quantity:
+            raise ValueError("")
+        players_set = set(players)
+        if len(players_set) != player_quantity:
+            raise ValueError("")
+        for player in players:
+            try:
+                User.objects.get(login_intra=player)
+            except User.DoesNotExist as e:
+                raise ValueError(e) from e
+
+    def post(self, request):
         """Post method."""
 
-        print(request.POST)
+        # print(json.loads(request.body))
+        incoming_request = json.loads(request.body)
         try:
-            player1 = User.objects.get(login_intra=request.POST['player1Name'])
-            player2 = User.objects.get(login_intra=request.POST['player2Name'])
-        except User.DoesNotExist:
-            return render(request, 'components/errors/player_not_registered.html', {
-                'error_message': "Invalid user"
+            self._validate_incoming_request(incoming_request)
+        except (User.DoesNotExist, ValueError) as error:
+            return render(request, 'components/errors/player_error.html', {
+                'error_message': error
             }, status=400)
         request.method = "GET"
         return GameTemplateView.as_view()(request)
