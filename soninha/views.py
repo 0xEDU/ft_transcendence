@@ -1,12 +1,19 @@
 """Views for the soninha app."""
+
+# Python Std Libs
 import os
 import json
 import requests
+from http import HTTPStatus
+
+# Our imports
+from soninha.models import User
+
+# Django's imports
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import TemplateView
-from django.shortcuts import redirect
-from django.http import HttpResponse, JsonResponse
-from soninha.models import User
 
 
 class UserTemplateView(TemplateView):
@@ -84,15 +91,20 @@ def update_profile_picture(request):
     if request.method == 'POST':
         # form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
         print(">> bateu no post")
+        print(f'>> request:')
+        print(request)
+        print(">> Method:", request.method)
+        print(">> POST parameters:", request.POST)
+        print(">> FILES:", request.FILES)
         # if form.is_valid():
         #     # Save the uploaded image to the user's profile picture field
         #     form.save()
-        return JsonResponse({'success': True})
+        return JsonResponse({"status":HTTPStatus.OK})
         # else:
         #     # If form is not valid, return error messages
         #     errors = form.errors.get('__all__')  # Get non-field-specific errors
         #     if not errors:
         #         errors = 'Invalid form submission. Please try again.'
         #     return JsonResponse({'success': False, 'errors': errors}, status=400)
-    print(">> não eh um post")
-    return JsonResponse({'success': False})
+
+    return JsonResponse({"status":HTTPStatus.METHOD_NOT_ALLOWED})

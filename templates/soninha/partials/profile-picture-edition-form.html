@@ -7,7 +7,7 @@
 >
   {% csrf_token %}
   <div class="mb-5">
-    <input id="profilePicEditionInput" class="form-control" type="file" id="formFile" accept="image/jpeg, image/png">
+    <input id="profilePicEditionInput" name="profilePicture" class="form-control" type="file" id="formFile" accept="image/jpeg, image/png">
     {% if error %}
     <p class="text-danger p-0 m-0">{% translate "Select a file to upload" %}</p>
     {% endif %}
