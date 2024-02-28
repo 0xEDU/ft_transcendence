@@ -152,7 +152,8 @@ install:
 	if [ "$$choice" = "y" ] || [ "$$choice" = "Y" ]; then \
 		pip install -r requirements.txt; \
 	else \
-		echo "Please activate the virtual environment first."; \
+		printf "\nPlease activate the virtual environment first.\n"; \
+		printf "To create the virtual environment, run $(BOLD_YELLOW)'make create-venv'$(RESET).\n"; \
 	fi
 
 # ---------------------------------------------------------------------------- #
