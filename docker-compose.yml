@@ -46,7 +46,6 @@ services:
       - postgres-transcendence
     volumes:
       - django-vol:/ft_transcendence/media
-      - contract-deployer-transcendence
 
 networks:
   ft_transcendence:
