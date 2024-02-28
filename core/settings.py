@@ -96,7 +96,7 @@ DATABASES = {
     }
 }
 
-MEDIA_ROOT = os.getenv('TRANSCENDENCE_MEDIA_DIR') # filesystem path to save media files
+MEDIA_ROOT = os.getenv('TRANSCENDENCE_MEDIA_DIR') # filesystem path to save media
 MEDIA_URL = '/media/' # endpoint to serve media files
 
 # Password validation
