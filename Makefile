@@ -128,8 +128,9 @@ chmod-scripts: $(DOCKER_SCRIPTS)
 	chmod +x $(DOCKER_SCRIPTS)
 
 volumes:
-	mkdir -p ~/goinfre/ft_transcendence/postgres \
-			 ~/goinfre/ft_transcendence/ganache
+	mkdir -p ~/goinfre/ft_transcendence/django \
+			 ~/goinfre/ft_transcendence/ganache \
+			 ~/goinfre/ft_transcendence/postgres
 
 fetch-translation-hooks:
 	django-admin makemessages -a
