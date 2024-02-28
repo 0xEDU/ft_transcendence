@@ -73,8 +73,10 @@ def update_profile_picture(request):
         user = get_object_or_404(User, pk=request.session["user_id"])
 
         # Delete the old profile picture file if it exists
-        if user.profile_picture and os.path.exists(str(user.profile_picture)):
-            os.remove(str(user.profile_picture))
+        if user.profile_picture:
+            old_file_path = os.path.join(settings.MEDIA_ROOT, str(user.profile_picture))
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
 
         # Generate a unique filename for the uploaded file
         filename = f"{uuid.uuid4().hex}{os.path.splitext(uploaded_file.name)[1]}"
@@ -93,9 +95,12 @@ def update_profile_picture(request):
                 destination.write(chunk)
 
         # Update the user's profile picture attribute with the file path
-        user.profile_picture = file_path
+        user.profile_picture = os.path.relpath(file_path, settings.MEDIA_ROOT)
         user.save()
 
-        return JsonResponse({"status": "OK", "file_path": user.profile_picture.url})
+        return JsonResponse({
+            "status": "OK",
+            "new_pfp_url": user.profile_picture.url,
+        })
     return JsonResponse({"status": HTTPStatus.METHOD_NOT_ALLOWED})
 

@@ -1,3 +1,5 @@
+const profilePictureEditionModal = new bootstrap.Modal(document.getElementById("profilePictureEditionModal"));
+
 document.getElementById('profilePicEditionInput').addEventListener('change', function (event) {
     // When the user selects a new picture from the file system, 
     let file = event.target.files[0];
@@ -41,26 +43,25 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
         method: 'POST',
         body: formData
     })
-        // .then(response => {
-        //     if (!response.ok) {
-        //         return Promise.reject(response);
-        //     }
-        //     if (hasElement(modalObj.playButtonDiv.id, "playerNotFound")) {
-        //         deleteElement("playerNotFound");
-        //     }
-        //     modalObj.modalInstance.hide();
-        //     clearPlayerInputs('secondPlayer', 'thirdPlayer', 'fourthPlayer');
-        //     scrollToSection("arena");
-        //     return response.text();
-        // })
-        // .then(responseText => {
-        //     console.log("Response:", responseText);
-        // })
-        // .catch(error => {
-        //     error.text().then(errorBody => {
-        //         if (!hasElement(modalObj.playButtonDiv.id, "playerNotFound")) {
-        //             appendElement(modalObj.playButtonSvg.id, errorBody);
-        //         }
-        //     });
-        // });
+        .then(response => {
+            // Check if the response status is 200 OK
+            if (response.ok) {
+                return response.json();
+            } else {
+                // Handle other response statuses if needed
+                console.error('Server error:', response.statusText);
+            }
+        })
+        .then(data => {
+
+            // Update the profile picture in the browser
+            let userImage = document.getElementById("userImage")
+            userImage.style.backgroundImage = `url(${data.new_pfp_url})`;
+
+            // Close the Bootstrap modal
+            profilePictureEditionModal.hide();
+        })
+        .catch(error => {
+            console.error('Network error:', error);
+        });
 });

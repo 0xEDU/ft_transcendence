@@ -1,8 +1,12 @@
 """Core views."""
-from django.shortcuts import render
-from soninha.models import User
-from soninha.views import UserTemplateView
+# Python Std Libs
 import os
+
+# Our imports
+from soninha.models import User
+
+# Django's imports
+from django.shortcuts import render
 
 def home(request):
     """Renders the home page."""
@@ -23,9 +27,9 @@ def home(request):
         user = User.objects.get(pk=session["user_id"])
         context["user_login"] = user.login_intra
         context["user_display_name"] = user.display_name
-        context["user_image"] = user.intra_cdn_profile_picture_url
+        context["user_image"] = user.profile_picture.url or user.intra_cdn_profile_picture_url
         user_is_logged_in = True
     else:
-        context["h1_text"] = "You are not logged"
+        context["h1_text"] = "You are not logged in"
     context["user_is_logged_in"] = user_is_logged_in
     return render(request, 'index.html', context)

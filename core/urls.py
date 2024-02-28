@@ -14,9 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+# Our imports
+from . import views
+
+# Django's imports
 from django.contrib import admin
 from django.urls import path, include
-from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -27,3 +33,7 @@ urlpatterns = [
     path('stats/', include('stats.urls')),
     path('blockchain/', include('blockchain.urls')),
 ]
+
+# # Add the media URL pattern only during development
+# if settings.DEBUG:
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # this isn't ideal but oh well what can one do
