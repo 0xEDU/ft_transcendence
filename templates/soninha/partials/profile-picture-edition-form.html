@@ -8,9 +8,6 @@
   {% csrf_token %}
   <div class="mb-5">
     <input id="profilePicEditionInput" name="profilePicture" class="form-control" type="file" id="formFile" accept="image/jpeg, image/png">
-    {% if error %}
-    <p class="text-danger p-0 m-0">{% translate "Select a file to upload" %}</p>
-    {% endif %}
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary">{% translate "Upload Picture" %}</button>

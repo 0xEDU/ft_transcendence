@@ -1,3 +1,7 @@
+import hasSiblingElement from "./tinyDOM/hasSiblingElement.js"
+import appendElement from "./tinyDOM/appendElement.js"
+import deleteElement from "./tinyDOM/deleteElement.js"
+
 const profilePictureEditionModal = new bootstrap.Modal(document.getElementById("profilePictureEditionModal"));
 
 document.getElementById('profilePicEditionInput').addEventListener('change', function (event) {
@@ -47,21 +51,36 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
             // Check if the response status is 200 OK
             if (response.ok) {
                 return response.json();
+            } else if (response.status === 400) {
+                // Handle the response as HTML (rendered template)
+                return response.text().then(html => {
+                    // Work with the HTML content here
+                    const trimmedHtml = html.replace(/(\r\n|\n|\r){2,}/gm, '\n').trim()
+                    if (!hasSiblingElement("profilePicEditionInput", trimmedHtml))
+                        appendElement("profilePicEditionInput", trimmedHtml)
+
+                    return ;
+                });
             } else {
-                // Handle other response statuses if needed
-                console.error('Server error:', response.statusText);
+                // Handle other response statuses (e.g., server errors)
+                throw new Error('Server error: ' + response.statusText);
             }
         })
         .then(data => {
-
-            // Update the profile picture in the browser
-            let userImage = document.getElementById("userImage")
-            userImage.style.backgroundImage = `url(${data.new_pfp_url})`;
-
-            // Close the Bootstrap modal
-            profilePictureEditionModal.hide();
+            if (data) {
+                // Update the profile picture in the browser
+                let userImage = document.getElementById("userImage")
+                userImage.style.backgroundImage = `url(${data.new_pfp_url})`;
+    
+                // Reset input field
+                document.getElementById('profilePicEditionInput').value = ''
+                deleteElement("formErrMsg");
+    
+                // Close the Bootstrap modal
+                profilePictureEditionModal.hide();
+            }
         })
         .catch(error => {
-            console.error('Network error:', error);
+            console.error('Error:', error);
         });
 });

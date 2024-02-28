@@ -13,9 +13,8 @@ from soninha.models import User
 # Django's imports
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
-from django.views.generic import TemplateView
 
 
 class LoginView(View):
@@ -69,7 +68,10 @@ class LogoutView(View):
 
 def update_profile_picture(request):
     if request.method == 'POST':
-        uploaded_file = request.FILES['profilePicture']
+        uploaded_file = request.FILES.get('profilePicture')
+        if not uploaded_file:
+            return render(request=request, template_name='components/errors/empty_profile_picture_form.html', status=400)
+
         user = get_object_or_404(User, pk=request.session["user_id"])
 
         # Delete the old profile picture file if it exists
@@ -98,9 +100,6 @@ def update_profile_picture(request):
         user.profile_picture = os.path.relpath(file_path, settings.MEDIA_ROOT)
         user.save()
 
-        return JsonResponse({
-            "status": "OK",
-            "new_pfp_url": user.profile_picture.url,
-        })
-    return JsonResponse({"status": HTTPStatus.METHOD_NOT_ALLOWED})
+        return JsonResponse({"new_pfp_url": user.profile_picture.url}, status=HTTPStatus.OK)
+    return HttpResponse(status=HTTPStatus.METHOD_NOT_ALLOWED)
 
