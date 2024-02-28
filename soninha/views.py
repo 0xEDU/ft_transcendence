@@ -18,28 +18,6 @@ from django.views import View
 from django.views.generic import TemplateView
 
 
-class UserTemplateView(TemplateView):
-    """Returns the user template."""
-    template_name = "soninha/profile-section.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        session = self.request.session
-        if "user_id" in session and session["user_id"] != "":
-            user = User.objects.get(pk=session["user_id"])
-            context["h1_margin"] = "mb-4"
-            context["h1_text"] = "Logged as " + user.login_intra
-            context["user_image"] = user.intra_cdn_profile_picture_url
-            context["anchor_function"] = 'id=logoutButton'
-            context["anchor_text"] = "Logout"
-            return context
-        context["h1_margin"] = "mb-0"
-        context["h1_text"] = "You are not logged"
-        context["anchor_function"] = f"href={os.getenv('INTRA_ACCESS_URL')}"
-        context["anchor_text"] = "Login with intra"
-        return context
-
-
 class LoginView(View):
     """Returns the login view. Might be removed."""
 
