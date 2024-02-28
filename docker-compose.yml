@@ -1,7 +1,7 @@
 version: '3'
 services:
   ganache-transcendence:
-    image: trufflesuite/ganache:latest
+    image: trufflesuite/ganache-cli:latest
     container_name: ganache-transcendence
     restart: always
     ports:
@@ -14,7 +14,7 @@ services:
     container_name: contract-deployer-transcendence
     networks:
       - ft_transcendence
-    build: 
+    build:
       context: ./truffle
     depends_on:
       - ganache-transcendence
@@ -24,7 +24,7 @@ services:
   postgres-transcendence:
     image: postgres:16-alpine
     container_name: postgres-transcendence
-    env_file: .env  
+    env_file: .env
     restart: always
     ports:
         - '${POSTGRES_PORT}:5432'
@@ -36,7 +36,6 @@ services:
   django-transcendence:
     image: django
     container_name: django-transcendence
-    command: python manage.py runserver_plus --cert-file cert.pem --key-file key.pem 0.0.0.0:8000
     build: ./
     ports:
       - '8000:8000'
@@ -47,6 +46,7 @@ services:
       - postgres-transcendence
     volumes:
       - django-vol:/ft_transcendence/media
+      - contract-deployer-transcendence
 
 networks:
   ft_transcendence:

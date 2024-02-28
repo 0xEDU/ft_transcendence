@@ -11,11 +11,12 @@ from django.shortcuts import render
 def home(request):
     """Renders the home page."""
 
-    intra_uid = os.getenv('INTRA_UID') 
+    intra_uid = os.getenv('INTRA_UID')
     redirect_uri = os.getenv('TRANSCENDENCE_IP')
     intra_endpoint = os.getenv('INTRA_ENDPOINT')
+    protocol = os.getenv('TRANSCENDENCE_PROTOCOL')
     context = {
-        "redirect_url": intra_endpoint + "/oauth/authorize?client_id=" + intra_uid + "&redirect_uri=http%3A%2F%2F" + redirect_uri + "%3A8000%2Fauth%2Flogin%2F&response_type=code" ,
+        "redirect_url": intra_endpoint + "/oauth/authorize?client_id=" + intra_uid + "&redirect_uri=" + protocol + "%3A%2F%2F" + redirect_uri + "%3A8000%2Fauth%2Flogin%2F&response_type=code",
         "user_helps": 120,
         "user_ball_distance": "10 mi",
         "user_time_played": "15h",
