@@ -10,6 +10,7 @@ from http import HTTPStatus
 from soninha.models import User
 
 # Django's imports
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.views import View
@@ -89,22 +90,18 @@ class LogoutView(View):
 
 def update_profile_picture(request):
     if request.method == 'POST':
-        # form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
-        print(">> bateu no post")
-        print(f'>> request:')
-        print(request)
-        print(">> Method:", request.method)
-        print(">> POST parameters:", request.POST)
-        print(">> FILES:", request.FILES)
-        # if form.is_valid():
-        #     # Save the uploaded image to the user's profile picture field
-        #     form.save()
-        return JsonResponse({"status":HTTPStatus.OK})
-        # else:
-        #     # If form is not valid, return error messages
-        #     errors = form.errors.get('__all__')  # Get non-field-specific errors
-        #     if not errors:
-        #         errors = 'Invalid form submission. Please try again.'
-        #     return JsonResponse({'success': False, 'errors': errors}, status=400)
-
+        uploaded_file = request.FILES['profilePicture']
+        # Define the directory where you want to save the uploaded files
+        upload_dir = os.path.join(settings.MEDIA_ROOT, 'profile_pictures')
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+        # Construct the file path
+        file_path = os.path.join(upload_dir, uploaded_file.name)
+        # Save the file to the filesystem
+        with open(file_path, 'wb') as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+        # Now, you have the file saved at file_path
+        # You can update the user's profile picture attribute with this file path
+        return JsonResponse({"status": "OK", "file_path": file_path})
     return JsonResponse({"status":HTTPStatus.METHOD_NOT_ALLOWED})
