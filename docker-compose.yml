@@ -44,7 +44,8 @@ services:
       - ft_transcendence
     depends_on:
       - postgres-transcendence
-      - contract-deployer-transcendence
+    volumes:
+      - django-vol:/ft_transcendence/media
 
 networks:
   ft_transcendence:
@@ -52,15 +53,21 @@ networks:
     name: ft_transcendence
 
 volumes:
-  postgres-vol:
+  django-vol:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '~/goinfre/ft_transcendence/postgres'
+      device: '~/goinfre/ft_transcendence/django'
   ganache-vol:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
       device: '~/goinfre/ft_transcendence/ganache'
+  postgres-vol:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '~/goinfre/ft_transcendence/postgres'

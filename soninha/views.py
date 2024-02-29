@@ -1,34 +1,20 @@
 """Views for the soninha app."""
-import os
+
+# Python Std Libs
+from http import HTTPStatus
 import json
+import os
 import requests
-from django.views import View
-from django.views.generic import TemplateView
-from django.shortcuts import redirect
-from django.http import HttpResponse
+import uuid
+
+# Our imports
 from soninha.models import User
 
-
-class UserTemplateView(TemplateView):
-    """Returns the user template."""
-    template_name = "soninha/partials/user.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        session = self.request.session
-        if "user_id" in session and session["user_id"] != "":
-            user = User.objects.get(pk=session["user_id"])
-            context["h1_margin"] = "mb-4"
-            context["h1_text"] = "Logged as " + user.login_intra
-            context["user_image"] = user.avatar_image_url
-            context["anchor_function"] = 'id=logoutButton'
-            context["anchor_text"] = "Logout"
-            return context
-        context["h1_margin"] = "mb-0"
-        context["h1_text"] = "You are not logged"
-        context["anchor_function"] = f"href={os.getenv('INTRA_ACCESS_URL')}"
-        context["anchor_text"] = "Login with intra"
-        return context
+# Django's imports
+from django.conf import settings
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views import View
 
 
 class LoginView(View):
@@ -67,7 +53,7 @@ class LoginView(View):
         if not pfp_intra:
             pfp_intra = "/static/images/default_user_image.svg"
         new_user, _ = User.objects.get_or_create(
-            display_name=login_intra, login_intra=login_intra, avatar_image_url=pfp_intra)
+            display_name=login_intra, login_intra=login_intra, intra_cdn_profile_picture_url=pfp_intra)
         request.session["user_id"] = new_user.id
         return redirect('/')  # This will return the html
 
@@ -79,3 +65,42 @@ class LogoutView(View):
         """Get method."""
         request.session["user_id"] = ""
         return HttpResponse('')
+
+
+def update_profile_picture(request):
+    if request.method == 'POST':
+        uploaded_file = request.FILES.get('profilePicture')
+        if not uploaded_file:
+            return render(request=request, template_name='components/errors/empty_profile_picture_form.html', status=400)
+
+        user = get_object_or_404(User, pk=request.session["user_id"])
+
+        # Delete the old profile picture file if it exists
+        if user.profile_picture:
+            old_file_path = os.path.join(settings.MEDIA_ROOT, str(user.profile_picture))
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
+
+        # Generate a unique filename for the uploaded file
+        filename = f"{uuid.uuid4().hex}{os.path.splitext(uploaded_file.name)[1]}"
+
+        # Define the directory where you want to save the uploaded files
+        upload_dir = os.path.join(settings.MEDIA_ROOT, 'profile_pictures')
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+        
+        # Construct the file path with the unique filename
+        file_path = os.path.join(upload_dir, filename)
+
+        # Save the file to the filesystem
+        with open(file_path, 'wb') as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+
+        # Update the user's profile picture attribute with the file path
+        user.profile_picture = os.path.relpath(file_path, settings.MEDIA_ROOT)
+        user.save()
+
+        return JsonResponse({"new_pfp_url": user.profile_picture.url}, status=HTTPStatus.OK)
+    return HttpResponse(status=HTTPStatus.METHOD_NOT_ALLOWED)
+

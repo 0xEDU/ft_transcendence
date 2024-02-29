@@ -1,11 +1,11 @@
-node_modules/
-/**/node_modules/
-/**/build/
-/**/dist/
+# Config
 .vscode
 .env
 .venv
 *.prettierrc
+
+# Profile pictures filesystem (docker volume)
+media/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
