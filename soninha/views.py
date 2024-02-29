@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from soninha.models import User
+from soninha.models import User,Achievements
 
 
 class UserTemplateView(TemplateView):
@@ -69,6 +69,7 @@ class LoginView(View):
         new_user, _ = User.objects.get_or_create(
             display_name=login_intra, login_intra=login_intra, avatar_image_url=pfp_intra)
         request.session["user_id"] = new_user.id
+        achievements, _ = Achievements.objects.get_or_create(user=new_user)
         return redirect('/')  # This will return the html
 
 

@@ -13,9 +13,9 @@ class Achievements(models.Model):
     """Model for achievements."""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ball_distance = models.IntegerField()
-    friends_count = models.IntegerField()
-    hours_played = models.IntegerField()
-    matches_classic = models.IntegerField()
-    matches_coop = models.IntegerField()
-    matches_won = models.IntegerField()
+    ball_distance = models.IntegerField(default=0)
+    friends_count = models.IntegerField(default=0)
+    hours_played = models.IntegerField(default=0)
+    matches_classic = models.IntegerField(default=0)
+    matches_coop = models.IntegerField(default=0)
+    matches_won = models.IntegerField(default=0)
