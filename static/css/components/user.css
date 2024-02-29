@@ -46,3 +46,8 @@ p#friendsText {
 	color: #FCFCFC;
 	font-size: 2em;
 }
+
+img#achieveImage:hover {
+    transform: scale(1.2); /* Increase size on hover (1.2 is just an example, adjust as needed) */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Adding box shadow for a visual effect */
+}

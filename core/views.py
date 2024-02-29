@@ -3,7 +3,7 @@
 import os
 
 # Our imports
-from soninha.models import User
+from soninha.models import User,Achievements
 
 # Django's imports
 from django.shortcuts import render
@@ -30,6 +30,15 @@ def home(request):
         context["user_display_name"] = user.display_name
         context["user_image"] = user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url
         user_is_logged_in = True
+        ############## ACHIEVEMENTS VALUES
+        achievement, _ = Achievements.objects.get_or_create(user=user)
+        context["achievement_ball_distance"] = achievement.ball_distance
+        context["achievement_friends_count"] = achievement.friends_count
+        context["achievement_hours_played"] = achievement.hours_played
+        context["achievement_matches_classic"] = achievement.matches_classic
+        context["achievement_matches_coop"] = achievement.matches_coop
+        context["achievement_matches_won"] = achievement.matches_won
+        ############### END
     else:
         context["h1_text"] = "You are not logged in"
     context["user_is_logged_in"] = user_is_logged_in

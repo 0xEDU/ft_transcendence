@@ -12,3 +12,18 @@ class User(models.Model):
 
     def __str__(self):
         return f"I am user [{self.id}] - {self.display_name}"
+
+
+class Achievements(models.Model):
+    """Model for achievements."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ball_distance = models.IntegerField(default=0)
+    friends_count = models.IntegerField(default=0)
+    hours_played = models.IntegerField(default=0)
+    matches_classic = models.IntegerField(default=0)
+    matches_coop = models.IntegerField(default=0)
+    matches_won = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"I am user [{self.user.login_intra}]'s achievements"
