@@ -265,7 +265,7 @@ const countdownStart = () => {
 const start = () => {
 	if (rightScore === winningScore || leftScore === winningScore) {
 		stopGame();
-        drawScore();
+		drawScore();
 		return;
 	}
 
@@ -284,14 +284,14 @@ const start = () => {
 	if (ballX + dx > canvas.width / 2) {
 		rightScore++;
 		resetBall();
-        drawScore();
+		drawScore();
 		return;
 	}
 
 	if (ballX + dx < -canvas.width / 2) {
 		leftScore++;
 		resetBall();
-        drawScore;
+		drawScore;
 		return;
 	}
 
@@ -329,7 +329,6 @@ const keyDownHandler = (e) => {
 		rightScore = 0;
 		leftScore = 0;
 		stateMachine.state = "NotStarted"
-		
 	}
 }
 
