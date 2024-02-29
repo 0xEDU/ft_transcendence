@@ -10,6 +10,7 @@ class User(models.Model):
     avatar_image_url = models.CharField(max_length=200, null=True)
 
 class Achievements(models.Model):
+    """Model for achievements."""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ball_distance = models.IntegerField()
