@@ -24,3 +24,6 @@ class Achievements(models.Model):
     matches_classic = models.IntegerField(default=0)
     matches_coop = models.IntegerField(default=0)
     matches_won = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"I am user [{self.user.login_intra}]'s achievements"

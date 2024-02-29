@@ -31,8 +31,7 @@ def home(request):
         context["user_image"] = user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url
         user_is_logged_in = True
         ############## ACHIEVEMENTS VALUES
-        user_achievements = Achievements.objects.filter(user=user)
-        achievement = user_achievements.first()
+        achievement, _ = Achievements.objects.get_or_create(user=user)
         context["achievement_ball_distance"] = achievement.ball_distance
         context["achievement_friends_count"] = achievement.friends_count
         context["achievement_hours_played"] = achievement.hours_played
