@@ -1,5 +1,5 @@
-import scrollToSection from "./control-panel.js";
-import {showControlPanel} from "./play-button.js";
+import { scrollToSection } from "./control-panel.js";
+import { showControlPanel } from "./play-button.js";
 
 // Game constants (trying to avoid magic numbers)
 let canvas;
