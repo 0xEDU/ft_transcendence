@@ -6,10 +6,13 @@ div#userInfoContainer {
     margin-left: 15vw;
 }
 
-img#userImage {
+.roundedSquareImage {
 	border-radius: 8px;
 	border: 3px solid #FCFCFC;
-	object-fit: cover;
+	background-size: cover; /* Scale the background image to cover the entire container */
+	background-position: center; /* Center the background image within the container */
+	width: 221px;
+	height: 221px;
 }
 
 p#userLogin {
