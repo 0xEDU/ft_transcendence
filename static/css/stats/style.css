@@ -44,3 +44,27 @@ p#matchDate {
     width: 20vh;
     text-align: center;
 }
+
+div#rectangle {
+    width: 470px; /* Adjust the width as needed */
+    height: 221px; /* Adjust the height as needed */
+    background-color: #3A3535; /* Set the background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div#rectangleSpace {
+    width: 470px; /* Adjust the width as needed */
+    height: 70px; /* Adjust the height as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div#verticalDiv {
+    width: 315px; /* Adjust the width as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

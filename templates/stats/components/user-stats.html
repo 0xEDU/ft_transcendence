@@ -1,1 +1,29 @@
-<h1>user</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/stats/style.css' %}">
+
+<div id="userStatsDiv" class="text-white d-flex justify-content-evenly">
+	<!-- Retangulo da esquerda -->
+	<div class="d-flex flex-column mt-3 me-3 justify-content-between">
+	<div id="rectangle">
+		<p>teste dentro do retangulo (top)</p>
+	</div>
+	<div id="rectangleSpace"></div>
+	<div id="rectangle">
+        <p>teste dentro do retângulo (bottom)
+	</div>
+	</div>
+	<!-- meio -->
+    <div id="verticalDiv" class="d-flex-column justify-content-center">
+        <p>Teste</p>
+        
+    </div>
+	<!-- Retangulo da direita -->
+	<div class="d-flex flex-column mt-3 me-3 justify-content-between">
+		<div id="rectangle">
+			<p>teste dentro do retangulo (top)</p>
+		</div>
+		<div id="rectangleSpace"></div>
+		<div id="rectangle">
+			<p>teste dentro do retângulo (bottom)
+		</div>
+</div>
