@@ -3,7 +3,7 @@
 import os
 
 # Our imports
-from soninha.models import User
+from soninha.models import User,Achievements
 
 # Django's imports
 from django.shortcuts import render
