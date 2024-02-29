@@ -32,7 +32,6 @@ def home(request):
         user_is_logged_in = True
         ############## ACHIEVEMENTS VALUES
         achievement, _ = Achievements.objects.get_or_create(user=user)
-        print(achievement)
         context["achievement_ball_distance"] = achievement.ball_distance
         context["achievement_friends_count"] = achievement.friends_count
         context["achievement_hours_played"] = achievement.hours_played

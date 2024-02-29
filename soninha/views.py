@@ -52,8 +52,7 @@ class LoginView(View):
         pfp_intra = response["image"]["versions"]["medium"]
         if not pfp_intra:
             pfp_intra = "/static/images/default_user_image.svg"
-        new_user, _ = User.objects.get_or_create(
-            display_name=login_intra, login_intra=login_intra, intra_cdn_profile_picture_url=pfp_intra)
+        new_user, _ = User.objects.get_or_create(login_intra=login_intra)
         request.session["user_id"] = new_user.id
         achievements, _ = Achievements.objects.get_or_create(user=new_user)
         return redirect('/')  # This will return the html
