@@ -1,6 +1,7 @@
 """Core views."""
 from django.shortcuts import render
 from soninha.models import User
+from soninha.models import Achievements
 from soninha.views import UserTemplateView
 import os
 
@@ -25,6 +26,18 @@ def home(request):
         context["user_login"] = user.login_intra
         context["user_display_name"] = user.display_name
         context["user_image"] = user.avatar_image_url
+
+############## ACHIEVEMENTS VALUES
+        user_achievements = Achievements.objects.filter(user=user)
+        achievement = user_achievements.first()
+        context["achievement_ball_distance"] = achievement.ball_distance
+        context["achievement_friends_count"] = achievement.friends_count
+        context["achievement_hours_played"] = achievement.hours_played
+        context["achievement_matches_classic"] = achievement.matches_classic
+        context["achievement_matches_coop"] = achievement.matches_coop
+        context["achievement_matches_won"] = achievement.matches_won
+############### END
+
         user_is_logged_in = True
     else:
         context["h1_text"] = "You are not logged"

@@ -22,16 +22,74 @@
 				<p id="userAchievementsText">ACHIEVEMENTS</p>
 				<!-- First row of images -->
 				<div class="d-flex justify-content-between">
-					<img id="victories" width=80 height=80 src="{% static 'achievements/victory-white.png' %}" alt="Achievement 1">
-					<img id="victories" width=80 height=80 src="{% static 'achievements/hours-white.png' %}" alt="Achievement 2">
-					<img id="victories" width=80 height=80 src="{% static 'achievements/friends-white.png' %}" alt="Achievement 3">
+					<!-- Ball Distance -->
+					{% if achievement_ball_distance >= 42 %}
+						<img id="ball_4" width=80 height=80 src="{% static 'achievements/distance-gold.png' %}" alt="Achievement 1">
+					{% elif achievement_ball_distance >= 21 %}
+						<img id="ball_3" width=80 height=80 src="{% static 'achievements/distance-silver.png' %}" alt="Achievement 1">
+					{% elif achievement_ball_distance >= 10 %}
+						<img id="ball_2" width=80 height=80 src="{% static 'achievements/distance-copper.png' %}" alt="Achievement 1">
+					{% else %}
+						<img id="ball_1" width=80 height=80 src="{% static 'achievements/distance-white.png' %}" alt="Achievement 1">
+					{% endif %}
+
+					<!-- Friends Count -->
+					{% if achievement_friends_count >= 42 %}
+						<img id="friends_4" width=80 height=80 src="{% static 'achievements/friends-gold.png' %}" alt="Achievement 1">
+					{% elif achievement_friends_count >= 21 %}
+						<img id="friends_3" width=80 height=80 src="{% static 'achievements/friends-silver.png' %}" alt="Achievement 1">
+					{% elif achievement_friends_count >= 10 %}
+						<img id="friends_2" width=80 height=80 src="{% static 'achievements/friends-copper.png' %}" alt="Achievement 1">
+					{% else %}
+						<img id="friends_1" width=80 height=80 src="{% static 'achievements/friends-white.png' %}" alt="Achievement 1">
+					{% endif %}
+
+					<!-- Hours Played -->
+					{% if achievement_hours_played >= 7 %}
+						<img id="hours_4" width=80 height=80 src="{% static 'achievements/hours-gold.png' %}" alt="Achievement 1">
+					{% elif achievement_hours_played >= 3 %}
+						<img id="hours_3" width=80 height=80 src="{% static 'achievements/hours-silver.png' %}" alt="Achievement 1">
+					{% elif achievement_hours_played >= 1 %}
+						<img id="hours_2" width=80 height=80 src="{% static 'achievements/hours-copper.png' %}" alt="Achievement 1">
+					{% else %}
+						<img id="hours_1" width=80 height=80 src="{% static 'achievements/hours-white.png' %}" alt="Achievement 1">
+					{% endif %}
 				</div>
 		
 				<!-- Second row of images -->
 				<div class="d-flex justify-content-between mt-3">
-					<img id="victories" width=80 height=80 src="{% static 'achievements/distance-white.png' %}" alt="Achievement 4">
-					<img id="victories" width=80 height=80 src="{% static 'achievements/co-op-white.png' %}" alt="Achievement 5">
-					<img id="victories" width=80 height=80 src="{% static 'achievements/classic-white.png' %}" alt="Achievement 6">
+					<!-- Classic -->
+					{% if achievement_matches_classic >= 42 %}
+						<img id="classic_4" width=80 height=80 src="{% static 'achievements/classic-gold.png' %}" alt="Achievement 1">
+					{% elif achievement_matches_classic >= 21 %}
+						<img id="classic_3" width=80 height=80 src="{% static 'achievements/classic-silver.png' %}" alt="Achievement 1">
+					{% elif achievement_matches_classic >= 10 %}
+						<img id="classic_2" width=80 height=80 src="{% static 'achievements/classic-copper.png' %}" alt="Achievement 1">
+					{% else %}
+						<img id="classic_1" width=80 height=80 src="{% static 'achievements/classic-white.png' %}" alt="Achievement 1">
+					{% endif %}
+
+					<!-- Co-op Count -->
+					{% if achievement_matches_coop >= 42 %}
+						<img id="co-op_4" width=80 height=80 src="{% static 'achievements/co-op-gold.png' %}" alt="Achievement 1">
+					{% elif achievement_matches_coop >= 21 %}
+						<img id="co-op_3" width=80 height=80 src="{% static 'achievements/co-op-silver.png' %}" alt="Achievement 1">
+					{% elif achievement_matches_coop >= 10 %}
+						<img id="co-op_2" width=80 height=80 src="{% static 'achievements/co-op-copper.png' %}" alt="Achievement 1">
+					{% else %}
+						<img id="co-op_1" width=80 height=80 src="{% static 'achievements/co-op-white.png' %}" alt="Achievement 1">
+					{% endif %}
+
+					<!-- Win Played -->
+					{% if achievement_matches_won >= 42 %}
+						<img id="victory_4" width=80 height=80 src="{% static 'achievements/victory-gold.png' %}" alt="Achievement 1">
+					{% elif achievement_matches_won >= 21 %}
+						<img id="victory_3" width=80 height=80 src="{% static 'achievements/victory-silver.png' %}" alt="Achievement 1">
+					{% elif achievement_matches_won >= 10 %}
+						<img id="victory_2" width=80 height=80 src="{% static 'achievements/victory-copper.png' %}" alt="Achievement 1">
+					{% else %}
+						<img id="victory_1" width=80 height=80 src="{% static 'achievements/victory-white.png' %}" alt="Achievement 1">
+					{% endif %}
 				</div>
 			</div>
 			<div id="friends">
