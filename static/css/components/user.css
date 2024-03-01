@@ -16,12 +16,12 @@ div#userInfoContainer {
 }
 
 p#userLogin {
-	font-size: 4em;
-	margin-bottom: 0;
+	font-size: 2em;
 }
 
 p#userDisplayName {
-	font-size: 2em;
+	font-size: 4em;
+	margin-bottom: 0;
 }
 
 p#userStats {

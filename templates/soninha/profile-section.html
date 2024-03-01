@@ -9,8 +9,10 @@
         {% include "soninha/partials/profile-picture.html" %}
 
         <div id="userInfoDiv" class="d-flex flex-column justify-content-center text-white ms-5">
+
+          {% include "soninha/partials/display-name.html" %}
+
           <p id="userLogin">{{ user_login }}</p>
-          <p id="userDisplayName">{{ user_display_name }}</p>
           <div id="userStatsDiv" class="d-flex mt-3">
             <p id="userStats">🙌 {{ user_helps }}</p>
             <p id="userStats">📍 {{ user_ball_distance }}</p>
