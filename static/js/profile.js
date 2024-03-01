@@ -58,8 +58,7 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
                     const trimmedHtml = html.replace(/(\r\n|\n|\r){2,}/gm, '\n').trim()
                     if (!hasSiblingElement("profilePicEditionInput", trimmedHtml))
                         appendElement("profilePicEditionInput", trimmedHtml)
-
-                    return ;
+                    return;
                 });
             } else {
                 // Handle other response statuses (e.g., server errors)
@@ -71,11 +70,11 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
                 // Update the profile picture in the browser
                 let userImage = document.getElementById("userImage")
                 userImage.style.backgroundImage = `url(${data.new_pfp_url})`;
-    
+
                 // Reset input field
                 document.getElementById('profilePicEditionInput').value = ''
                 deleteElement("formErrMsg");
-    
+
                 // Close the Bootstrap modal
                 profilePictureEditionModal.hide();
             }
@@ -83,4 +82,32 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
         .catch(error => {
             console.error('Error:', error);
         });
+});
+
+// Get the button element
+var button = document.querySelector('#userDisplayName > button');
+var formButton = document.querySelector('#userDisplayNameForm button');
+var inputField = document.querySelector('#userDisplayNameForm input[type="text"]');
+
+// Get the alternating elements
+var paragraph = document.querySelector('#userDisplayName');
+var form = document.getElementById('userDisplayNameForm');
+
+// Add click event listener to the buttons
+button.addEventListener('click', function () {
+    // Toggle the 'd-none' class to alternating elements
+    paragraph.classList.add('d-none');
+    form.classList.remove('d-none');
+
+    // Focus input field
+    inputField.focus();
+    inputField.setSelectionRange(inputField.value.length, inputField.value.length);
+});
+
+formButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    // Toggle the 'd-none' class to alternating elements
+    paragraph.classList.remove('d-none');
+    form.classList.add('d-none');
 });

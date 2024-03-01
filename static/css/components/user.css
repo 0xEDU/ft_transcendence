@@ -1,9 +1,9 @@
 div#userDiv {
-	margin-top: 8vh;	
+	margin-top: 8vh;
 }
 
 div#userInfoContainer {
-    margin-left: 15vw;
+	margin-left: 15vw;
 }
 
 .roundedSquareImage {
@@ -19,9 +19,37 @@ p#userLogin {
 	font-size: 2em;
 }
 
-p#userDisplayName {
+#userDisplayName span {
 	font-size: 4em;
 	margin-bottom: 0;
+	user-select: none;
+}
+
+button:has(> i.fa.fa-pencil-square) {
+	background-color: transparent;
+	border: none;
+  }
+
+.fa-pencil-square {
+	color: var(--WHITE);
+	font-size: 2em;
+}
+
+#userDisplayName>button {
+	transition: transform 0.2s ease;
+}
+
+#userDisplayName>button:hover {
+	transform: scale(1.2);
+}
+
+#userDisplayNameForm input {
+	background-color: var(--LIGHT_GRAY);
+	color: var(--WHITE);
+	border: none;
+	font-size: 4em;
+	margin-bottom: 0;
+	width: 80%;
 }
 
 p#userStats {
@@ -48,6 +76,6 @@ p#friendsText {
 }
 
 img#achieveImage:hover {
-    transform: scale(1.2); /* Increase size on hover (1.2 is just an example, adjust as needed) */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Adding box shadow for a visual effect */
+	transform: scale(1.2);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
