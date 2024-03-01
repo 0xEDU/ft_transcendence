@@ -2,10 +2,11 @@
 
 <div id="userDiv" class="d-flex">
   <div id="userInfoContainer" class="d-flex flex-column">
-    {% if user_image %}
-      <div class="d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
 
-        {% include "soninha/partials/profile-picture.html" %}
+        {% if user_image %}
+          {% include "soninha/partials/profile-picture.html" %}
+        {% endif %}
 
         <div id="userInfoDiv" class="d-flex flex-column justify-content-center text-white ms-5">
 
@@ -99,7 +100,6 @@
           <p id="friendsText">MATES ALONG THE WAY</p>
         </div>
       </div>
-    {% endif %}
   </div>
 </div>
 
