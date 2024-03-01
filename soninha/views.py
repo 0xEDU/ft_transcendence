@@ -67,13 +67,13 @@ class LogoutView(View):
         return HttpResponse('')
 
 
-def update_profile_picture(request):
-    if request.method == 'POST':
+class ProfilePictureView(View):
+    def post(self, request, *args, **kwargs):
         uploaded_file = request.FILES.get('profilePicture')
         if not uploaded_file:
-            return render(request=request, template_name='components/errors/empty_profile_picture_form.html', status=400)
+            return render(request=request, template_name='components/errors/empty_profile_picture_form.html', status=HTTPStatus.BAD_REQUEST)
 
-        user = get_object_or_404(User, pk=request.session["user_id"])
+        user = get_object_or_404(User, pk=request.session.get("user_id"))
 
         # Delete the old profile picture file if it exists
         if user.profile_picture:
@@ -102,5 +102,18 @@ def update_profile_picture(request):
         user.save()
 
         return JsonResponse({"new_pfp_url": user.profile_picture.url}, status=HTTPStatus.OK)
-    return HttpResponse(status=HTTPStatus.METHOD_NOT_ALLOWED)
 
+class DisplayNameView(View):
+    def post(self, request, *args, **kwargs):
+        new_display_name = request.POST.get("display-name")
+
+        if not new_display_name:
+            return render(request=request, template_name='components/errors/empty_display_name_form.html', status=HTTPStatus.BAD_REQUEST)
+
+        user = get_object_or_404(User, pk=request.session.get("user_id"))
+
+        # Update the user's profile picture attribute with the file path
+        user.display_name = new_display_name
+        user.save()
+
+        return JsonResponse({"new_display_name": user.display_name}, status=HTTPStatus.OK)

@@ -1,0 +1,14 @@
+<p id="userDisplayName" class="d-flex justify-content-start align-items-center mb-0">
+  <span>{{ user_display_name }}</span>
+  <button type="button" aria-label="Edit user display name" class="ms-3"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>
+</p>
+
+<form id="userDisplayNameForm"
+  class="d-none d-flex justify-content-start align-items-center"
+  method="post"
+  action="{% url "soninha:display_name" %}"
+>
+  {% csrf_token %}
+  <input id="displayNameEditionInput" type="text" name="display-name" value="{{ user_display_name }}" maxlength="20" required />
+  <button type="submit" aria-label="Edit user display name" class="ms-3"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>
+</form>
