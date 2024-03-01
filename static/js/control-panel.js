@@ -177,6 +177,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
                 if (displacementPctg < -0.7 || displacementPctg > 0.7)
                     activateFullMotion = true;
+                else
+                    activateFullMotion = false;
             }
         }
     });
