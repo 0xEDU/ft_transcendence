@@ -2,8 +2,9 @@ import hasSiblingElement from "./tinyDOM/hasSiblingElement.js"
 import appendElement from "./tinyDOM/appendElement.js"
 import deleteElement from "./tinyDOM/deleteElement.js"
 
-const profilePictureEditionModal = new bootstrap.Modal(document.getElementById("profilePictureEditionModal"));
 
+// ------------------------------------------------- Profile Picture Edition ---
+// Update preview with selected photo
 document.getElementById('profilePicEditionInput').addEventListener('change', function (event) {
     // When the user selects a new picture from the file system, 
     let file = event.target.files[0];
@@ -36,6 +37,7 @@ document.getElementById('profilePicEditionInput').addEventListener('change', fun
     }
 });
 
+// Profile picture form submission
 document.getElementById("profilePictureEditionForm").addEventListener("submit", function (event) {
     // Prevent the default form submission behavior
     event.preventDefault();
@@ -43,8 +45,12 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
     // Collect form data
     const formData = new FormData(event.target);
 
-    fetch('/auth/user/profile-picture', {
-        method: 'POST',
+    // Send request
+    const url = event.target.getAttribute('action');
+    const method = event.target.getAttribute('method');
+
+    fetch(url, {
+        method: method,
         body: formData
     })
         .then(response => {
@@ -84,17 +90,15 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
         });
 });
 
-// Get the button element
-var button = document.querySelector('#userDisplayName > button');
-var formButton = document.querySelector('#userDisplayNameForm button');
-var inputField = document.querySelector('#userDisplayNameForm input[type="text"]');
-
+// ------------------------------------------------- Display Name Edition ------
 // Get the alternating elements
-var paragraph = document.querySelector('#userDisplayName');
-var form = document.getElementById('userDisplayNameForm');
+let paragraph = document.querySelector('#userDisplayName');
+let form = document.getElementById('userDisplayNameForm');
 
-// Add click event listener to the buttons
-button.addEventListener('click', function () {
+// Add click event listener to display name button
+document.querySelector('#userDisplayName > button').addEventListener('click', function () {
+    let inputField = document.querySelector('#userDisplayNameForm input[type="text"]');
+
     // Toggle the 'd-none' class to alternating elements
     paragraph.classList.add('d-none');
     form.classList.remove('d-none');
@@ -104,10 +108,56 @@ button.addEventListener('click', function () {
     inputField.setSelectionRange(inputField.value.length, inputField.value.length);
 });
 
-formButton.addEventListener('click', function (event) {
+// Display name form submission
+document.getElementById("userDisplayNameForm").addEventListener("submit", function (event) {
+    // Prevent the default form submission behavior
     event.preventDefault();
 
-    // Toggle the 'd-none' class to alternating elements
-    paragraph.classList.remove('d-none');
-    form.classList.add('d-none');
+    // Collect form data
+    const formData = new FormData(event.target);
+
+    // Send request
+    const url = event.target.getAttribute('action');
+    const method = event.target.getAttribute('method');
+
+    fetch(url, {
+        method: method,
+        body: formData
+    })
+        .then(response => {
+            // Check if the response status is 200 OK
+            if (response.ok) {
+                return response.json();
+            } else if (response.status === 400) {
+                // Handle the response as HTML (rendered template)
+                return response.text().then(html => {
+                    // Work with the HTML content here
+                    const trimmedHtml = html.replace(/(\r\n|\n|\r){2,}/gm, '\n').trim()
+                    if (!hasSiblingElement("displayNameEditionInput", trimmedHtml))
+                        appendElement("displayNameEditionInput", trimmedHtml)
+                    return;
+                });
+            } else {
+                // Handle other response statuses (e.g., server errors)
+                throw new Error('Server error: ' + response.statusText);
+            }
+        })
+        .then(data => {
+            if (data) {
+                // Update the display name in the browser
+                let displayName = document.querySelector("#userDisplayName span")
+                displayName.textContent = data.new_display_name;
+
+                // Reset input field
+                document.querySelector('#userDisplayNameForm input[name="display-name"]').value = data.new_display_name
+                deleteElement("formErrMsg");
+
+                // Toggle the 'd-none' class to alternating elements
+                paragraph.classList.remove('d-none');
+                form.classList.add('d-none');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 });
