@@ -1,7 +1,10 @@
 @import 'components/control-panel/base.css';
 @import 'components/control-panel/switch.css';
+@import 'sections/kudos.css';
+@import 'sections/lobby.css';
 @import 'sections/login.css';
 @import 'sections/profile.css';
+@import 'sections/stats.css';
 
 * {
     margin: 0;
