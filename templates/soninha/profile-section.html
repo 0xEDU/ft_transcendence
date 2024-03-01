@@ -5,11 +5,9 @@
   <div id="userInfoContainer" class="d-flex flex-column">
     {% if user_image %}
       <div class="d-flex justify-content-center align-items-center">
-        <div id="profilePicture">
-          <div id="userImage" class="roundedSquareImage" style="background-image: url('{{ user_image }}');"></div>
-          <!-- Button to trigger modal -->
-          <button class="btn" data-bs-toggle="modal" data-bs-target="#profilePictureEditionModal"><i class="fa fa-pencil"></i></button>
-        </div>
+
+        {% include "soninha/partials/profile-picture.html" %}
+
         <div id="userInfoDiv" class="d-flex flex-column justify-content-center text-white ms-5">
           <p id="userLogin">{{ user_login }}</p>
           <p id="userDisplayName">{{ user_display_name }}</p>
