@@ -3,11 +3,12 @@ div#profilePicture {
 }
 
 #profilePicture .btn {
-    color: var(--WHITE);
+	color: var(--WHITE);
     position: absolute;
     bottom:0;
     right:0;
     padding: 0 7% 7% 0;
+	border: none;
 }
 
 #profilePicture .btn i {
