@@ -4,6 +4,9 @@ import deleteElement from "./tinyDOM/deleteElement.js"
 
 
 // ------------------------------------------------- Profile Picture Edition ---
+
+let profilePictureEditionModal = new bootstrap.Modal(document.getElementById('profilePictureEditionModal'));
+
 // Update preview with selected photo
 document.getElementById('profilePicEditionInput').addEventListener('change', function (event) {
     // When the user selects a new picture from the file system, 
