@@ -1,8 +1,8 @@
-{% load static %}
+{% load static i18n %}
 
 <div id="matchesHistoryDiv" class="text-white d-flex justify-content-evenly">
     <div id="historyDiv" class="d-flex flex-column mt-5 me-5">
-        <p class="m-0 ms-1 fw-bold">CO-OP</p>
+        <p class="m-0 ms-1 fw-bold">{% translate "CO-OP" %}</p>
         <div id="coopHistoryDiv" class="d-flex flex-column">
             <table>
                 <tbody>
@@ -16,7 +16,7 @@
                 </tbody>
             </table>
         </div>
-        <p class="m-0 ms-1 fw-bold">CLASSIC</p>
+        <p class="m-0 ms-1 fw-bold">{% translate "CLASSIC" %}</p>
         <div id="versusHistoryDiv">
             <table>
                 <tbody>
@@ -34,7 +34,7 @@
     <div id="matchesDiv" class="overflow-scroll">
         {% if not match_rows %}
             <div id="matchRow" class="d-flex justify-content-between text-white fw-bold align-items-center px-2 py-2 mb-2">
-                <p id="matchText" class="m-0">No matches played yet</p>
+                <p id="matchText" class="m-0">{% translate "No matches played yet" %}</p>
             </div>
         {% else %}
             {% for match in match_rows %}
