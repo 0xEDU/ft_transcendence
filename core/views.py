@@ -35,7 +35,7 @@ class IndexView(View):
 
         # Check if there is a logged in user
         session = request.session
-        user_is_logged_in = "user_id" in session and session["user_id"] != ""
+        user_is_logged_in = "user_id" in session and session.get("user_id", '') != ''
         context["user_is_logged_in"] = user_is_logged_in
         if user_is_logged_in:
             # Get user info
