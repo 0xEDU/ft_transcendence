@@ -1,0 +1,74 @@
+{% load static i18n %}
+
+<h2>{% translate "ACHIEVEMENTS" %}</h2>
+<!-- First row of images -->
+<div class="d-flex justify-content-between">
+<!-- Ball Distance -->
+{% if achievement_ball_distance >= 42 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/distance-gold.png' %}" alt="{% translate 'Gold distance achievement' %}" title="{% translate 'Gold distance achievement aquired!' %}">
+{% elif achievement_ball_distance >= 21 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/distance-silver.png' %}" alt="{% translate 'Silver distance achievement' %}" title="{% translate 'Silver distance achievement aquired!' %}">
+{% elif achievement_ball_distance >= 10 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/distance-copper.png' %}" alt="{% translate 'Copper distance achievement' %}" title="{% translate 'Copper distance achievement aquired!' %}">
+{% else %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/distance-white.png' %}" alt="{% translate 'White distance achievement' %}" title="{% translate 'No distance achievement aquired yet, go play some matches!' %}">
+{% endif %}
+
+<!-- Friends Count -->
+{% if achievement_friends_count >= 21 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/friends-gold.png' %}" alt="{% translate 'Gold friends achievement' %}" title="{% translate 'Gold friends achievement aquired!' %}">
+{% elif achievement_friends_count >= 10 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/friends-silver.png' %}" alt="{% translate 'Silver friends achievement' %}" title="{% translate 'Silver friends achievement aquired!' %}">
+{% elif achievement_friends_count >= 5 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/friends-copper.png' %}" alt="{% translate 'Copper friends achievement' %}" title="{% translate 'Copper friends achievement aquired!' %}">
+{% else %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/friends-white.png' %}" alt="{% translate 'White friends achievement' %}" title="{% translate 'No friends achievement aquired yet, go play some matches!' %}">
+{% endif %}
+
+<!-- Hours Played -->
+{% if achievement_hours_played >= 7 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/hours-gold.png' %}" alt="{% translate 'Gold time played achievement' %}" title="{% translate 'Gold time played achievement aquired!' %}">
+{% elif achievement_hours_played >= 3 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/hours-silver.png' %}" alt="{% translate 'Silver time played achievement' %}" title="{% translate 'Silver time played achievement aquired!' %}">
+{% elif achievement_hours_played >= 1 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/hours-copper.png' %}" alt="{% translate 'Copper time played achievement' %}" title="{% translate 'Copper time played achievement aquired!' %}">
+{% else %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/hours-white.png' %}" alt="{% translate 'White time played achievement' %}" title="{% translate 'No time played achievement aquired yet, go play some matches!' %}">
+{% endif %}
+</div>
+
+<!-- Second row of images -->
+<div class="d-flex justify-content-between mt-3">
+<!-- Classic -->
+{% if achievement_matches_classic >= 42 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/classic-gold.png' %}" alt="{% translate 'Gold classic matches achievement' %}" title="{% translate 'Gold classic matches achievement aquired!' %}">
+{% elif achievement_matches_classic >= 21 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/classic-silver.png' %}" alt="{% translate 'Silver classic matches achievement' %}" title="{% translate 'Silver classic matches achievement aquired!' %}">
+{% elif achievement_matches_classic >= 10 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/classic-copper.png' %}" alt="{% translate 'Copper classic matches achievement' %}" title="{% translate 'Copper classic matches achievement aquired!' %}">
+{% else %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/classic-white.png' %}" alt="{% translate 'White classic matches achievement' %}" title="{% translate 'No classic matches achievement aquired yet, go play some matches!' %}">
+{% endif %}
+
+<!-- Co-op Count -->
+{% if achievement_matches_coop >= 42 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/co-op-gold.png' %}" alt="{% translate 'Gold co-op matches achievement' %}" title="{% translate 'Gold co-op matches achievement aquired!' %}">
+{% elif achievement_matches_coop >= 21 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/co-op-silver.png' %}" alt="{% translate 'Silver co-op matches achievement' %}" title="{% translate 'Silver co-op matches achievement aquired!' %}">
+{% elif achievement_matches_coop >= 10 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/co-op-copper.png' %}" alt="{% translate 'Copper co-op matches achievement' %}" title="{% translate 'Copper co-op matches achievement aquired!' %}">
+{% else %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/co-op-white.png' %}" alt="{% translate 'White co-op matches achievement' %}" title="{% translate 'No co-op matches achievement aquired yet, go play some matches!' %}">
+{% endif %}
+
+<!-- Win Played -->
+{% if achievement_matches_won >= 42 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/victory-gold.png' %}" alt="{% translate 'Gold matches won achievement' %}" title="{% translate 'Gold matches won achievement aquired!' %}">
+{% elif achievement_matches_won >= 21 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/victory-silver.png' %}" alt="{% translate 'Silver matches won achievement' %}" title="{% translate 'Silver matches won achievement aquired!' %}">
+{% elif achievement_matches_won >= 10 %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/victory-copper.png' %}" alt="{% translate 'Copper matches won achievement' %}" title="{% translate 'Copper matches won achievement aquired!' %}">
+{% else %}
+  <img id="achieveImage" width=80 height=80 src="{% static 'achievements/victory-white.png' %}" alt="{% translate 'White matches won achievement' %}" title="{% translate 'No matches won achievement aquired yet, go play some matches!' %}">
+{% endif %}
+</div>
