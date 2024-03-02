@@ -42,13 +42,7 @@ div#userInfoContainer {
 	height: 221px;
 }
 
-p#userLogin {
-	font-size: 2em;
-}
-
 #userDisplayName span {
-	font-size: 4em;
-	margin-bottom: 0;
 	user-select: none;
 }
 
@@ -79,11 +73,6 @@ button:has(> i.fa.fa-pencil-square) {
 	width: 80%;
 }
 
-p#userStats {
-	font-size: 1.5em;
-	margin-right: 3rem !important;
-}
-
 div#achievementsAndFriends {
 	display: flex;
 	flex-direction: row;
@@ -94,12 +83,6 @@ div#achievementsAndFriends {
 
 div#friends {
 	margin-left: 3em;
-}
-
-p#userAchievementsText,
-p#friendsText {
-	color: #FCFCFC;
-	font-size: 2em;
 }
 
 img#achieveImage:hover {

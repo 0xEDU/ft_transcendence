@@ -12,18 +12,18 @@
 
           {% include "soninha/partials/display-name.html" %}
 
-          <p id="userLogin">{{ user_login }}</p>
+          <h3>{{ user_login }}</h3>
           <div id="userStatsDiv" class="d-flex mt-3">
-            <p id="userStats">🙌 {{ user_helps }}</p>
-            <p id="userStats">📍 {{ user_ball_distance }}</p>
-            <p id="userStats">🕰️ {{ user_time_played }}</p>
-            <p id="userStats">👯 {{ user_number_of_friends }}</p>
+            <h4 class="ms-3">🙌 {{ user_helps }}</h4>
+            <h4 class="ms-3">📍 {{ user_ball_distance }}</h4>
+            <h4 class="ms-3">🕰️ {{ user_time_played }}</h4>
+            <h4 class="ms-3">👯 {{ user_number_of_friends }}</h4>
           </div>
         </div>
       </div>
       <div id="achievementsAndFriends">
         <div id="achievements">
-          <p id="userAchievementsText">{% translate "ACHIEVEMENTS" %}</p>
+          <h2>{% translate "ACHIEVEMENTS" %}</h2>
           <!-- First row of images -->
 				<div class="d-flex justify-content-between">
 					<!-- Ball Distance -->
@@ -97,7 +97,7 @@
 				</div>
         </div>
         <div id="friends">
-          <p id="friendsText">{% translate "MATES ALONG THE WAY" %}</p>
+          <h2>{% translate "MATES ALONG THE WAY" %}</h2>
         </div>
       </div>
   </div>

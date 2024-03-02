@@ -2,7 +2,7 @@
 
 <div id="matchesHistoryDiv" class="text-white d-flex justify-content-evenly">
     <div id="historyDiv" class="d-flex flex-column mt-5 me-5">
-        <p class="m-0 ms-1 fw-bold">{% translate "CO-OP" %}</p>
+        <h4 class="m-0 ms-1">{% translate "CO-OP" %}</h4>
         <div id="coopHistoryDiv" class="d-flex flex-column">
             <table>
                 <tbody>
@@ -16,7 +16,7 @@
                 </tbody>
             </table>
         </div>
-        <p class="m-0 ms-1 fw-bold">{% translate "CLASSIC" %}</p>
+        <h4 class="m-0 ms-1">{% translate "CLASSIC" %}</h4>
         <div id="versusHistoryDiv">
             <table>
                 <tbody>
@@ -33,12 +33,12 @@
     </div>
     <div id="matchesDiv" class="overflow-scroll">
         {% if not match_rows %}
-            <div id="matchRow" class="d-flex justify-content-between text-white fw-bold align-items-center px-2 py-2 mb-2">
+            <div id="matchRow" class="d-flex justify-content-between text-white align-items-center px-2 py-2 mb-2">
                 <p id="matchText" class="m-0">{% translate "No matches played yet" %}</p>
             </div>
         {% else %}
             {% for match in match_rows %}
-                <div id="matchRow" class="d-flex justify-content-between text-white fw-bold align-items-center px-2 py-2 mb-2">
+                <div id="matchRow" class="d-flex justify-content-between text-white align-items-center px-2 py-2 mb-2">
                     <p id="matchText" class="m-0">{{ match.description }}</p>
                     <p id="matchScore" class="m-0">{{ match.score }}</p>
                     <p id="matchHour" class="m-0">{{ match.match_hour }}</p>
