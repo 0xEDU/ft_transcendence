@@ -48,18 +48,6 @@ div#rectangle {
     align-items: center;
 }
 
-div#rectangleSpace {
-    width: 470px;
-    height: 70px;
-}
-
-div#verticalDiv {
-    width: 315px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 p#userStatsText {
     min-width: 12vh;
     width: 80vh;
