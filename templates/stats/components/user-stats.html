@@ -1,28 +1,92 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/stats/style.css' %}">
+{% load static i18n %}
+<link rel="stylesheet" href="{% static 'css/sections/stats.css' %}">
 
-<div id="userStatsDiv" class="text-white d-flex justify-content-center">
-	<!-- Retangulo da esquerda -->
-	<div class="d-flex flex-column mt-3 me-3 justify-content-between">
-	<div id="rectangle">
-		<p>"Distance walked together"</p>
-	</div>
-	<div id="rectangleSpace"></div>
-	<div id="rectangle">
-        <p>"High Five Count"</p>
-	</div>
-	</div>
-	<!-- meio -->
-    <div id="verticalDiv" class="d-flex-column justify-content-center">
-		<p>You played XX matches with XXXXXXXXXXXXXXXXXXX</p>
-    </div>
-	<!-- Retangulo da direita -->
-	<div class="d-flex flex-column mt-3 me-3 justify-content-between">
-		<div id="rectangle">
-			<p>"Hours played"</p>
+<div class="container-fluid">
+	<!-- Empty Space Row -->
+	<div class="row mt-2"></div>
+  
+	<!-- Profile Header Section -->
+	<div class="row profile-header">
+	  <!-- Empty Space Column -->
+	  <div class="col-0 col-md-1"></div>
+	  
+	  <!-- First Column -->
+	  <div class="col-6 col-md-4">
+		<!-- Distance Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-2"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-3">
+					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-distance.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMid">10.5 miles</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "DISTANCE WALKED TOGETHER" %}</p>
 		</div>
-		<div id="rectangleSpace"></div>
-		<div id="rectangle">
-			<p>"Companions met"</p>
+		<!-- Empty Row -->
+		<div class="row mt-5"></div>
+		<!-- High Five Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-2"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-3">
+					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-friends.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMax">30</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "HIGH FIVE COUNT" %}</p>
 		</div>
-</div>
+	  </div>
+	  <!-- Bff Column -->
+	  <div class="col-6 col-md-2 d-flex-column justify-content-center">
+		<p>{% translate "You played XX matches with XXXXXXXXXXXXXXXXXXX" %}</p>
+	  </div>
+	  <!-- Second Column -->
+	  <div class="col-6 col-md-4">
+		<!-- Hours Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-2"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-3">
+					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-time.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMax">30</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "HOURS PLAYED" %}</p>
+		</div>
+		<!-- Empty Row -->
+		<div class="row mt-5"></div>
+		<!-- Companions Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-2"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-3">
+					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-person.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMax">30</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "COMPANIONS MET" %}</p>
+		</div>
+	  </div>
+  
+	  <!-- Empty Space Column -->
+	  <div class="col-0 col-md-1"></div>
+	</div>
+	
+  </div>

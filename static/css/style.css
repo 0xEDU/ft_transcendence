@@ -11,7 +11,7 @@
     padding: 0;
 
     /* DEBUGGING */
-    /* outline: 1px solid magenta; */
+    outline: 1px solid magenta;
 }
 
 body {

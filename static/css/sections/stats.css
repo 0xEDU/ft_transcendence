@@ -41,25 +41,38 @@ p#matchDate {
 }
 
 div#rectangle {
-    width: 470px; /* Adjust the width as needed */
-    height: 221px; /* Adjust the height as needed */
-    background-color: #3A3535; /* Set the background color */
+    background-color: #3A3535;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
 }
 
 div#rectangleSpace {
-    width: 470px; /* Adjust the width as needed */
-    height: 70px; /* Adjust the height as needed */
+    width: 470px;
+    height: 70px;
+}
+
+div#verticalDiv {
+    width: 315px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-div#verticalDiv {
-    width: 315px; /* Adjust the width as needed */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+p#userStatsText {
+    min-width: 12vh;
+    width: 80vh;
+    font-size: 1.8em;
+    text-align: center;
+}
+
+p#userStatsMid {
+    font-size: 2.2em;
+    text-align: center;
+}
+
+p#userStatsMax {
+    font-size: 3.3em;
+    text-align: center;
 }
