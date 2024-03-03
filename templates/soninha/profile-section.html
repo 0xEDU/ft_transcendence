@@ -1,34 +1,52 @@
 {% load static i18n %}
 
-<div id="userDiv" class="d-flex">
-  <div id="userInfoContainer" class="d-flex flex-column">
-    <div class="d-flex justify-content-center align-items-center">
+<div class="container-fluid">
+  <!-- Empty Space Row -->
+  <div class="row mt-5"></div>
 
-        {% if user_image %}
-          {% include "soninha/partials/profile-picture.html" %}
-        {% endif %}
-
-        <div id="userInfoDiv" class="d-flex flex-column justify-content-center text-white ms-5">
-
-          {% include "soninha/partials/display-name.html" %}
-
-          <h3>{{ user_login }}</h3>
-          <div id="userStatsDiv" class="d-flex mt-3">
-            <h4 class="ms-3">🙌 {{ user_helps }}</h4>
-            <h4 class="ms-3">📍 {{ user_ball_distance }}</h4>
-            <h4 class="ms-3">🕰️ {{ user_time_played }}</h4>
-            <h4 class="ms-3">👯 {{ user_number_of_friends }}</h4>
-          </div>
-        </div>
+  <!-- Profile Header Section -->
+  <div class="row profile-header">
+    <!-- Empty Space Column -->
+    <div class="col-0 col-md-2"></div>
+    
+    <!-- User Image Column -->
+    <div class="col-6 col-md-2">
+      {% if user_image %}
+      {% include "soninha/partials/profile-picture.html" %}
+      {% endif %}
+    </div>
+    <!-- User Digest Column -->
+    <div class="col-6 col-md-6">
+      {% include "soninha/partials/display-name.html" %}
+      <h3>{{ user_login }}</h3>
+      <div id="userStatsDiv" class="d-flex mt-3">
+        <h4 class="ms-3">🙌 {{ user_helps }}</h4>
+        <h4 class="ms-3">📍 {{ user_ball_distance }}</h4>
+        <h4 class="ms-3">🕰️ {{ user_time_played }}</h4>
+        <h4 class="ms-3">👯 {{ user_number_of_friends }}</h4>
       </div>
-      <div id="achievementsAndFriends">
-        <div id="achievements">
-          {% include "soninha/partials/achievements-segment.html" %}
-        </div>
-        <div id="friends">
-          {% include "soninha/partials/friends-segment.html" %}
-        </div>
-      </div>
+    </div>
+
+    <!-- Empty Space Column -->
+    <div class="col-0 col-md-2"></div>
+  </div>
+  
+  <!-- Bottom Half Section -->
+  <div class="row profile-bottom-half">
+    <!-- Empty Space Column -->
+    <div class="col-0 col-md-2"></div>
+
+    <!-- Achievements Segment -->
+    <div id="" class="col-6 col-md-4 achievements-segment">
+      {% include "soninha/partials/achievements-segment.html" %}
+    </div>
+    <!-- Friends Segment -->
+    <div class="col-6 col-md-4 friends-segment">
+      {% include "soninha/partials/friends-segment.html" %}
+    </div>
+
+    <!-- Empty Space Column -->
+    <div class="col-0 col-md-2"></div>
   </div>
 </div>
 
