@@ -23,18 +23,17 @@ div#profilePicture {
 
 section#profile .modal-footer {
     border-top: none;
-    /* Remove the top border of the modal footer */
 }
 
 .roundedSquareImage {
     border-radius: 8px;
     border: 3px solid #FCFCFC;
-    background-size: cover;
     /* Scale the background image to cover the entire container */
-    background-position: center;
+    background-size: cover;
     /* Center the background image within the container */
-    width: 221px;
-    height: 221px;
+    background-position: center;
+    width: 25vh;
+    height: 25vh;
 }
 
 #userDisplayName span {
@@ -68,7 +67,7 @@ button:has(> i.fa.fa-pencil-square) {
     width: 80%;
 }
 
-img#achieveImage:hover {
+img.achievementImage:hover {
     transform: scale(1.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
