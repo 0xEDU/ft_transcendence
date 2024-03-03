@@ -1,4 +1,4 @@
-import emptyElement from "./tinyDOM/emptyElement.js";
+import deleteElement from "./tinyDOM/deleteElement.js";
 
 export const state = {
     position: "",
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (state.isLoggedIn) {
                     // LOG USER OUT
                     // Do the logging out magic
-                    fetch("/auth/logout").then(() => emptyElement("userDiv"));
+                    fetch("/auth/logout").then(() => deleteElement("userImage"));
                     state.isLoggedIn = false;
 
                     // Trigger animations

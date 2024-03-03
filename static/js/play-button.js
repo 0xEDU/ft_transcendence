@@ -110,8 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
             "players": Array.from(formData.keys()).filter(key =>
                 key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== ""),
         }
-        console.log(event.target);
-        console.log(formData);
 
         fetch(url, {
             method: 'POST',

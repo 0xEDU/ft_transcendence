@@ -18,7 +18,11 @@ from django.views import View
 
 
 class LoginView(View):
-    """Returns the login view. Might be removed."""
+    """
+    This view is invoked by the intra API after the user has been authenticated.
+    It should receive a code from the intra API.
+    This code must then be exchanged by a valid access token, which represents the user's authorization for our application to retrieve their information in the intra API.
+    """
 
     def _get_token(self, code):
         """Returns the intra token."""
@@ -28,6 +32,7 @@ class LoginView(View):
         secret = os.getenv('INTRA_SECRET')
         redirect_uri = os.getenv('TRANSCENDENCE_IP')
         protocol = os.getenv('TRANSCENDENCE_PROTOCOL')
+
         url_parameters = "?grant_type=authorization_code&client_id=" + \
             uid + "&client_secret=" + secret + "&code=" + code + \
             "&redirect_uri=" + protocol + "%3A%2F%2F" + redirect_uri + "%3A8000%2Fauth%2Flogin%2F"
@@ -40,21 +45,42 @@ class LoginView(View):
     def get(self,  request, *args, **kwargs):
         """Get method."""
 
+        # Exchange code by authorization token
+        # (The user grants permission for our application to retrieve their information)
         code = request.GET.get('code', '')
         token = self._get_token(code)
+
         if not token:
             return HttpResponse("Couldn't get intra token", status=500)
+
+        # Make new call to intra's API to retrieve user's information
         bearer = "Bearer " + token
         cadet_api = os.getenv('INTRA_ENDPOINT') + os.getenv('CADET_API')
-        response = json.loads(requests.get(cadet_api, headers={
-            'Authorization': bearer}, timeout=5).content)
-        login_intra = response["login"]
-        pfp_intra = response["image"]["versions"]["medium"]
+        response = requests.get(
+            cadet_api, headers={
+                'Authorization': bearer
+            }, timeout=5
+        )
+
+        # Get user information from response
+        parsedResponse = json.loads(response.content)
+        login_intra = parsedResponse["login"]
+        pfp_intra = parsedResponse["image"]["versions"]["medium"]
         if not pfp_intra:
             pfp_intra = "/static/images/default_user_image.svg"
-        new_user, _ = User.objects.get_or_create(login_intra=login_intra)
-        request.session["user_id"] = new_user.id
-        achievements, _ = Achievements.objects.get_or_create(user=new_user)
+
+        # Create new user entry in our database, or just retrieves it if they've logged in before
+        user, is_new_entry = User.objects.get_or_create(login_intra=login_intra)
+        if (is_new_entry):
+            user.display_name = login_intra
+            user.intra_cdn_profile_picture_url = pfp_intra
+            user.save()
+        # Create new achievement entry for user in our database
+        achievements, is_new_entry = Achievements.objects.get_or_create(user=user)
+
+        # Register user as logged in in session
+        request.session["user_id"] = user.id
+
         return redirect('/')  # This will return the html
 
 
