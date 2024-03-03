@@ -2,66 +2,66 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon/favicon.ico' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bakbak+One&family=Quicksand:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon/favicon.ico' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bakbak+One&family=Quicksand:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
     <title>PONG</title>
-</head>
-<body>
-    {% comment %} Fixed-position elements {% endcomment %}
-    {% include "components/control-panel/base.html" %}
+  </head>
+  <body>
+    {% comment %}Fixed-position elements{% endcomment %}
+    {% include 'components/control-panel/base.html' %}
 
-    {% comment %} SPA layout {% endcomment %}
-    {% comment %} Upper row {% endcomment %}
+    {% comment %}SPA layout{% endcomment %}
+    {% comment %}Upper row{% endcomment %}
     <div class="board-row">
-        <section class="empty"></section>
-        <section id="kudos">
-			{% include "kudos/base.html" %}
-        </section>
-        <section class="empty"></section>
-        <section class="empty"></section>
-    </div>
-    
-    {% comment %} Middle row {% endcomment %}
-    <div class="board-row">
-        <section id="stats">
-            {% include "stats/base.html" %}
-        </section>
-        <section id="profile">
-            {% include "soninha/profile-section.html" %}
-        </section>
-        <section id="lobby">
-            {% include "lobby/base.html" %}
-        </section>
-        <section id="arena">
-            {% include "arena/base.html" %}
-        </section>
-    </div>
-    
-    {% comment %} Lower row {% endcomment %}
-    <div class="board-row">
-        <section class="empty"></section>
-        <section id="login">
-            {% include "components/pong-logo.html" %}
-            {% include "components/wood-grain-panel.html" %}
-        </section>
-        <section class="empty"></section>
-        <section class="empty"></section>
+      <section class="empty"></section>
+      <section id="kudos">
+        {% include 'kudos/base.html' %}
+      </section>
+      <section class="empty"></section>
+      <section class="empty"></section>
     </div>
 
-    {% comment %} Scripts {% endcomment %}
+    {% comment %}Middle row{% endcomment %}
+    <div class="board-row">
+      <section id="stats">
+        {% include 'stats/base.html' %}
+      </section>
+      <section id="profile">
+        {% include 'soninha/profile-section.html' %}
+      </section>
+      <section id="lobby">
+        {% include 'lobby/base.html' %}
+      </section>
+      <section id="arena">
+        {% include 'arena/base.html' %}
+      </section>
+    </div>
+
+    {% comment %}Lower row{% endcomment %}
+    <div class="board-row">
+      <section class="empty"></section>
+      <section id="login">
+        {% include 'components/pong-logo.html' %}
+        {% include 'components/wood-grain-panel.html' %}
+      </section>
+      <section class="empty"></section>
+      <section class="empty"></section>
+    </div>
+
+    {% comment %}Scripts{% endcomment %}
     <script type="module" src="{% static 'js/script.js' %}" defer></script>
     <script type="module" src="{% static 'js/control-panel.js' %}" defer></script>
     <script type="module" src="{% static 'js/play-button.js' %}" defer></script>
     <script type="module" src="{% static 'js/pong.js' %}" defer></script>
-</body>
+  </body>
 </html>

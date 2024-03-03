@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="modal fade" id="tournamentModal" tabindex="-1" aria-labelledby="tournamentModalLabel" aria-hidden="true" data-bs-theme="dark">
   <div class="modal-dialog modal-xl">
     <div id="tModalContent" class="modal-content">
@@ -7,44 +9,44 @@
       <form id="tournamentForm" action="/pong/form" method="POST">
         {% csrf_token %}
         <div class="modal-body text-white pt-0">
-          <h1 class="ms-3 mb-5 w-100 text-center">TOURNAMENT</h1>
+          <h1 class="ms-3 mb-5 w-100 text-center">{% translate "TOURNAMENT" %}</h1>
           <div class="d-flex justify-content-evenly">
             <div class="d-flex flex-column align-items-center">
-              <h3 class="settingName">GAME MODE</h3>
+              <h3 class="settingName">{% translate "GAME MODE" %}</h3>
               <div class="d-flex flex-column align-items-start">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="gameModeDefault" id="coopRadio" value="coop" checked />
-                  <label class="form-check-label" for="coopRadio">CO-OP</label>
+                  <label class="form-check-label" for="coopRadio">{% translate "CO-OP" %}</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="gameModeDefault" id="classicRadio" value="classic" />
-                  <label class="form-check-label" for="classicRadio">CLASSIC</label>
+                  <label class="form-check-label" for="classicRadio">{% translate "CLASSIC" %}</label>
                 </div>
               </div>
             </div>
             <div class="d-flex flex-column align-items-center">
-              <h3 class="settingName">PLAYER</h3>
+              <h3 class="settingName">{% translate "PLAYER" %}</h3>
               <div class="d-flex flex-column align-items-start">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="playerDefault" id="tFourPlayersRadio" value="4" checked />
-                  <label class="form-check-label" for="tFourPlayersRadio">FOUR</label>
+                  <label class="form-check-label" for="tFourPlayersRadio">{% translate "FOUR" %}</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="playerDefault" id="eightPlayersRadio" value="8" />
-                  <label class="form-check-label" for="eightPlayersRadio">EIGHT</label>
+                  <label class="form-check-label" for="eightPlayersRadio">{% translate "EIGHT" %}</label>
                 </div>
               </div>
             </div>
             <div class="d-flex flex-column align-items-center">
-              <h3 class="settingName">MAP</h3>
+              <h3 class="settingName">{% translate "MAP" %}</h3>
               <div class="d-flex flex-column align-items-start">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="mapDefault" id="tMap1Radio" value="map1" checked />
-                  <label class="form-check-label" for="tMap1Radio">MAP 1</label>
+                  <label class="form-check-label" for="tMap1Radio">{% translate "MAP 1" %}</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="mapDefault" id="tMap2Radio" value="map2" />
-                  <label class="form-check-label" for="tMap2Radio">MAP 2</label>
+                  <label class="form-check-label" for="tMap2Radio">{% translate "MAP 2" %}</label>
                 </div>
               </div>
             </div>
@@ -52,8 +54,8 @@
           <div id="playerInputDiv" class="container-fluid my-5">
             <div class="row row-cols-2">
               <div class="col">
-                <input type="text" class="form-control" id="firstPlayer" placeholder={{user_display_name}} disabled/>
-                <input type="hidden" name="player1Name" value={{user_display_name}}>
+                <input type="text" class="form-control" id="firstPlayer" placeholder={{user_login}} disabled/>
+                <input type="hidden" name="player1Name" value={{user_login}}>
               </div>
               <div class="col">
                 <input type="text" class="form-control" id="secondPlayer" name="player2Name" placeholder="Player 2"/>

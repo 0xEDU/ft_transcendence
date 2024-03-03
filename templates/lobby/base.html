@@ -1,9 +1,9 @@
 {% load static i18n %}
 
-<div id="lobbyDiv" class="d-flex text-white fw-bolder align-items-center justify-content-evenly">
-  <h1 id="singleMatchButton" type="button" data-bs-toggle="modal" data-bs-target="#singleMatchModal">SINGLE MATCH</h1>
+<div id="lobbyDiv" class="d-flex text-white align-items-center justify-content-evenly">
+  <h1 id="singleMatchButton" type="button" data-bs-toggle="modal" data-bs-target="#singleMatchModal">{% translate "SINGLE MATCH" %}</h1>
   <div id="dottedLine" class="d-flex align-items-center"></div>
-  <h1 id="tournamentButton" type="button" data-bs-toggle="modal" data-bs-target="#tournamentModal">TOURNAMENT</h1>
+  <h1 id="tournamentButton" type="button" data-bs-toggle="modal" data-bs-target="#tournamentModal">{% translate "TOURNAMENT" %}</h1>
 </div>
 {% include 'lobby/components/single-match-modal.html' %}
 {% include 'lobby/components/tournament-modal.html' %}

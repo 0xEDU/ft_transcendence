@@ -1,13 +1,21 @@
 {% load static i18n %}
 
 <div class="kudosWrapper">
-	<div id="emojiCarousel" class="carousel">
-	  <h1>MADE WITH <span class="emoji-slot">❤️</span></h1>
-	</div>
-	<div id="nameCarousel" class="carousel">
-	  <h1>BY <span class="name-slot">roaraujo</span></h1>
-	  <img class="profile-pic" src="static/images/roaraujo.jpeg" alt="Profile Picture">
-	</div>
+  <div id="emojiCarousel" class="carousel">
+    <h1>
+      {% blocktrans %}
+      MADE WITH <span class="emoji-slot">❤️</span>
+      {% endblocktrans %}
+    </h1>
+  </div>
+  <div id="nameCarousel" class="carousel">
+    <h1>
+      {% blocktrans %}
+      BY <span class="name-slot">roaraujo</span>
+      {% endblocktrans %}
+    </h1>
+    <img class="profile-pic" src="static/images/roaraujo.jpeg" alt="Profile Picture">
+  </div>
 </div>
 
 <script type="module" src="{% static 'js/kudos.js' %}"></script>
