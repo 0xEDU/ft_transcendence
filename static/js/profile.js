@@ -77,8 +77,8 @@ document.getElementById("profilePictureEditionForm").addEventListener("submit", 
         .then(data => {
             if (data) {
                 // Update the profile picture in the browser
-                let userImage = document.getElementById("userImage")
-                userImage.style.backgroundImage = `url(${data.new_pfp_url})`;
+                let profilePicture = document.getElementById("profilePicture")
+                profilePicture.style.backgroundImage = `url(${data.new_pfp_url})`;
 
                 // Reset input field
                 document.getElementById('profilePicEditionInput').value = ''
