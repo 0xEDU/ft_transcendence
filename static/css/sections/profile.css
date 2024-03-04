@@ -71,3 +71,20 @@ img.achievementImage:hover {
     transform: scale(1.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
+
+img.matesImage:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.matesImage {
+    border: 3px solid #ffffff; /* Adjust color as needed */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* This adds the shadow */
+    border-radius: 10px; /* This makes the corners rounded */
+    background-color: #000; /* Adjust background color as needed */
+}
+
+#addSign:hover {
+	transform: scale(1.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
