@@ -5,7 +5,7 @@ from django.db import models
 class UserStats(models.Model):
     """Model to store user statistics."""
 
-    player = models.ForeignKey(User, on_delete=models.CASCADE, related_name="statistics")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="statistics")
     total_hours_played = models.FloatField(default=0)
     coop_cumulative_ball_distance = models.FloatField(default=0)
     classic_cumulative_ball_distance = models.FloatField(default=0)
@@ -17,7 +17,7 @@ class UserStats(models.Model):
     def __str__(self):
         opponents = ', '.join([opponent.login_intra for opponent in self.classic_oponents.all()])
         companions = ', '.join([opponent.login_intra for opponent in self.coop_companions.all()])
-        return f">> Statistics for {self.player.login_intra}:\n" \
+        return f">> Statistics for {self.user.login_intra}:\n" \
                f"    - Total hours played: {self.total_hours_played}\n" \
                f"    - Co-op cumulative ball distance: {self.coop_cumulative_ball_distance}\n" \
                f"    - Classic cumulative ball distance: {self.classic_cumulative_ball_distance}\n" \
