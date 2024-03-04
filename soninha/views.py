@@ -8,7 +8,8 @@ import requests
 import uuid
 
 # Our imports
-from soninha.models import User,Achievements
+from soninha.models import User, Achievements
+from stats.models import UserStats
 
 # Django's imports
 from django.conf import settings
@@ -77,6 +78,8 @@ class LoginView(View):
             user.save()
         # Create new achievement entry for user in our database
         achievements, is_new_entry = Achievements.objects.get_or_create(user=user)
+        # Create new stats entry for user in our database
+        user_stats, is_new_entry = UserStats.objects.get_or_create(user=user)
 
         # Register user as logged in in session
         request.session["user_id"] = user.id
