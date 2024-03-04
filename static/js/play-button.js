@@ -3,7 +3,7 @@ import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
 import insertElement from "./tinyDOM/insertElement.js";
-import pongMain from "./pong.js"
+import launchClassicPongMatch from "./pong.js"
 
 class ModalObj {
     constructor(form, modalElement, modalInstance, playButtonSvg, playButtonDiv, fourPlayersRadio, redCircle) {
@@ -133,10 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.text();
             })
             .then(responseText => {
-                console.log("Response:", responseText);
                 insertElement("gameDiv", responseText);
-                pongMain();
-
+                launchClassicPongMatch();
+                // TODO: if/else => launchCoopPongMatch();
             })
             .catch(error => {
                 error.text().then(errorBody => {
