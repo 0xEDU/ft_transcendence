@@ -10,14 +10,14 @@ ROWS_SIZE = 15
 TOTAL_NUM_OF_CELLS = 88
 COOP_COLORS = {
     "none": "var(--HEAVY_GRAY)",
-    "low": "#ffe988",
-    "medium": "#ffde4f",
-    "high": "#facb03",
+    "low": "var(--YELLOW_30)",
+    "medium": "var(--YELLOW_60)",
+    "high": "var(--YELLOW_100)",
 }
 VERSUS_COLORS = {
     "none": "var(--HEAVY_GRAY)",
-    "win": "#00ff00",
-    "loss": "#ff0000",
+    "win": "var(--GREEN)",
+    "loss": "var(--RED)",
 }
 
 

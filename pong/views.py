@@ -1,17 +1,22 @@
-"""Views for the pong app."""
+# Std imports
 import json
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.views.generic import View, TemplateView
-from soninha.models import User
+
+# Our own imports
 from pong.models import Match, Score
+from soninha.models import User
+
+# Django's imports
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.utils.translation import gettext as _
+from django.views.generic import View
 
 
 def get_matches(user_name):
     """Get matches for a user."""
 
     matches_list = []
-    user = User.objects.get(display_name=user_name)
+    user = User.objects.get(login_intra=user_name)
     user_matches_query = "SELECT * from pong_score where player_id=" + \
         str(user.id)
     matches_record = Match.objects.raw(user_matches_query)
@@ -31,19 +36,69 @@ def get_matches(user_name):
     return matches_list
 
 
-def home_view(request):
-    """Home view. Probably will be removed."""
-    context = {}
-    context["session"] = request.session
-    return render(request, 'pong/pages/index.html', context)
-
 
 class MatchView(View):
-    """This view is called after the game ends, it saves everything in the DB."""
+    """
+    This view is responsible for Matches management.
+    
+    It is called when a new match begins. It creates a new batch in the DB and returns the new match id.
 
-    def post(self, request, *args, **kwargs):
-        """Post method."""
+    It is also called after the game ends, and saves the match results and scores in the DB.
+    """
+    def _validate_incoming_request(self, incoming_request):
+        players = incoming_request['players']
+        player_quantity = incoming_request['playerQuantity']
+        match_type = incoming_request['gameMode']
 
+        if match_type not in [choice[0] for choice in Match.MATCH_TYPE_CHOICES]:
+            raise ValueError(_("Invalid game mode: '%(match_type)s'") % {'match_type': match_type})
+        if len(players) != player_quantity:
+            raise ValueError(_("Fill in the names of all players to start the match."))
+        players_set = set(players)
+        if len(players_set) != player_quantity:
+            raise ValueError(_("Error converting players list to set object"))
+        for player in players:
+            try:
+                User.objects.get(login_intra=player)
+            except User.DoesNotExist as e:
+                raise ValueError(_("User '%(player)s' does not exist") % {'player': player}) from e
+
+    def post(self, request):
+        # print(json.loads(request.body))
+        incoming_request = json.loads(request.body)
+        try:
+            self._validate_incoming_request(incoming_request)
+        except (User.DoesNotExist, ValueError) as error:
+            return render(request, 'components/errors/player_error.html', {
+                'error_message': error
+            }, status=400)
+        # >> {
+        #     'gameType': 'singleMatch',
+        #     'gameMode': 'co-op',
+        #     'playerQuantity': 2,
+        #     'mapSkin': 'map1',
+        #     'players': ['roaraujo', 'guribeir']
+        # }
+
+        # Formdata is valid at this point, now create a new match and return its id
+        # player1 = User.objects.get(login_intra="etachott")
+        # player2 = User.objects.get(login_intra="roaraujo")
+        # match = Match.objects.create()
+        # Score.objects.create(player=player1, match=match, score=0)
+        # Score.objects.create(player=player2, match=match, score=0)
+        # match.players.add(player1, player2)
+        response_data = {"match_id": "soon enough"}
+        # response_data = {
+        #     "records": [],
+        #     "player1": player1.display_name,
+        #     "player2": player2.display_name,
+        #     "match_id": match.id
+        # }
+
+        return HttpResponse(response_data)
+
+    def put(self, request, *args, **kwargs):
+        # TODO: review and test.
         try:
             data = json.loads(request.body)
             match_id = data['match_id']
@@ -71,86 +126,3 @@ class MatchView(View):
             return HttpResponse('')
         except json.JSONDecodeError:
             return HttpResponse('Something went wrong in the Match View')
-
-
-class GameTemplateView(TemplateView):
-    """
-    This view is called when the game starts, it get/create users,
-    create a match and a score, then pass it as context to our template
-    """
-    template_name = "arena/components/game.html"
-
-    def get_context_data(self, **kwargs):
-        """Returns the context data."""
-
-        context = super().get_context_data(**kwargs)
-        return context
-    
-    # def get(self, request, *args, **kwargs):
-    #     """Get method."""
-
-    #     player1 = User.objects.get(login_intra="etachott")
-    #     player2 = User.objects.get(login_intra="roaraujo")
-    #     match = Match.objects.create()
-    #     Score.objects.create(player=player1, match=match, score=0)
-    #     Score.objects.create(player=player2, match=match, score=0)
-    #     match.players.add(player1, player2)
-    #     context = {
-    #         "records": [],
-    #         "player1": player1.display_name,
-    #         "player2": player2.display_name,
-    #         "match_id": match.id
-    #     }
-    #     return render(request, 'pong/pages/game.html', context)
-    
-    def post(self, request, *args, **kwargs):
-        """Post method."""
-
-        # player1, _ = User.objects.get(login_intra=request.POST['player1'])
-        # player2, _ = User.objects.get(login_intra=request.POST['player2'])
-        # match = Match.objects.create()
-        # Score.objects.create(player=player1, match=match, score=0)
-        # Score.objects.create(player=player2, match=match, score=0)
-        # match.players.add(player1, player2)
-        # context = {
-        #     "records": [],
-        #     "player1": request.POST['player1'],
-        #     "player2": request.POST['player2'],
-        #     "match_id": match.id
-        # }
-        print(json.loads(request.body))
-        return HttpResponse("")
-
-class GameFormView(View):
-    """
-    This view is called when the player submits
-    the information to set the game.
-    """
-
-    def _validate_incoming_request(self, incoming_request):
-        players = incoming_request['players']
-        player_quantity = incoming_request['playerQuantity']
-        if len(players) != player_quantity:
-            raise ValueError("")
-        players_set = set(players)
-        if len(players_set) != player_quantity:
-            raise ValueError("")
-        for player in players:
-            try:
-                User.objects.get(login_intra=player)
-            except User.DoesNotExist as e:
-                raise ValueError(e) from e
-
-    def post(self, request):
-        """Post method."""
-
-        # print(json.loads(request.body))
-        incoming_request = json.loads(request.body)
-        try:
-            self._validate_incoming_request(incoming_request)
-        except (User.DoesNotExist, ValueError) as error:
-            return render(request, 'components/errors/player_error.html', {
-                'error_message': error
-            }, status=400)
-        request.method = "GET"
-        return GameTemplateView.as_view()(request)
