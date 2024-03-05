@@ -50,40 +50,7 @@ const randomizeBallMovement = () => {
 	speedY = 0.5
 }
 
-class StateMachine {
-	constructor() {
-		this._state = States.NOT_STARTED;
-	}
-
-	get state() {
-		return this._state;
-	}
-
-	set state(newState) {
-		this._state = newState;
-		// this.handleStateChange();
-	}
-
-	endGame() {
-		if (this.state === States.RUNNING) {
-			this.state = States.GAME_OVER;
-			stopGame();
-			// Call to django goes here I guess
-
-
-
-
-		}
-	}
-}
-
-const stateMachine = new StateMachine();
-
-const stopGame = () => {
-	clearInterval(gameLoopIntervalId);
-	resetBall();
-	stateMachine.state = States.GAME_OVER;
-}
+let gameState = States.NOT_STARTED;
 
 function adjustCanvasSizeToWindow() {
 	context.fillStyle = styleGuide.__YELLOW_100;
@@ -124,6 +91,19 @@ const drawStartingScreen = () => {
 	context.fillText("Pong Game", canvas.width / 2, canvas.height / 4); // Game title
 	context.font = "24px sans serif"; // Smaller text for instructions
 	context.fillText("Press Enter to Start", canvas.width / 2, canvas.height / 2); // Start instructions
+}
+
+const drawEndingScreen = () => {
+	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+	resetBall();
+	if (gameState === States.GAME_OVER) {
+		context.textAlign = 'center';
+		context.font = "bold 48px sans serif";
+		context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+		context.fillText(leftScore + " x " + rightScore, canvas.width / 2, canvas.height / 2 + 60);
+		context.font = "bold 18px sans serif";
+		context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + 100);
+	}
 }
 
 const drawBall = () => {
@@ -227,12 +207,14 @@ const movePaddles = () => {
 	}
 }
 
-const startGameButItsSomethingElse = () => {
-	if (stateMachine.state === States.RUNNING) {
+const launchGame = () => {
+	if (gameState === States.RUNNING) {
 
 		if (rightScore === winningScore || leftScore === winningScore) {
-			stopGame();
-			drawScore();
+			// Somebody won. The game is over.
+			gameState = States.GAME_OVER;
+			clearInterval(gameLoopIntervalId); // stop game execution
+			drawEndingScreen();
 			return;
 		}
 
@@ -258,7 +240,7 @@ const startGameButItsSomethingElse = () => {
 		if (ballX + dx < -canvas.width / 2) {
 			rightScore++;
 			resetBall();
-			drawScore;
+			drawScore();
 			return;
 		}
 
@@ -268,13 +250,8 @@ const startGameButItsSomethingElse = () => {
 }
 
 const drawScore = () => {
-	context.font = "bold 48px sans serif";
-	if (leftScore === winningScore || rightScore === winningScore) {
-		context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
-		context.fillText(leftScore + " x " + rightScore, canvas.width / 2, canvas.height / 2 + 60);
-		context.font = "bold 18px sans serif";
-		context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + 100);
-	}
+	console.log("TODO: Write logic to update the score on screen;")
+	return ;
 }
 
 const keyDownHandler = (e) => {
@@ -291,17 +268,16 @@ const keyDownHandler = (e) => {
 	if (e.key === "s" || e.key === "S") {
 		leftDownPressed = true;
 	}
-	if (e.key == "Enter" && stateMachine.state === States.NOT_STARTED) {
+	if (e.key == "Enter" && gameState === States.NOT_STARTED) {
 		drawMiddleLine();
 		startGameAfterCountdown(3);
 	}
-	if (e.key == "Enter" && stateMachine.state === States.GAME_OVER) {
-		stateMachine.endGame();
+	if (e.key == "Enter" && gameState === States.GAME_OVER) {
 		scrollToSection("lobby");
 		showControlPanel();
 		rightScore = 0;
 		leftScore = 0;
-		stateMachine.state = States.NOT_STARTED;
+		gameState = States.NOT_STARTED;
 	}
 }
 
@@ -338,7 +314,7 @@ function startGameAfterCountdown() {
 				seconds--;
 				countdown(); // Recursive call for next countdown iteration
 				if (seconds === 0) {
-					stateMachine.state = States.RUNNING;
+					gameState = States.RUNNING;
 				}
 			}, 1000); // Delay of 1 second (1000 milliseconds)
 		}
@@ -366,7 +342,6 @@ export default function launchClassicPongMatch() {
 	document.addEventListener("keyup", keyUpHandler);
 
 	// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
-	console.log(stateMachine.state);
-	gameLoopIntervalId = setInterval(startGameButItsSomethingElse, 10);
+	gameLoopIntervalId = setInterval(launchGame, 10);
 };
 
