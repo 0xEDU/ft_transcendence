@@ -2,8 +2,7 @@ import { scrollToSection } from "./control-panel.js";
 import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
-import insertElement from "./tinyDOM/insertElement.js";
-import pongMain from "./pong.js"
+import launchClassicPongMatch from "./pong.js"
 
 class ModalObj {
     constructor(form, modalElement, modalInstance, playButtonSvg, playButtonDiv, fourPlayersRadio, redCircle) {
@@ -99,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleFormSubmit(modalObj, event) {
         event.preventDefault();
-        const url = "/pong/form";
+        const url = "/pong/match";
         const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const formData = new FormData(event.target);
         const gameData = {
@@ -133,16 +132,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.text();
             })
             .then(responseText => {
-                console.log("Response:", responseText);
-                insertElement("gameDiv", responseText);
-                pongMain();
-
+                launchClassicPongMatch();
+                // TODO: if/else => launchCoopPongMatch();
             })
             .catch(error => {
                 error.text().then(errorBody => {
-                    if (!hasElement(modalObj.playButtonDiv.id, "playerNotFound")) {
-                        appendElement(modalObj.playButtonSvg.id, errorBody);
-                    }
+                    if (hasElement(modalObj.playButtonDiv.id, "playerNotFound"))
+                        deleteElement("playerNotFound");
+                    appendElement(modalObj.playButtonSvg.id, errorBody);
                 });
             });
     }

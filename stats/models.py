@@ -1,17 +1,28 @@
-"""Models for stats app."""
+from soninha.models import User
 from django.db import models
 from soninha.models import User
 
-# Create your models here.
-class UserStats(models.Model):
-    """Model for the stats of the user."""
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ball_distance = models.IntegerField(default=0)
-    friends_count = models.IntegerField(default=0)
-    hours_played = models.IntegerField(default=0)
-    high_five_count = models.IntegerField(default=0)
-    most_played_with = models.CharField(max_length=20)
+class UserStats(models.Model):
+    """Model to store user statistics."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="statistics")
+    total_hours_played = models.FloatField(default=0)
+    coop_cumulative_ball_distance = models.FloatField(default=0)
+    classic_cumulative_ball_distance = models.FloatField(default=0)
+    coop_hits_record = models.IntegerField(default=0)
+    classic_victories = models.FloatField(default=0)
+    coop_companions = models.ManyToManyField(User, related_name='companions')
+    classic_oponents = models.ManyToManyField(User, related_name='opponents')
 
     def __str__(self):
-        return f"I am user [{self.user.login_intra}]'s stats"
+        opponents = ', '.join([opponent.login_intra for opponent in self.classic_oponents.all()])
+        companions = ', '.join([opponent.login_intra for opponent in self.coop_companions.all()])
+        return f">> Statistics for {self.user.login_intra}:\n" \
+               f"    - Total hours played: {self.total_hours_played}\n" \
+               f"    - Co-op cumulative ball distance: {self.coop_cumulative_ball_distance}\n" \
+               f"    - Classic cumulative ball distance: {self.classic_cumulative_ball_distance}\n" \
+               f"    - Co-op hits record: {self.coop_hits_record}\n" \
+               f"    - Classic victories: {self.classic_victories}\n" \
+               f"    - Companions met: {companions}\n" \
+               f"    - Opponents played against: {opponents}\n"

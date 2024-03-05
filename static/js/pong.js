@@ -1,18 +1,15 @@
 import { scrollToSection } from "./control-panel.js";
 import { showControlPanel } from "./play-button.js";
+import styleGuide from "./style-guide.js"
 
 // Game constants (trying to avoid magic numbers)
 let canvas;
-let ctx;
-let game_main;
-let gameInterval;
-let pongString;
+let context;
+let gameCanvasDiv;
+let gameLoopIntervalId;
 
 // ball variables
-const ballWidth = 20;
-const ballHeight = 20;
 const ballRadius = 10;
-const ballColor = "#fff"
 let ballX = 0;
 let ballY = 0;
 
@@ -26,7 +23,7 @@ let rightPaddlePosition = 0;
 
 let rightScore = 0;
 let leftScore = 0;
-const winningScore = 1;
+const winningScore = 3;
 
 // randomize this later
 let dx = -3.2;
@@ -39,6 +36,12 @@ let rightDownPressed = false;
 let leftUpPressed = false;
 let leftDownPressed = false;
 
+const States = {
+	NOT_STARTED: "NotStarted",
+	RUNNING: "Running",
+	GAME_OVER: "GameOver",
+};
+
 const randomizeBallMovement = () => {
 	// Randomize direction and speed
 	dx = (Math.random() > 0.5 ? 1 : -1) * (2.5 + Math.random() * 2); // Randomize between -4.5 and 4.5
@@ -47,65 +50,16 @@ const randomizeBallMovement = () => {
 	speedY = 0.5
 }
 
-class StateMachine {
-	constructor() {
-		this._state = "NotStarted";
-	}
+let gameState = States.NOT_STARTED;
 
-	get state() {
-		return this._state;
-	}
-
-	set state(newState) {
-		this._state = newState;
-		this.handleStateChange();
-	}
-
-	handleStateChange() {
-		if (this.state === "NotStarted") {
-			drawStartingScreen();
-		} else if (this.state === "Running") {
-			// Clear the starting screen and start the game loop
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			countdownStart(); // This will start the countdown
-		} else if (this.state === "GameOver") {
-			// Handle game over logic
-			console.log("Game Over!");
-		}
-	}
-
-	startGame() {
-		if (this.state === "NotStarted") {
-			this.state = "Running";
-			countdown = 4; // Reset countdown
-			countdownStart();
-		}
-	}
-
-	endGame() {
-		if (this.state === "Running") {
-			this.state = "GameOver";
-			stopGame();
-			// Call to django goes here I guess
-		}
-	}
-}
-
-const stateMachine = new StateMachine();
-
-const stopGame = () => {
-	clearInterval(gameInterval);
-	resetBall();
-	stateMachine.state = "GameOver";
-}
-
-function setCanvasScalingFactor() {
-	return window.devicePixelRatio || 1;
-}
-
-function setCanvasSize() {
+function adjustCanvasSizeToWindow() {
+	context.fillStyle = styleGuide.__YELLOW_100;
+	context.font = "48px sans serif";
+	context.textAlign = "center";
+	context.fillText(55, canvas.width / 2, canvas.height / 2);
+	// context.clearRect(0, 0, canvas.width, canvas.height);
 	//Gets the devicePixelRatio
-	var pixelRatio = setCanvasScalingFactor();
+	var pixelRatio = window.devicePixelRatio || 1;
 
 	//The viewport is in portrait mode, so var width should be based off viewport WIDTH
 	if (window.innerHeight > window.innerWidth) {
@@ -122,55 +76,66 @@ function setCanvasSize() {
 	var height = width * 0.7;
 
 	//This will be used to downscale the canvas element when devicePixelRatio > 1
-	game_main.style.width = width + "px";
-	game_main.style.height = height + "px";
+	gameCanvasDiv.style.width = width + "px";
+	gameCanvasDiv.style.height = height + "px";
 
 	canvas.width = width * pixelRatio;
 	canvas.height = height * pixelRatio;
 }
 
 const drawStartingScreen = () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-	ctx.fillStyle = "#FFF"; // Text color
-	ctx.font = "48px sans serif"; // Text font and size
-	ctx.textAlign = "center"; // Align text to the center
-	ctx.fillText("Pong Game", canvas.width / 2, canvas.height / 4); // Game title
-	ctx.font = "24px sans serif"; // Smaller text for instructions
-	ctx.fillText("Press Enter to Start", canvas.width / 2, canvas.height / 2); // Start instructions
+	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+	context.fillStyle = styleGuide.__WHITE; // Text color
+	context.font = "48px sans serif"; // Text font and size
+	context.textAlign = "center"; // Align text to the center
+	context.fillText("Pong Game", canvas.width / 2, canvas.height / 4); // Game title
+	context.font = "24px sans serif"; // Smaller text for instructions
+	context.fillText("Press Enter to Start", canvas.width / 2, canvas.height / 2); // Start instructions
+}
+
+const drawEndingScreen = () => {
+	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+	resetBall();
+	if (gameState === States.GAME_OVER) {
+		context.textAlign = 'center';
+		context.font = "bold 48px sans serif";
+		context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+		context.fillText(leftScore + " x " + rightScore, canvas.width / 2, canvas.height / 2 + 60);
+		context.font = "bold 18px sans serif";
+		context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + 100);
+	}
 }
 
 const drawBall = () => {
-	ctx.fill();
-	ctx.beginPath();
-	ctx.arc(
+	context.fillStyle = styleGuide.__WHITE;
+	context.fill();
+	context.beginPath();
+	context.arc(
 		canvas.width / 2 + ballX, canvas.height / 2 + ballY,
 		ballRadius, 0, Math.PI * 2);
-	ctx.fillStyle = ballColor;
-	ctx.fill();
-	ctx.closePath();
+	context.fill();
+	context.closePath();
 }
 
 const drawPaddles = () => {
+	context.fillStyle = styleGuide.__ORANGE;
+
 	// Left paddle
-	ctx.fill();
-	ctx.beginPath();
-	ctx.rect(
+	context.beginPath();
+	context.rect(
 		paddlePadding, (canvas.height / 2) - (paddleHeight / 2) + leftPaddleY,
 		paddleWidth, paddleHeight);
-	ctx.fillStyle = ballColor;
-	ctx.fill();
-	ctx.closePath();
+	context.fill();
+	context.closePath();
 
 	// Right paddle
 	rightPaddlePosition = (canvas.height / 2) - (paddleHeight / 2) + rightPaddleY;
-	ctx.fill();
-	ctx.beginPath();
-	ctx.rect(
+	context.beginPath();
+	context.rect(
 		(canvas.width - paddlePadding) - (paddleWidth), rightPaddlePosition,
 		paddleWidth, paddleHeight);
-	ctx.fillStyle = ballColor;
-	ctx.fill();
-	ctx.closePath();
+	context.fill();
+	context.closePath();
 }
 
 const drawMiddleLine = () => {
@@ -178,10 +143,10 @@ const drawMiddleLine = () => {
 	const gap = 10; // Gap between dashes
 	let y = 0;
 
-	ctx.fillStyle = "rgba(255, 255, 255, 0.6)"; // Use the same color as the ball for consistency
+	context.fillStyle = styleGuide.__GREEN;
 
 	while (y < canvas.height) {
-		ctx.fillRect(canvas.width / 2 - lineLength / 2, y, lineLength, lineLength);
+		context.fillRect(canvas.width / 2 - lineLength / 2, y, lineLength, lineLength);
 		y += lineLength + gap;
 	}
 }
@@ -242,93 +207,77 @@ const movePaddles = () => {
 	}
 }
 
-let countdown = 4;
-const countdownStart = () => {
-	if (countdown > 0) {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+const launchGame = () => {
+	if (gameState === States.RUNNING) {
+
+		if (rightScore === winningScore || leftScore === winningScore) {
+			// Somebody won. The game is over.
+			gameState = States.GAME_OVER;
+			clearInterval(gameLoopIntervalId); // stop game execution
+			drawEndingScreen();
+			return;
+		}
+
+		context.clearRect(0, 0, canvas.width, canvas.height);
 		drawMiddleLine();
+		drawBall();
 		drawPaddles();
-		ctx.fillStyle = "#FFF";
-		ctx.font = "48px sans serif";
-		ctx.textAlign = "center";
-		ctx.fillText(countdown, canvas.width / 2, canvas.height / 2);
+		movePaddles();
 
-		countdown--;
-		setTimeout(countdownStart, 800);
-	} else {
-		clearInterval(gameInterval);
-		// Start the game loop once the countdown is finished
-		gameInterval = setInterval(start, 10);
+		if (ballY + dy > canvas.height / 2 || ballY + dy < (-canvas.height / 2) + ballRadius) {
+			dy = -dy;
+		}
+
+		checkCollisionWithPaddle();
+
+		if (ballX + dx > canvas.width / 2) {
+			leftScore++;
+			resetBall();
+			drawScore();
+			return;
+		}
+
+		if (ballX + dx < -canvas.width / 2) {
+			rightScore++;
+			resetBall();
+			drawScore();
+			return;
+		}
+
+		ballX += dx * speedX;
+		ballY += dy * speedY;
 	}
-}
-
-const start = () => {
-	if (rightScore === winningScore || leftScore === winningScore) {
-		stopGame();
-		drawScore();
-		return;
-	}
-
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	drawMiddleLine();
-	drawBall();
-	drawPaddles();
-	movePaddles();
-
-	if (ballY + dy > canvas.height / 2 || ballY + dy < (-canvas.height / 2) + ballRadius) {
-		dy = -dy;
-	}
-
-	checkCollisionWithPaddle();
-
-	if (ballX + dx > canvas.width / 2) {
-		rightScore++;
-		resetBall();
-		drawScore();
-		return;
-	}
-
-	if (ballX + dx < -canvas.width / 2) {
-		leftScore++;
-		resetBall();
-		drawScore;
-		return;
-	}
-
-	ballX += dx * speedX;
-	ballY += dy * speedY;
 }
 
 const drawScore = () => {
-	ctx.font = "bold 48px sans serif";
-	if (leftScore === winningScore || rightScore === winningScore) {
-		ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
-	}
+	console.log("TODO: Write logic to update the score on screen;")
+	return ;
 }
 
 const keyDownHandler = (e) => {
+	// drawMiddleLine(); // HERE IT WORKS.
 	if (e.key === "Up" || e.key === "ArrowUp") {
 		rightUpPressed = true;
 	}
 	if (e.key === "Down" || e.key === "ArrowDown") {
 		rightDownPressed = true;
 	}
-	if (e.key === "w") {
+	if (e.key === "w" || e.key === "W") {
 		leftUpPressed = true;
 	}
-	if (e.key === "s") {
+	if (e.key === "s" || e.key === "S") {
 		leftDownPressed = true;
 	}
-	if (e.key == "Enter" && stateMachine.state === "NotStarted") {
-		stateMachine.startGame();
+	if (e.key == "Enter" && gameState === States.NOT_STARTED) {
+		drawMiddleLine();
+		startGameAfterCountdown(3);
 	}
-	if (e.key == "Enter" && stateMachine.state === "GameOver") {
-		stateMachine.endGame();
+	if (e.key == "Enter" && gameState === States.GAME_OVER) {
 		scrollToSection("lobby");
 		showControlPanel();
 		rightScore = 0;
 		leftScore = 0;
-		stateMachine.state = "NotStarted"
+		gameState = States.NOT_STARTED;
 	}
 }
 
@@ -339,25 +288,60 @@ const keyUpHandler = (e) => {
 	if (e.key === "Down" || e.key === "ArrowDown") {
 		rightDownPressed = false;
 	}
-	if (e.key === "w") {
+	if (e.key === "w" || e.key === "W") {
 		leftUpPressed = false;
 	}
-	if (e.key === "s") {
+	if (e.key === "s" || e.key === "S") {
 		leftDownPressed = false;
 	}
 }
 
+function startGameAfterCountdown() {
+	let seconds = 3; // Initial value for the countdown
+
+	function countdown() {
+		if (seconds >= 0) {
+			context.clearRect(0, 0, canvas.width, canvas.height);
+
+			drawPaddles();
+
+			context.fillStyle = styleGuide.__RED;
+			context.font = "48px sans serif";
+			context.textAlign = "center";
+			context.fillText(seconds, canvas.width / 2, canvas.height / 2);
+
+			setTimeout(() => {
+				seconds--;
+				countdown(); // Recursive call for next countdown iteration
+				if (seconds === 0) {
+					gameState = States.RUNNING;
+				}
+			}, 1000); // Delay of 1 second (1000 milliseconds)
+		}
+	}
+
+	// Start the countdown
+	countdown();
+}
+
 // main
-export default function pongMain() {
+export default function launchClassicPongMatch() {
 	canvas = document.getElementById("pongGameCanvas");
-	game_main = document.getElementById("gameDiv");
-	ctx = canvas.getContext("2d");
-	pongString = canvas.dataset.pong;
-	setCanvasSize();
+	context = canvas.getContext("2d");
+	gameCanvasDiv = document.getElementById("gameDiv");
+
+	// Initial set up of the canvas
+	adjustCanvasSizeToWindow();
 	randomizeBallMovement();
-	stateMachine.handleStateChange();
-	window.addEventListener("resize", setCanvasSize, false);
-	document.addEventListener("keydown", keyDownHandler, false);
-	document.addEventListener("keyup", keyUpHandler, false);
+	drawStartingScreen();
+
+	// Readjusts the size of the canvas in case of window resizing mid-game
+	window.addEventListener("resize", adjustCanvasSizeToWindow);
+	// Set keyboard event handlers.
+	document.addEventListener("keydown", keyDownHandler);
+	document.addEventListener("keyup", keyUpHandler);
+
+	// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
+	gameLoopIntervalId = setInterval(launchGame, 10);
 };
 
