@@ -223,7 +223,7 @@ const movePaddles = () => {
 	}
 }
 
-const keyDownHandler = (e) => {
+const keyDownHandler = (e, match_id) => {
 	// Right-side player
 	if (e.key === "Up" || e.key === "ArrowUp") {
 		rightUpPressed = true;
@@ -243,7 +243,7 @@ const keyDownHandler = (e) => {
 	// Transitions for starting and ending screens
 	if (e.key == "Enter" && gameState === States.NOT_STARTED) {
 		drawMiddleLine();
-		startGameAfterCountdown(3);
+		startGameAfterCountdown();
 	}
 	if (e.key == "Enter" && gameState === States.GAME_OVER) {
 		rightScore = 0;
@@ -252,40 +252,44 @@ const keyDownHandler = (e) => {
 		scrollToSection("lobby");
 		showControlPanel();
 
-		// durationSecs = (endTime - startTime) / 1000;
-		// ballTraveledDistance = 10;
-		// paddleHits = 42;
-		// matchData = {
-		// 	"match_duration": durationSecs,
-		// 	"ball_traveled_distance": ballTraveledDistance,
-		// 	"paddle_hits": paddleHits,
-		// }
-		// const matchId = 1;
-		// const url = `/match/${matchId}`;
+		const url = `/pong/match/${match_id}`;
 
-		// // Define the options for the fetch request
-		// const options = {
-		// 	method: 'PUT',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// 	body: JSON.stringify(matchData),
-		// };
+		const durationSecs = (endTime - startTime) / 1000;
+		ballTraveledDistance = 10;
+		paddleHits = 42;
+		const matchData = {
+			"match_duration": durationSecs,
+			"ball_traveled_distance": ballTraveledDistance,
+			"paddle_hits": paddleHits,
+		}
 
-		// // Send the fetch request
-		// fetch(url, options)
-		// 	.then(response => {
-		// 		if (!response.ok) {
-		// 			throw new Error('Network response was not ok');
-		// 		}
-		// 		return response.json();
-		// 	})
-		// 	.then(data => {
-		// 		console.log('Match data updated successfully:', data);
-		// 	})
-		// 	.catch(error => {
-		// 		console.error('Error updating match data:', error);
-		// 	});
+		const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+
+		// Define the options for the fetch request
+		const options = {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRFToken': csrfToken,
+			},
+			body: JSON.stringify(matchData),
+		};
+
+		// Send the fetch request
+		fetch(url, options)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then(data => {
+				console.log('Match data updated successfully:', data);
+			})
+			.catch(error => {
+				console.error('Error updating match data:', error);
+			});
 	}
 }
 
@@ -393,7 +397,10 @@ export default function launchClassicPongMatch(match_id) {
 	// Readjusts the size of the canvas in case of window resizing mid-game
 	window.addEventListener("resize", adjustCanvasSizeToWindow);
 	// Set keyboard event handlers.
-	document.addEventListener("keydown", keyDownHandler);
+	document.addEventListener("keydown", function (event) {
+		// Call the original event handler function with the event and additional variable
+		keyDownHandler(event, match_id);
+	});
 	document.addEventListener("keyup", keyUpHandler);
 
 	// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared

@@ -99,30 +99,33 @@ class MatchView(View):
 
     def put(self, request, *args, **kwargs):
         # TODO: review and test.
-        try:
-            data = json.loads(request.body)
-            match_id = data['match_id']
-            player1_display_name = data['player1']
-            player2_display_name = data['player2']
-            player1_score = data['player1_score']
-            player2_score = data['player2_score']
+        print(f'>> bateu no put')
+        print(f'>> [{request}]: request')
+        # try:
+        #     data = json.loads(request.body)
+        #     match_id = data['match_id']
+        #     player1_display_name = data['player1']
+        #     player2_display_name = data['player2']
+        #     player1_score = data['player1_score']
+        #     player2_score = data['player2_score']
 
-            match_instance = Match.objects.get(pk=match_id)
+        #     match_instance = Match.objects.get(pk=match_id)
 
-            player1_instance = User.objects.get(
-                display_name=player1_display_name)
-            score1 = Score.objects.get(
-                player=player1_instance, match=match_instance)
-            score1.score = player1_score
-            score1.save()
+        #     player1_instance = User.objects.get(
+        #         display_name=player1_display_name)
+        #     score1 = Score.objects.get(
+        #         player=player1_instance, match=match_instance)
+        #     score1.score = player1_score
+        #     score1.save()
 
-            player2_instance = User.objects.get(
-                display_name=player2_display_name)
-            score2 = Score.objects.get(
-                player=player2_instance, match=match_instance)
-            score2.score = player2_score
-            score2.save()
-            # request.session["matches_record"] = get_matches(request.session["intra_login"])
-            return HttpResponse('')
-        except json.JSONDecodeError:
-            return HttpResponse('Something went wrong in the Match View')
+        #     player2_instance = User.objects.get(
+        #         display_name=player2_display_name)
+        #     score2 = Score.objects.get(
+        #         player=player2_instance, match=match_instance)
+        #     score2.score = player2_score
+        #     score2.save()
+        #     # request.session["matches_record"] = get_matches(request.session["intra_login"])
+        #     return HttpResponse('')
+        # except json.JSONDecodeError:
+        #     return HttpResponse('Something went wrong in the Match View')
+        return HttpResponse('')
