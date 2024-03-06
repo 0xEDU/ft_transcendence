@@ -5,6 +5,7 @@
 @import 'sections/login.css';
 @import 'sections/profile.css';
 @import 'sections/stats.css';
+@import 'sections/friends.css';
 
 * {
     margin: 0;
