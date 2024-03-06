@@ -1,6 +1,10 @@
 """Views for the stats app."""
 from typing import List
 
+# Our imports
+from stats.models import UserStats
+
+# Django imports
 from django.views.generic import TemplateView
 from pong.models import Score
 from dataclasses import dataclass
@@ -161,4 +165,9 @@ class UserStatsTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        test = UserStats.objects.get()
+        context["hours_played"] = test.total_hours_played
+        context["high_five"] = test.coop_hits_record
+        context["distance"] = test.classic_cumulative_ball_distance + test.coop_cumulative_ball_distance
+        context["companions"] = test.classic_oponents.count() + test.coop_companions.count()
         return context

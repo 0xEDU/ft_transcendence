@@ -4,7 +4,6 @@ import os
 
 # Our imports
 from soninha.models import User,Achievements
-from stats.models import UserStats
 
 # Django's imports
 from django.shortcuts import render
@@ -52,11 +51,5 @@ class IndexView(View):
             context["achievement_matches_classic"] = achievement.matches_classic
             context["achievement_matches_coop"] = achievement.matches_coop
             context["achievement_matches_won"] = achievement.matches_won
-            # Get user stats info
-            # stats = UserStats.objects.get(user=user)
-            # context["distance"] = stats.coop_cumulative_ball_distance + stats.classic_cumulative_ball_distance
-            # context["high_five"] = stats.coop_hits_record
-            # context["hours_played"] = stats.total_hours_played
-            # context["companions"] = stats.classic_oponents.count() + stats.coop_companions.count()
 
         return render(request, 'index.html', context)
