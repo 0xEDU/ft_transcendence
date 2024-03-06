@@ -129,10 +129,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearPlayerInputs('secondPlayer', 'thirdPlayer', 'fourthPlayer');
                 scrollToSection("arena");
                 hideControlPanel();
-                return response.text();
+                return response.json();
             })
-            .then(responseText => {
-                launchClassicPongMatch();
+            .then(responseData => {
+                launchClassicPongMatch(responseData.match_id);
                 // TODO: if/else => launchCoopPongMatch();
             })
             .catch(error => {
