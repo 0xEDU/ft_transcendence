@@ -1,7 +1,5 @@
 from soninha.models import User
 from django.db import models
-from soninha.models import User
-
 
 class UserStats(models.Model):
     """Model to store user statistics."""
