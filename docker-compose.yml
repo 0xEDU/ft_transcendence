@@ -31,7 +31,7 @@ services:
     networks:
       - ft_transcendence
     volumes:
-      - postgres-vol:/var/lib/postgresql
+      - postgres-vol:/var/lib/postgresql/data
 
   django-transcendence:
     image: django
