@@ -4,7 +4,7 @@ td#coopSquare,
 td#versusSquare {
     width: 20px;
     height: 20px;
-    border: 5px solid var(--HEAVY_GRAY);
+    border: 0.5px solid #4d4c4c;
 }
 
 table {
