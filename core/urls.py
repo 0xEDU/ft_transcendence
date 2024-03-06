@@ -32,6 +32,7 @@ urlpatterns = [
     path('pong/', include('pong.urls')),
     path('stats/', include('stats.urls')),
     path('blockchain/', include('blockchain.urls')),
+	path('search-user/', views.SearchUserView.as_view(), name='search_user'),
 ]
 
 # # Add the media URL pattern only during development

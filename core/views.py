@@ -1,14 +1,27 @@
 """Core views."""
 # Python Std Libs
 import os
-
 # Our imports
 from soninha.models import User,Achievements
 
 # Django's imports
 from django.shortcuts import render
 from django.views import View
+from django.http import JsonResponse
 
+class SearchUserView(View):
+    def get(self, request, *args, **kwargs):
+        search_term = request.GET.get('search', '')
+        try:
+            user = User.objects.get(display_name__icontains=search_term)
+            data = {
+                'displayName': user.display_name,
+                'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
+                'profileUrl': f'/profile/{user.id}/',
+            }
+            return JsonResponse(data)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
 
 class IndexView(View):
     """Renders the home page."""
