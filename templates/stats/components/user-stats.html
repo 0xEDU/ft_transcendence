@@ -22,7 +22,7 @@
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-distance.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
-					<p id="userStatsMax">10.5</p>
+					<p id="userStatsMax">{{ distance }}</p>
 				</div>
 			</div>
 			<p id="userStatsText">{% translate "DISTANCE WALKED TOGETHER" %}</p>
@@ -39,7 +39,7 @@
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-friends.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
-					<p id="userStatsMax">30</p>
+					<p id="userStatsMax">{{ high_five }}</p>
 				</div>
 			</div>
 			<p id="userStatsText">{% translate "HIGH FIVE COUNT" %}</p>
@@ -61,7 +61,7 @@
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-time.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
-					<p id="userStatsMax">30</p>
+					<p id="userStatsMax">{{ hours_played }}</p>
 				</div>
 			</div>
 			<p id="userStatsText">{% translate "HOURS PLAYED" %}</p>
@@ -78,7 +78,7 @@
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-person.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
-					<p id="userStatsMax">30</p>
+					<p id="userStatsMax">{{ companions }}</p>
 				</div>
 			</div>
 			<p id="userStatsText">{% translate "COMPANIONS MET" %}</p>
