@@ -18,7 +18,7 @@
 			<!-- Image + Words Row -->
 			<div class="row d-flex align-items-justified">
 				<div class="col-0 col-md-2"></div>
-				<div class="col-0 col-md-3">
+				<div class="col-0 col-md-2">
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-distance.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
@@ -35,7 +35,7 @@
 			<!-- Image + Words Row -->
 			<div class="row d-flex align-items-justified">
 				<div class="col-0 col-md-2"></div>
-				<div class="col-0 col-md-3">
+				<div class="col-0 col-md-2">
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-friends.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
@@ -47,7 +47,11 @@
 	  </div>
 	  <!-- Bff Column -->
 	  <div class="col-2 col-md-2 d-flex flex-column align-items-center justify-content-center">
-		<p>{% translate "You played XX matches with XXXXXXXXXXXXXXXXXXX" %}</p>
+		  <div class="bffText">BFF</div>
+		<div class="bffImage">
+			<img src="static/images/roaraujo.jpeg" alt="Imagem Redonda" class="roundedImage">
+		</div>
+		<p id="userStatsBFF">{% translate "you played " %} {{ bff_matches }} {% translate "matches with " %} {{ bff_login }}!</p>
 	  </div>
 	  <!-- Second Column -->
 	  <div class="col-6 col-md-4">
@@ -57,7 +61,7 @@
 			<!-- Image + Words Row -->
 			<div class="row d-flex align-items-justified">
 				<div class="col-0 col-md-2"></div>
-				<div class="col-0 col-md-3">
+				<div class="col-0 col-md-2">
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-time.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
@@ -74,7 +78,7 @@
 			<!-- Image + Words Row -->
 			<div class="row d-flex align-items-justified">
 				<div class="col-0 col-md-2"></div>
-				<div class="col-0 col-md-3">
+				<div class="col-0 col-md-2">
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-person.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">

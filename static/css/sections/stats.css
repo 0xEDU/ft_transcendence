@@ -59,3 +59,30 @@ p#userStatsMax {
     font-size: 3.3em;
     text-align: center;
 }
+
+p#userStatsBFF {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.bffImage {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.roundedImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 3px solid #FCFCFC;
+    border-radius: 50%;
+}
+
+.bffText {
+    text-align: center; /* Centralizar o texto horizontalmente */
+    font-size: 3.3em;
+    font-weight: bold;
+    color: #ffffff;
+}
