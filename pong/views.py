@@ -115,6 +115,15 @@ class MatchView(View):
                 scoreObj.save()
                 statsObj = UserStats.objects.get(user=user)
                 statsObj.total_hours_played = statsObj.total_hours_played + data.get("match_duration")
+                # TODO: if/else pra classic / co-op
+                statsObj.coop_cumulative_ball_distance = statsObj.coop_cumulative_ball_distance + data.get("ball_traveled_distance_cm")
+                statsObj.classic_cumulative_ball_distance = statsObj.classic_cumulative_ball_distance + data.get("ball_traveled_distance_cm")
+                statsObj.coop_hits_record = data.get("paddle_hits") if (data.get("paddle_hits") > statsObj.coop_hits_record) else statsObj.coop_hits_record
+
+                ## TODO:
+                # classic_victories
+                # coop_companions
+                # classic_oponents
                 statsObj.save()
             return JsonResponse({"match_id": match_id, "timestamp": match.match_date})
         except json.JSONDecodeError:

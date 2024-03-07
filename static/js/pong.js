@@ -40,10 +40,12 @@ let leftUpPressed = false;
 let leftDownPressed = false;
 
 // Stats
-let startTime = 0;
-let endTime = 0;
-let paddleHits = 0;
-let ballTraveledDistance = 0;
+let matchStats = {
+	startTime: 0,
+	endTime: 0,
+	paddleHits: 0,
+	ballTraveledDistance: 0
+};
 
 const States = {
 	NOT_STARTED: "NotStarted",
@@ -213,12 +215,14 @@ const checkCollisionWithPaddle = () => {
 		dx = -dx;
 		// Adjust the ball's position to ensure it bounces from the paddle's edge
 		ballX = -canvas.width / 2 + paddleWidth + paddlePadding + ballRadius;
+		matchStats.paddleHits++;
 	}
-
+	
 	// Collision with Right Paddle
 	if (ballCanvasX + ballRadius > canvas.width - paddleWidth && ballCanvasY > rightPaddleTop && ballCanvasY < rightPaddleBottom) {
 		dx = -dx;
 		ballX = canvas.width / 2 - paddleWidth - ballRadius; // Reposition ball after collision
+		matchStats.paddleHits++;
 	}
 }
 
@@ -297,22 +301,15 @@ const keyUpHandler = (e) => {
 const sendMatchDataToServer = (match_id, players_array) => {
 	const url = `/pong/match/${match_id}`;
 
-	const durationSecs = (endTime - startTime) / 1000;
-	ballTraveledDistance = 10;
-	paddleHits = 42;
-
 	const matchData = {
-		"match_duration": durationSecs,
-		"ball_traveled_distance": ballTraveledDistance,
-		"paddle_hits": paddleHits,
+		"match_duration": (matchStats.endTime - matchStats.startTime) / 1000,
+		"ball_traveled_distance_cm": (matchStats.ballTraveledDistance / window.devicePixelRatio) * (2.54 / 96), // 1 inch = 2.54 centimeters, 1 inch = 96 CSS pixels
+		"paddle_hits": matchStats.paddleHits,
 		"scores": {
 			[players_array[0]]: leftScore,
 			[players_array[1]]: rightScore,
 		}
 	}
-
-	console.log(`scores: ${matchData.scores}`)
-	console.log(matchData.scores)
 
 	const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
@@ -347,7 +344,7 @@ const launchGame = (match_id, players_array) => {
 		if (rightScore === winningScore || leftScore === winningScore) {
 			// Somebody won. The game is over.
 			gameState = States.GAME_OVER;
-			endTime = performance.now();
+			matchStats.endTime = performance.now();
 			clearInterval(gameLoopIntervalId); // stop game execution
 			drawEndingScreen();
 			sendMatchDataToServer(match_id, players_array);
@@ -370,6 +367,7 @@ const launchGame = (match_id, players_array) => {
 
 		checkCollisionWithPaddle();
 
+		// Check if ball hit side walls (score)
 		if (ballX + dx > canvas.width / 2) {
 			leftScore++;
 			resetBall();
@@ -382,8 +380,16 @@ const launchGame = (match_id, players_array) => {
 			return;
 		}
 
+		// Store the initial coordinates of the ball
+		let initialX = ballX;
+		let initialY = ballY;
+
+		// Move ball
 		ballX += dx * speedX;
 		ballY += dy * speedY;
+
+		// Calculate the distance traveled
+		matchStats.ballTraveledDistance += Math.sqrt(Math.pow(ballX - initialX, 2) + Math.pow(ballY - initialY, 2));
 	}
 }
 
@@ -407,7 +413,7 @@ function startGameAfterCountdown() {
 				countdown();
 				if (seconds === 0) {
 					gameState = States.RUNNING;
-					startTime = performance.now();
+					matchStats.startTime = performance.now();
 				}
 			}, 1000);
 		}
