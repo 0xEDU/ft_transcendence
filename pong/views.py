@@ -109,6 +109,6 @@ class MatchView(View):
                 scoreObj = Score.objects.get(player=user, match=match)
                 scoreObj.score = score
                 scoreObj.save()
-            return HttpResponse('')
+            return JsonResponse({"match_id": match_id, "timestamp": match.match_date})
         except json.JSONDecodeError:
             return HttpResponse('Something went wrong in the Match View')

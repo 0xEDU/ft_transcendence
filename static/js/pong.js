@@ -305,7 +305,7 @@ const sendMatchDataToServer = (match_id, players_array) => {
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
-			return response.text();
+			return response.json();
 		})
 		.then(data => {
 			console.log('Match data updated successfully:', data);
@@ -323,6 +323,8 @@ const launchGame = (match_id, players_array) => {
 			endTime = performance.now();
 			clearInterval(gameLoopIntervalId); // stop game execution
 			drawEndingScreen();
+			leftScore = 0;
+			rightScore = 0;
 			sendMatchDataToServer(match_id, players_array);
 			return;
 		}
