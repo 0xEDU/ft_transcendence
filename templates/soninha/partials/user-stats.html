@@ -3,6 +3,6 @@
 <div id="userStatsDiv" class="d-flex mt-3">
   <h4 class="ms-3"  title="{% translate 'Team ball hits record' %}">🙌 {{ ball_hits_record }}</h4>
   <h4 class="ms-3"  title="{% translate 'Distance traveled with a companion' %}">📍 {{ cumulative_ball_distance }} km</h4>
-  <h4 class="ms-3"  title="{% translate 'Total hours played' %}">🕰️ {{ user_time_played }} h</h4>
+  <h4 class="ms-3"  title="{% translate 'Total hours played' %}">🕰️ {{ total_hours_played|floatformat:2 }} h</h4>
   <h4 class="ms-3"  title="{% translate 'Companions encountered' %}">👯 {{ unique_companions_encountered }}</h4>
 </div>

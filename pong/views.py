@@ -5,6 +5,7 @@ import json
 # Our own imports
 from pong.models import Match, Score
 from soninha.models import User
+from stats.models import UserStats
 
 # Django's imports
 from django.http import HttpResponse, JsonResponse
@@ -100,6 +101,9 @@ class MatchView(View):
     def put(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
+
+
+
             print(f'>> [{data}]: data')
             match_id = kwargs["match_id"]
             match = Match.objects.get(pk=match_id)
@@ -109,6 +113,9 @@ class MatchView(View):
                 scoreObj = Score.objects.get(player=user, match=match)
                 scoreObj.score = score
                 scoreObj.save()
+                statsObj = UserStats.objects.get(user=user)
+                statsObj.total_hours_played = statsObj.total_hours_played + data.get("match_duration")
+                statsObj.save()
             return JsonResponse({"match_id": match_id, "timestamp": match.match_date})
         except json.JSONDecodeError:
             return HttpResponse('Something went wrong in the Match View')

@@ -43,7 +43,7 @@ class IndexView(View):
             # Get user stats
             context["ball_hits_record"] = UserStats.objects.get(user=user).coop_hits_record
             context["cumulative_ball_distance"] = UserStats.objects.get(user=user).coop_cumulative_ball_distance
-            context["user_time_played"] = UserStats.objects.get(user=user).total_hours_played
+            context["total_hours_played"] = UserStats.objects.get(user=user).total_hours_played
             all_matches_played_ids = Score.objects.filter(player_id=user.pk).values_list('match_id', flat=True)
             unique_players_played_with = []
             for match_id in all_matches_played_ids:
