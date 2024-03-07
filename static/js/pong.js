@@ -56,8 +56,8 @@ const randomizeBallMovement = () => {
 	// Randomize direction and speed
 	dx = (Math.random() > 0.5 ? 1 : -1) * (2.5 + Math.random() * 2); // Randomize between -5 and 5
 	dy = (Math.random() > 0.5 ? 1 : -1) * (2.5 + Math.random() * 2); // Randomize between -5 and 5
-	speedX = 0.5
-	speedY = 0.5
+	speedX = 5;
+	speedY = 5;
 }
 
 function adjustCanvasSizeToWindow() {
@@ -223,7 +223,7 @@ const movePaddles = () => {
 	}
 }
 
-const keyDownHandler = (e, match_id) => {
+const keyDownHandler = (e, match_id, playersArray) => {
 	// Right-side player
 	if (e.key === "Up" || e.key === "ArrowUp") {
 		rightUpPressed = true;
@@ -246,8 +246,6 @@ const keyDownHandler = (e, match_id) => {
 		startGameAfterCountdown();
 	}
 	if (e.key == "Enter" && gameState === States.GAME_OVER) {
-		rightScore = 0;
-		leftScore = 0;
 		gameState = States.NOT_STARTED;
 		scrollToSection("lobby");
 		showControlPanel();
@@ -257,14 +255,18 @@ const keyDownHandler = (e, match_id) => {
 		const durationSecs = (endTime - startTime) / 1000;
 		ballTraveledDistance = 10;
 		paddleHits = 42;
+
 		const matchData = {
 			"match_duration": durationSecs,
 			"ball_traveled_distance": ballTraveledDistance,
 			"paddle_hits": paddleHits,
+			"scores": {
+				[playersArray[0]]: leftScore,
+				[playersArray[1]]: rightScore,
+			}
 		}
 
 		const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-
 
 		// Define the options for the fetch request
 		const options = {
@@ -282,7 +284,7 @@ const keyDownHandler = (e, match_id) => {
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
 				}
-				return response.json();
+				return response.text();
 			})
 			.then(data => {
 				console.log('Match data updated successfully:', data);
@@ -354,7 +356,8 @@ const launchGame = () => {
 }
 
 function startGameAfterCountdown() {
-	let seconds = 3; // Initial value for the countdown
+	let seconds = 1; // TODO: VOLTAR PRA 3
+	// let seconds = 3; // Initial value for the countdown
 
 	function countdown() {
 		if (seconds >= 0) {
@@ -383,8 +386,8 @@ function startGameAfterCountdown() {
 }
 
 // main
-export default function launchClassicPongMatch(match_id) {
-	console.log(`about to start match number ${match_id}...`)
+export default function launchClassicPongMatch(match_id, playersArray) {
+	console.log(`about to start match number ${match_id} with ${playersArray}...`)
 	canvas = document.getElementById("pongGameCanvas");
 	context = canvas.getContext("2d");
 	gameCanvasDiv = document.getElementById("gameDiv");
@@ -399,7 +402,7 @@ export default function launchClassicPongMatch(match_id) {
 	// Set keyboard event handlers.
 	document.addEventListener("keydown", function (event) {
 		// Call the original event handler function with the event and additional variable
-		keyDownHandler(event, match_id);
+		keyDownHandler(event, match_id, playersArray);
 	});
 	document.addEventListener("keyup", keyUpHandler);
 

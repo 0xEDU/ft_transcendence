@@ -98,34 +98,17 @@ class MatchView(View):
         return JsonResponse(response_data)
 
     def put(self, request, *args, **kwargs):
-        # TODO: review and test.
-        print(f'>> bateu no put')
-        print(f'>> [{request}]: request')
-        # try:
-        #     data = json.loads(request.body)
-        #     match_id = data['match_id']
-        #     player1_display_name = data['player1']
-        #     player2_display_name = data['player2']
-        #     player1_score = data['player1_score']
-        #     player2_score = data['player2_score']
-
-        #     match_instance = Match.objects.get(pk=match_id)
-
-        #     player1_instance = User.objects.get(
-        #         display_name=player1_display_name)
-        #     score1 = Score.objects.get(
-        #         player=player1_instance, match=match_instance)
-        #     score1.score = player1_score
-        #     score1.save()
-
-        #     player2_instance = User.objects.get(
-        #         display_name=player2_display_name)
-        #     score2 = Score.objects.get(
-        #         player=player2_instance, match=match_instance)
-        #     score2.score = player2_score
-        #     score2.save()
-        #     # request.session["matches_record"] = get_matches(request.session["intra_login"])
-        #     return HttpResponse('')
-        # except json.JSONDecodeError:
-        #     return HttpResponse('Something went wrong in the Match View')
-        return HttpResponse('')
+        try:
+            data = json.loads(request.body)
+            print(f'>> [{data}]: data')
+            match_id = kwargs["match_id"]
+            match = Match.objects.get(pk=match_id)
+            print(f'>> [{data.get("scores")}]: data.get("scores")')
+            for login_intra, score in data.get("scores").items():
+                user = User.objects.get(login_intra=login_intra)
+                scoreObj = Score.objects.get(player=user, match=match)
+                scoreObj.score = score
+                scoreObj.save()
+            return HttpResponse('')
+        except json.JSONDecodeError:
+            return HttpResponse('Something went wrong in the Match View')
