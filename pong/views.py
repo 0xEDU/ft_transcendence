@@ -1,12 +1,14 @@
 # Std imports
+from http import HTTPStatus
 import json
 
 # Our own imports
 from pong.models import Match, Score
 from soninha.models import User
+from stats.models import UserStats
 
 # Django's imports
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.generic import View
@@ -64,65 +66,65 @@ class MatchView(View):
                 raise ValueError(_("User '%(player)s' does not exist") % {'player': player}) from e
 
     def post(self, request):
-        # print(json.loads(request.body))
         incoming_request = json.loads(request.body)
+        required_params = [
+            "gameType",
+            "gameMode",
+            "playerQuantity",
+            "mapSkin",
+            "players",
+        ]
+        for param in required_params:
+            if param not in incoming_request:
+                return render(request, 'components/errors/player_error.html', {
+                    'error_message': _("Missing required parameter: '%(param)s'") % {'param': param}
+                }, status=HTTPStatus.BAD_REQUEST)
+
         try:
             self._validate_incoming_request(incoming_request)
         except (User.DoesNotExist, ValueError) as error:
             return render(request, 'components/errors/player_error.html', {
                 'error_message': error
-            }, status=400)
-        # >> {
-        #     'gameType': 'singleMatch',
-        #     'gameMode': 'co-op',
-        #     'playerQuantity': 2,
-        #     'mapSkin': 'map1',
-        #     'players': ['roaraujo', 'guribeir']
-        # }
+            }, status=HTTPStatus.BAD_REQUEST)
 
-        # Formdata is valid at this point, now create a new match and return its id
-        # player1 = User.objects.get(login_intra="etachott")
-        # player2 = User.objects.get(login_intra="roaraujo")
-        # match = Match.objects.create()
-        # Score.objects.create(player=player1, match=match, score=0)
-        # Score.objects.create(player=player2, match=match, score=0)
-        # match.players.add(player1, player2)
-        response_data = {"match_id": "soon enough"}
-        # response_data = {
-        #     "records": [],
-        #     "player1": player1.display_name,
-        #     "player2": player2.display_name,
-        #     "match_id": match.id
-        # }
+        # Form data is valid at this point, now create a new match and return its id
+        new_match = Match.objects.create(type=incoming_request['gameMode'])
+        for player in incoming_request['players']:
+            user = User.objects.get(login_intra=player)
+            Score.objects.create(player=user, match=new_match, score=0)
+            new_match.players.add(user)
 
-        return HttpResponse(response_data)
+        response_data = {"match_id": new_match.id}
+
+        return JsonResponse(response_data)
 
     def put(self, request, *args, **kwargs):
-        # TODO: review and test.
         try:
             data = json.loads(request.body)
-            match_id = data['match_id']
-            player1_display_name = data['player1']
-            player2_display_name = data['player2']
-            player1_score = data['player1_score']
-            player2_score = data['player2_score']
 
-            match_instance = Match.objects.get(pk=match_id)
 
-            player1_instance = User.objects.get(
-                display_name=player1_display_name)
-            score1 = Score.objects.get(
-                player=player1_instance, match=match_instance)
-            score1.score = player1_score
-            score1.save()
 
-            player2_instance = User.objects.get(
-                display_name=player2_display_name)
-            score2 = Score.objects.get(
-                player=player2_instance, match=match_instance)
-            score2.score = player2_score
-            score2.save()
-            # request.session["matches_record"] = get_matches(request.session["intra_login"])
-            return HttpResponse('')
+            print(f'>> [{data}]: data')
+            match_id = kwargs["match_id"]
+            match = Match.objects.get(pk=match_id)
+            print(f'>> [{data.get("scores")}]: data.get("scores")')
+            for login_intra, score in data.get("scores").items():
+                user = User.objects.get(login_intra=login_intra)
+                scoreObj = Score.objects.get(player=user, match=match)
+                scoreObj.score = score
+                scoreObj.save()
+                statsObj = UserStats.objects.get(user=user)
+                statsObj.total_hours_played = statsObj.total_hours_played + data.get("match_duration")
+                # TODO: if/else pra classic / co-op
+                statsObj.coop_cumulative_ball_distance = statsObj.coop_cumulative_ball_distance + data.get("ball_traveled_distance_cm")
+                statsObj.classic_cumulative_ball_distance = statsObj.classic_cumulative_ball_distance + data.get("ball_traveled_distance_cm")
+                statsObj.coop_hits_record = data.get("paddle_hits") if (data.get("paddle_hits") > statsObj.coop_hits_record) else statsObj.coop_hits_record
+
+                ## TODO:
+                # classic_victories
+                # coop_companions
+                # classic_oponents
+                statsObj.save()
+            return JsonResponse({"match_id": match_id, "timestamp": match.match_date})
         except json.JSONDecodeError:
             return HttpResponse('Something went wrong in the Match View')

@@ -3,7 +3,9 @@
 import os
 
 # Our imports
-from soninha.models import User,Achievements
+from pong.models import Score
+from soninha.models import User, Achievements
+from stats.models import UserStats
 
 # Django's imports
 from django.shortcuts import render
@@ -25,13 +27,7 @@ class IndexView(View):
                         "&redirect_uri=" + protocol + "%3A%2F%2F" + \
                         redirect_uri + "%3A8000%2Fauth%2Flogin%2F&response_type=code"
 
-        context = {
-            "redirect_url": redirect_url,
-            "user_helps": 120,
-            "user_ball_distance": "10 mi",
-            "user_time_played": "15h",
-            "user_number_of_friends": 12,
-        }
+        context = {"redirect_url": redirect_url}
 
         # Check if there is a logged in user
         session = request.session
@@ -43,6 +39,19 @@ class IndexView(View):
             context["user_login"] = user.login_intra
             context["user_display_name"] = user.display_name
             context["user_image"] = user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url
+
+            # Get user stats
+            context["ball_hits_record"] = UserStats.objects.get(user=user).coop_hits_record
+            context["cumulative_ball_distance"] = UserStats.objects.get(user=user).coop_cumulative_ball_distance
+            context["total_hours_played"] = UserStats.objects.get(user=user).total_hours_played
+            all_matches_played_ids = Score.objects.filter(player_id=user.pk).values_list('match_id', flat=True)
+            unique_players_played_with = []
+            for match_id in all_matches_played_ids:
+                other_player_id = Score.objects.filter(match_id=match_id).exclude(player_id=user.pk).values_list('player_id', flat=True).first()
+                if other_player_id not in unique_players_played_with:
+                    unique_players_played_with.append(other_player_id)
+            context["unique_companions_encountered"] = len(unique_players_played_with)
+
             # Get user achievements info
             achievement = Achievements.objects.get(user=user)
             context["achievement_ball_distance"] = achievement.ball_distance
