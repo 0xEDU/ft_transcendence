@@ -23,6 +23,8 @@ let rightPaddlePosition = 0;
 
 let rightScore = 0;
 let leftScore = 0;
+let rightPlayerLogin;
+let leftPlayerLogin;
 const winningScore = 3;
 
 // randomize this later
@@ -92,6 +94,8 @@ function adjustCanvasSizeToWindow() {
 
 const drawStartingScreen = () => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+	drawPlayersNames();
 	context.fillStyle = styleGuide.__RED; // Text color
 	// context.fillStyle = styleGuide.__WHITE; // Text color
 	context.font = "48px sans serif"; // Text font and size
@@ -108,7 +112,7 @@ const drawEndingScreen = () => {
 		context.textAlign = 'center';
 		context.font = "bold 48px sans serif";
 		context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
-		context.fillText(leftScore + " x " + rightScore, canvas.width / 2, canvas.height / 2 + 60);
+		context.fillText(leftPlayerLogin + ' ' + leftScore + " x " + rightScore + ' ' + rightPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
 		context.font = "bold 18px sans serif";
 		context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + 100);
 	}
@@ -163,7 +167,27 @@ const drawMiddleLine = () => {
 }
 
 const drawScore = () => {
-	console.log("TODO: Write logic to update the score on screen;")
+	context.fillStyle = styleGuide.__WHITE
+	let y = canvas.height / 15;
+	let margin = canvas.width / 20;
+
+	context.font = "bold 48px sans serif";
+	context.textAlign = "left";
+	context.fillText(leftScore, margin, y);
+	context.textAlign = "right";
+	context.fillText(rightScore, canvas.width - margin, y);
+	return;
+}
+
+const drawPlayersNames = () => {
+	context.fillStyle = styleGuide.__WHITE
+	let y = canvas.height / 15 + 60;
+	let margin = canvas.width / 20;
+	context.font = "bold 18px sans serif";
+	context.textAlign = "left";
+	context.fillText(leftPlayerLogin, margin, y);
+	context.textAlign = "right";
+	context.fillText(rightPlayerLogin, canvas.width - margin, y);
 	return;
 }
 
@@ -287,6 +311,9 @@ const sendMatchDataToServer = (match_id, players_array) => {
 		}
 	}
 
+	console.log(`scores: ${matchData.scores}`)
+	console.log(matchData.scores)
+
 	const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
 	// Define the options for the fetch request
@@ -323,14 +350,16 @@ const launchGame = (match_id, players_array) => {
 			endTime = performance.now();
 			clearInterval(gameLoopIntervalId); // stop game execution
 			drawEndingScreen();
+			sendMatchDataToServer(match_id, players_array);
 			leftScore = 0;
 			rightScore = 0;
-			sendMatchDataToServer(match_id, players_array);
 			return;
 		}
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		drawMiddleLine();
+		drawPlayersNames();
+		drawScore();
 		drawBall();
 		drawPaddles();
 		movePaddles();
@@ -344,14 +373,12 @@ const launchGame = (match_id, players_array) => {
 		if (ballX + dx > canvas.width / 2) {
 			leftScore++;
 			resetBall();
-			drawScore();
 			return;
 		}
 
 		if (ballX + dx < -canvas.width / 2) {
 			rightScore++;
 			resetBall();
-			drawScore();
 			return;
 		}
 
@@ -396,6 +423,9 @@ export default function launchClassicPongMatch(match_id, players_array) {
 	canvas = document.getElementById("pongGameCanvas");
 	context = canvas.getContext("2d");
 	gameCanvasDiv = document.getElementById("gameDiv");
+
+	leftPlayerLogin = players_array[0];
+	rightPlayerLogin = players_array[1];
 
 	// Initial set up of the canvas
 	adjustCanvasSizeToWindow();

@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // TODO: if/else => launchCoopPongMatch();
             })
             .catch(error => {
+                // throw error;
                 error.text().then(errorBody => {
                     if (hasElement(modalObj.playButtonDiv.id, "playerNotFound"))
                         deleteElement("playerNotFound");
