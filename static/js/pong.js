@@ -223,7 +223,7 @@ const movePaddles = () => {
 	}
 }
 
-const keyDownHandler = (e, match_id, playersArray) => {
+const keyDownHandler = (e) => {
 	// Right-side player
 	if (e.key === "Up" || e.key === "ArrowUp") {
 		rightUpPressed = true;
@@ -249,49 +249,6 @@ const keyDownHandler = (e, match_id, playersArray) => {
 		gameState = States.NOT_STARTED;
 		scrollToSection("lobby");
 		showControlPanel();
-
-		const url = `/pong/match/${match_id}`;
-
-		const durationSecs = (endTime - startTime) / 1000;
-		ballTraveledDistance = 10;
-		paddleHits = 42;
-
-		const matchData = {
-			"match_duration": durationSecs,
-			"ball_traveled_distance": ballTraveledDistance,
-			"paddle_hits": paddleHits,
-			"scores": {
-				[playersArray[0]]: leftScore,
-				[playersArray[1]]: rightScore,
-			}
-		}
-
-		const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-
-		// Define the options for the fetch request
-		const options = {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': csrfToken,
-			},
-			body: JSON.stringify(matchData),
-		};
-
-		// Send the fetch request
-		fetch(url, options)
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.text();
-			})
-			.then(data => {
-				console.log('Match data updated successfully:', data);
-			})
-			.catch(error => {
-				console.error('Error updating match data:', error);
-			});
 	}
 }
 
@@ -313,7 +270,52 @@ const keyUpHandler = (e) => {
 	}
 }
 
-const launchGame = () => {
+const sendMatchDataToServer = (match_id, players_array) => {
+	const url = `/pong/match/${match_id}`;
+
+	const durationSecs = (endTime - startTime) / 1000;
+	ballTraveledDistance = 10;
+	paddleHits = 42;
+
+	const matchData = {
+		"match_duration": durationSecs,
+		"ball_traveled_distance": ballTraveledDistance,
+		"paddle_hits": paddleHits,
+		"scores": {
+			[players_array[0]]: leftScore,
+			[players_array[1]]: rightScore,
+		}
+	}
+
+	const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+	// Define the options for the fetch request
+	const options = {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': csrfToken,
+		},
+		body: JSON.stringify(matchData),
+	};
+
+	// Send the fetch request
+	fetch(url, options)
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.text();
+		})
+		.then(data => {
+			console.log('Match data updated successfully:', data);
+		})
+		.catch(error => {
+			console.error('Error updating match data:', error);
+		});
+}
+
+const launchGame = (match_id, players_array) => {
 	if (gameState === States.RUNNING) {
 		if (rightScore === winningScore || leftScore === winningScore) {
 			// Somebody won. The game is over.
@@ -321,6 +323,7 @@ const launchGame = () => {
 			endTime = performance.now();
 			clearInterval(gameLoopIntervalId); // stop game execution
 			drawEndingScreen();
+			sendMatchDataToServer(match_id, players_array);
 			return;
 		}
 
@@ -386,8 +389,8 @@ function startGameAfterCountdown() {
 }
 
 // main
-export default function launchClassicPongMatch(match_id, playersArray) {
-	console.log(`about to start match number ${match_id} with ${playersArray}...`)
+export default function launchClassicPongMatch(match_id, players_array) {
+	console.log(`about to start match number ${match_id} with ${players_array}...`)
 	canvas = document.getElementById("pongGameCanvas");
 	context = canvas.getContext("2d");
 	gameCanvasDiv = document.getElementById("gameDiv");
@@ -400,13 +403,12 @@ export default function launchClassicPongMatch(match_id, playersArray) {
 	// Readjusts the size of the canvas in case of window resizing mid-game
 	window.addEventListener("resize", adjustCanvasSizeToWindow);
 	// Set keyboard event handlers.
-	document.addEventListener("keydown", function (event) {
-		// Call the original event handler function with the event and additional variable
-		keyDownHandler(event, match_id, playersArray);
-	});
+	document.addEventListener("keydown", keyDownHandler);
 	document.addEventListener("keyup", keyUpHandler);
 
 	// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
-	gameLoopIntervalId = setInterval(launchGame, 10);
+	gameLoopIntervalId = setInterval(() => {
+		launchGame(match_id, players_array); // Pass arguments to launchGame function
+	}, 10);
 };
 
