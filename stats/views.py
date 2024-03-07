@@ -165,7 +165,10 @@ class UserStatsTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        test = UserStats.objects.get()
+        current_user_id = self.request.session["user_id"]
+        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+            return context
+        test = UserStats.objects.get(user=current_user_id)
         context["hours_played"] = test.total_hours_played
         context["high_five"] = test.coop_hits_record
         context["distance"] = test.classic_cumulative_ball_distance + test.coop_cumulative_ball_distance
