@@ -7,6 +7,7 @@
 	margin-bottom:5vh;
 }
 .friendsPage-inputGroup {
+	margin-top: 2vh;
 	width: auto;
 }
 .friendsPage-btnOutlineSecondary {
@@ -42,7 +43,15 @@
 	border: 1px solid;
 }
 
-.friendName {
-    font-weight: bold;
-	padding-left: 2vw;
+.friendCardHtml {
+	height: 10vh;
+}
+
+.overflowList {
+	max-height: 50vh;
+	-ms-overflow-style: none;
+}
+
+.overflowList::-webkit-scrollbar {
+	display: none;
 }
