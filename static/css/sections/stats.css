@@ -4,7 +4,7 @@ td#coopSquare,
 td#versusSquare {
     width: 20px;
     height: 20px;
-    border: 5px solid var(--HEAVY_GRAY);
+    border: 0.5px solid var(--LIGHT_GRAY);
 }
 
 table {
@@ -18,7 +18,7 @@ div#coopHistoryDiv {
 div#matchRow {
     min-width: 100px;
     width: 50vw;
-    background-color: #3a3535;
+    background-color: var(--LIGHT_GRAY);
     font-size: 1.5em;
 }
 
@@ -38,4 +38,50 @@ p#matchDate {
     min-width: 2vh;
     width: 20vh;
     text-align: center;
+}
+
+div#rectangle {
+    background-color: var(--MEDIUM_GRAY);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+p#userStatsText {
+    min-width: 12vh;
+    width: 80vh;
+    font-size: 1.8em;
+    text-align: center;
+}
+
+p#userStatsMax {
+    font-size: 3.3em;
+    text-align: center;
+}
+
+p#userStatsBFF {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.bffImage {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.roundedImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 3px solid var(--WHITE);
+    border-radius: 50%;
+}
+
+.bffText {
+    text-align: center; /* Centralizar o texto horizontalmente */
+    font-size: 3.3em;
+    font-weight: bold;
 }
