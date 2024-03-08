@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('classic_cumulative_ball_distance', models.FloatField(default=0)),
                 ('coop_hits_record', models.IntegerField(default=0)),
                 ('classic_victories', models.FloatField(default=0)),
-                ('classic_oponents', models.ManyToManyField(related_name='opponents', to='soninha.user')),
+                ('classic_opponents', models.ManyToManyField(related_name='opponents', to='soninha.user')),
                 ('coop_companions', models.ManyToManyField(related_name='companions', to='soninha.user')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='statistics', to='soninha.user')),
             ],

@@ -119,7 +119,7 @@ class MatchView(View):
                 other_user = next(u for u, s in scores.items() if u != login_intra)
                 if match.type == "classic" and login_intra == winner:
                     statsObj.classic_victories += 1
-                    statsObj.classic_oponents.add(User.objects.get(login_intra=other_user))
+                    statsObj.classic_opponents.add(User.objects.get(login_intra=other_user))
                 if match.type == "co-op":
                     statsObj.coop_companions.add(User.objects.get(login_intra=other_user))
                 statsObj.save()

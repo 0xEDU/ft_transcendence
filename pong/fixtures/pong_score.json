@@ -1,0 +1,182 @@
+[
+	{
+		"model": "pong.score",
+		"pk": 1,
+		"fields": {
+			"player": 1,
+			"match": 1,
+			"score": 2
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 2,
+		"fields": {
+			"player": 2,
+			"match": 1,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 3,
+		"fields": {
+			"player": 1,
+			"match": 2,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 4,
+		"fields": {
+			"player": 3,
+			"match": 2,
+			"score": 6
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 5,
+		"fields": {
+			"player": 1,
+			"match": 3,
+			"score": 2
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 6,
+		"fields": {
+			"player": 5,
+			"match": 3,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 7,
+		"fields": {
+			"player": 1,
+			"match": 4,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 8,
+		"fields": {
+			"player": 4,
+			"match": 4,
+			"score": 1
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 9,
+		"fields": {
+			"player": 2,
+			"match": 5,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 10,
+		"fields": {
+			"player": 5,
+			"match": 5,
+			"score": 2
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 11,
+		"fields": {
+			"player": 2,
+			"match": 6,
+			"score": 1
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 12,
+		"fields": {
+			"player": 3,
+			"match": 6,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 13,
+		"fields": {
+			"player": 2,
+			"match": 7,
+			"score": 0
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 14,
+		"fields": {
+			"player": 4,
+			"match": 7,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 15,
+		"fields": {
+			"player": 3,
+			"match": 8,
+			"score": 2
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 16,
+		"fields": {
+			"player": 4,
+			"match": 8,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 17,
+		"fields": {
+			"player": 3,
+			"match": 9,
+			"score": 0
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 18,
+		"fields": {
+			"player": 5,
+			"match": 9,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 19,
+		"fields": {
+			"player": 4,
+			"match": 10,
+			"score": 3
+		}
+	},
+	{
+		"model": "pong.score",
+		"pk": 20,
+		"fields": {
+			"player": 5,
+			"match": 10,
+			"score": 1
+		}
+	}
+]
