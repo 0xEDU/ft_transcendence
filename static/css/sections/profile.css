@@ -28,7 +28,7 @@ section#profile .modal-footer {
 
 .roundedSquareImage {
     border-radius: 8px;
-    border: 3px solid #FCFCFC;
+    border: 3px solid var(--WHITE);
     background-size: cover;
     /* Scale the background image to cover the entire container */
     background-position: center;
