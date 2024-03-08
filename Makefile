@@ -36,7 +36,7 @@ migrate:
 	$(PYTHON_VERSION) manage.py migrate
 
 load_fixtures: migrate
-	$(PYTHON_VERSION) manage.py loaddata users achievements userstats
+	$(PYTHON_VERSION) manage.py loaddata users achievements userstats pong_score pong_match
 
 clean: clean-db clean-app
 
