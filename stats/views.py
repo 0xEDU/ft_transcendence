@@ -185,7 +185,10 @@ class UserStatsTemplateView(TemplateView):
             context["distance"] = "{:,.2f}".format(distance / 1000) + " m"
         else:
             context["distance"] = "{:,.2f}".format(distance / 1000000) + " km"
-        context["companions"] = userdb.classic_opponents.count() + userdb.coop_companions.count()
+        opponents_with_counts = [opponent for opponent in userdb.classic_opponents.all()]
+        companions_with_counts = [companion for companion in userdb.coop_companions.all()]
+        combined_set = set(opponents_with_counts + companions_with_counts)
+        context["companions"] = len(combined_set)
         context["bff_matches"] = 25
         context["bff_login"] = "roaraujo"
         return context
