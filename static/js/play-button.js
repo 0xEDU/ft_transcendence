@@ -101,13 +101,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const url = "/pong/match";
         const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const formData = new FormData(event.target);
+
+        const playersArray = Array.from(formData.keys()).filter(key =>
+            key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== "")
+
         const gameData = {
             "gameType": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
             "gameMode": formData.get('gameModeDefault'),
             "playerQuantity": Number(formData.get('playerDefault')),
             "mapSkin": formData.get('mapDefault'),
-            "players": Array.from(formData.keys()).filter(key =>
-                key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== ""),
+            "players": playersArray,
         }
 
         fetch(url, {
@@ -129,13 +132,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearPlayerInputs('secondPlayer', 'thirdPlayer', 'fourthPlayer');
                 scrollToSection("arena");
                 hideControlPanel();
-                return response.text();
+                return response.json();
             })
-            .then(responseText => {
-                launchClassicPongMatch();
+            .then(responseData => {
+                launchClassicPongMatch(responseData.match_id, playersArray);
                 // TODO: if/else => launchCoopPongMatch();
             })
             .catch(error => {
+                // throw error;
                 error.text().then(errorBody => {
                     if (hasElement(modalObj.playButtonDiv.id, "playerNotFound"))
                         deleteElement("playerNotFound");

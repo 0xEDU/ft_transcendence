@@ -1,47 +1,47 @@
 [
-	{
-		"model": "soninha.user",
-		"pk": 1,
-		"fields": {
-			"login_intra": "roaraujo",
-			"display_name": "rods",
-			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/b1e244962293a9e25b9d242f45a1e93b/roaraujo.jpg"
-		}
-	},
-	{
-		"model": "soninha.user",
-		"pk": 2,
-		"fields": {
-			"login_intra": "guribeir",
-			"display_name": "Gui",
-			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/5302f4ddaa3a261b0d58520e6cda3ee5/guribeir.png"
-		}
-	},
-	{
-		"model": "soninha.user",
-		"pk": 3,
-		"fields": {
-			"login_intra": "etachott",
-			"display_name": "0xEDU",
-			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/e3925dd9727731f5df93df52990edfd7/etachott.jpg"
-		}
-	},
-	{
-		"model": "soninha.user",
-		"pk": 4,
-		"fields": {
-			"login_intra": "feralves",
-			"display_name": "Fer",
-			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/5decd4781f37e4d733049129cb24b20c/feralves.jpg"
-		}
-	},
-	{
-		"model": "soninha.user",
-		"pk": 5,
-		"fields": {
-			"login_intra": "viferrei",
-			"display_name": "Vini",
-			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/a9a073a50f7d49694db13aeda8b6763a/viferrei.jpg"
-		}
-	}
-  ]
+  {
+      "model": "soninha.user",
+      "pk": 1,
+      "fields": {
+          "login_intra": "roaraujo",
+          "display_name": "rods",
+          "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/b1e244962293a9e25b9d242f45a1e93b/roaraujo.jpg"
+      }
+  },
+  {
+      "model": "soninha.user",
+      "pk": 2,
+      "fields": {
+          "login_intra": "guribeir",
+          "display_name": "Gui",
+          "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/5302f4ddaa3a261b0d58520e6cda3ee5/guribeir.png"
+      }
+  },
+  {
+      "model": "soninha.user",
+      "pk": 3,
+      "fields": {
+          "login_intra": "etachott",
+          "display_name": "0xEDU",
+          "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/e3925dd9727731f5df93df52990edfd7/etachott.jpg"
+      }
+  },
+  {
+      "model": "soninha.user",
+      "pk": 4,
+      "fields": {
+          "login_intra": "feralves",
+          "display_name": "Fer",
+          "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/5decd4781f37e4d733049129cb24b20c/feralves.jpg"
+      }
+  },
+  {
+      "model": "soninha.user",
+      "pk": 5,
+      "fields": {
+          "login_intra": "viferrei",
+          "display_name": "Vini",
+          "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/a9a073a50f7d49694db13aeda8b6763a/viferrei.jpg"
+      }
+  }
+]
