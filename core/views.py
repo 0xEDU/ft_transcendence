@@ -41,16 +41,11 @@ class IndexView(View):
             context["user_image"] = user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url
 
             # Get user stats
-            context["ball_hits_record"] = UserStats.objects.get(user=user).coop_hits_record
-            context["cumulative_ball_distance"] = UserStats.objects.get(user=user).coop_cumulative_ball_distance
-            context["total_hours_played"] = UserStats.objects.get(user=user).total_hours_played
-            all_matches_played_ids = Score.objects.filter(player_id=user.pk).values_list('match_id', flat=True)
-            unique_players_played_with = []
-            for match_id in all_matches_played_ids:
-                other_player_id = Score.objects.filter(match_id=match_id).exclude(player_id=user.pk).values_list('player_id', flat=True).first()
-                if other_player_id not in unique_players_played_with:
-                    unique_players_played_with.append(other_player_id)
-            context["unique_companions_encountered"] = len(unique_players_played_with)
+            userStats = UserStats.objects.get(user=user)
+            context["ball_hits_record"] = userStats.coop_hits_record
+            context["cumulative_ball_distance"] = userStats.coop_cumulative_ball_distance
+            context["total_hours_played"] = userStats.total_hours_played
+            context["unique_companions_encountered"] = userStats.coop_companions.count()
 
             # Get user achievements info
             achievement = Achievements.objects.get(user=user)
