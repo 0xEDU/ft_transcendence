@@ -11,10 +11,10 @@ class UserStats(models.Model):
     coop_hits_record = models.IntegerField(default=0)
     classic_victories = models.FloatField(default=0)
     coop_companions = models.ManyToManyField(User, related_name='companions')
-    classic_oponents = models.ManyToManyField(User, related_name='opponents')
+    classic_opponents = models.ManyToManyField(User, related_name='opponents')
 
     def __str__(self):
-        opponents = ', '.join([opponent.login_intra for opponent in self.classic_oponents.all()])
+        opponents = ', '.join([opponent.login_intra for opponent in self.classic_opponents.all()])
         companions = ', '.join([opponent.login_intra for opponent in self.coop_companions.all()])
         return f">> Statistics for {self.user.login_intra}:\n" \
                f"    - Total hours played: {self.total_hours_played}\n" \

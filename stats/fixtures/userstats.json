@@ -10,7 +10,7 @@
 			"coop_hits_record": 40,
 			"classic_victories": 30,
 			"coop_companions": [2,3],
-			"classic_oponents": [5,4]
+			"classic_opponents": [5,4]
 		}
 	},
 	{
@@ -24,7 +24,7 @@
 			"coop_hits_record": 25,
 			"classic_victories": 18,
 			"coop_companions": [1,5],
-			"classic_oponents": [3,4]
+			"classic_opponents": [3,4]
 		}
 	},
 	{
@@ -38,7 +38,7 @@
 			"coop_hits_record": 50,
 			"classic_victories": 40,
 			"coop_companions": [1,4],
-			"classic_oponents": [1,5]
+			"classic_opponents": [1,5]
 		}
 	},
 	{
@@ -52,7 +52,7 @@
 			"coop_hits_record": 12,
 			"classic_victories": 8,
 			"coop_companions": [3,5],
-			"classic_oponents": [1,2]
+			"classic_opponents": [1,2]
 		}
 	},
 	{
@@ -66,7 +66,7 @@
 			"coop_hits_record": 35,
 			"classic_victories": 25,
 			"coop_companions": [4,2],
-			"classic_oponents": [3,1]
+			"classic_opponents": [3,1]
 		}
 	}
 ]

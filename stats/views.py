@@ -172,7 +172,7 @@ class UserStatsTemplateView(TemplateView):
         context["hours_played"] = userdb.total_hours_played
         context["high_five"] = userdb.coop_hits_record
         context["distance"] = userdb.classic_cumulative_ball_distance + userdb.coop_cumulative_ball_distance
-        context["companions"] = userdb.classic_oponents.count() + userdb.coop_companions.count()
+        context["companions"] = userdb.classic_opponents.count() + userdb.coop_companions.count()
         context["bff_matches"] = 25
         context["bff_login"] = "roaraujo"
         return context
