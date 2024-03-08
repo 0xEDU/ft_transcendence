@@ -102,28 +102,30 @@ class MatchView(View):
         try:
             data = json.loads(request.body)
 
-
-
             print(f'>> [{data}]: data')
             match_id = kwargs["match_id"]
             match = Match.objects.get(pk=match_id)
             print(f'>> [{data.get("scores")}]: data.get("scores")')
-            for login_intra, score in data.get("scores").items():
+
+            scores = data.get("scores")
+            winner = max(scores, key=scores.get)
+            for login_intra, score in scores.items():
                 user = User.objects.get(login_intra=login_intra)
                 scoreObj = Score.objects.get(player=user, match=match)
                 scoreObj.score = score
-                scoreObj.save()
+                scoreObj.save() # important! doing this before updating stats
                 statsObj = UserStats.objects.get(user=user)
                 statsObj.total_hours_played = statsObj.total_hours_played + data.get("match_duration")
                 # TODO: if/else pra classic / co-op
                 statsObj.coop_cumulative_ball_distance = statsObj.coop_cumulative_ball_distance + data.get("ball_traveled_distance_cm")
                 statsObj.classic_cumulative_ball_distance = statsObj.classic_cumulative_ball_distance + data.get("ball_traveled_distance_cm")
                 statsObj.coop_hits_record = data.get("paddle_hits") if (data.get("paddle_hits") > statsObj.coop_hits_record) else statsObj.coop_hits_record
-
-                ## TODO:
-                # classic_victories
-                # coop_companions
-                # classic_oponents
+                other_user = next(u for u, s in scores.items() if u != login_intra)
+                if match.type == "classic" and login_intra == winner:
+                    statsObj.classic_victories += 1
+                    statsObj.classic_oponents.add(User.objects.get(login_intra=other_user))
+                if match.type == "co-op":
+                    statsObj.coop_companions.add(User.objects.get(login_intra=other_user))
                 statsObj.save()
             return JsonResponse({"match_id": match_id, "timestamp": match.match_date})
         except json.JSONDecodeError:
