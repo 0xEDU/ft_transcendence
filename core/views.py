@@ -43,8 +43,22 @@ class IndexView(View):
             # Get user stats
             userStats = UserStats.objects.get(user=user)
             context["ball_hits_record"] = userStats.coop_hits_record
-            context["cumulative_ball_distance"] = userStats.coop_cumulative_ball_distance
-            context["total_hours_played"] = userStats.total_hours_played
+            distance = userStats.coop_cumulative_ball_distance + userStats.classic_cumulative_ball_distance
+            if distance < 10:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance) + " mm"
+            elif distance < 1000:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 10) + " cm"
+            elif distance < 1000000:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 1000) + " m"
+            else:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 1000000) + " km"
+            hours = userStats.total_hours_played
+            if hours < 60:
+                context["total_hours_played"] = str(round(hours, 2)) + " sec"
+            elif hours < 3600:
+                context["total_hours_played"] = "{:,.2f}".format(hours / 60) + " min"
+            else:
+                context["total_hours_played"] = "{:,.2f}".format(hours / 3600) + " hours"
             context["unique_companions_encountered"] = userStats.coop_companions.count()
 
             # Get user achievements info
