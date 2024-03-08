@@ -1,5 +1,6 @@
 import { scrollToSection } from "./control-panel.js";
 import { showControlPanel } from "./play-button.js";
+import insertInElement from "./tinyDOM/insertInElement.js"; 
 import styleGuide from "./style-guide.js"
 
 // Game constants (trying to avoid magic numbers)
@@ -329,10 +330,10 @@ const sendMatchDataToServer = (match_id, players_array) => {
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
-			return response.json();
+			return response.text();
 		})
-		.then(data => {
-			console.log('Match data updated successfully:', data);
+		.then(responseHTML => {
+			insertInElement("userStatsDiv", responseHTML);
 		})
 		.catch(error => {
 			console.error('Error updating match data:', error);

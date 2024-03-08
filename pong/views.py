@@ -101,12 +101,8 @@ class MatchView(View):
     def put(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
-
-            print(f'>> [{data}]: data')
             match_id = kwargs["match_id"]
             match = Match.objects.get(pk=match_id)
-            print(f'>> [{data.get("scores")}]: data.get("scores")')
-
             scores = data.get("scores")
             winner = max(scores, key=scores.get)
             for login_intra, score in scores.items():
@@ -127,6 +123,16 @@ class MatchView(View):
                 if match.type == "co-op":
                     statsObj.coop_companions.add(User.objects.get(login_intra=other_user))
                 statsObj.save()
-            return JsonResponse({"match_id": match_id, "timestamp": match.match_date})
+
+            logged_in_user = User.objects.get(pk=request.session["user_id"])
+            logged_user_stats = UserStats.objects.get(user=logged_in_user)
+            context = {
+                "ball_hits_record": logged_user_stats.coop_hits_record,
+                "cumulative_ball_distance": logged_user_stats.coop_cumulative_ball_distance + logged_user_stats.classic_cumulative_ball_distance,
+                "total_hours_played": logged_user_stats.total_hours_played,
+                "unique_companions_encountered": logged_user_stats.coop_companions.count(),
+            }
+
+            return render(request, "soninha/partials/user-stats.html", context)
         except json.JSONDecodeError:
             return HttpResponse('Something went wrong in the Match View')
