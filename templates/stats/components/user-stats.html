@@ -22,7 +22,7 @@
 					<img style="max-height: 80px; width: auto;" src="{% static 'achievements/icon-distance.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
 				</div>
 				<div class="col-0 col-md-6">
-					<p id="userStatsMax">{{ distance }}</p>
+					<p id="userStatsMax">{{ distance|floatformat:2 }}</p>
 				</div>
 			</div>
 			<p id="userStatsText">{% translate "DISTANCE WALKED TOGETHER" %}</p>

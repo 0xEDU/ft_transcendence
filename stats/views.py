@@ -169,7 +169,10 @@ class UserStatsTemplateView(TemplateView):
         if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
             return context
         userdb = UserStats.objects.get(user=current_user_id)
-        context["hours_played"] = userdb.total_hours_played
+        if userdb.total_hours_played < 60:
+            context["hours_played"] = str(round(userdb.total_hours_played, 2)) + " min"
+        else:
+            context["hours_played"] = "{:,.2f}".format(userdb.total_hours_played / 60) + " hours"
         context["high_five"] = userdb.coop_hits_record
         context["distance"] = userdb.classic_cumulative_ball_distance + userdb.coop_cumulative_ball_distance
         context["companions"] = userdb.classic_opponents.count() + userdb.coop_companions.count()
