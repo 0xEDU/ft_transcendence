@@ -1,4 +1,4 @@
-import insertElement from "./tinyDOM/insertElement.js";
+import insertInElement from "./tinyDOM/insertInElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import emptyElement from "./tinyDOM/emptyElement.js";
 
@@ -28,7 +28,7 @@ function fetchStatsPage(page) {
 		.then(text => {
 			if (text) {
 				emptyElement("statsDiv");
-				insertElement("statsDiv", text);
+				insertInElement("statsDiv", text);
 			}
 		})
 }
