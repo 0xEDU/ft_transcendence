@@ -9,6 +9,12 @@ from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
 
+from django.db.models import Q
+from .models import Friendship
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+
 class SearchUserView(View):
     def get(self, request, *args, **kwargs):
         search_term = request.GET.get('search', '')
@@ -22,6 +28,54 @@ class SearchUserView(View):
             return JsonResponse(data)
         except User.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
+
+class FriendshipRequestView(View):
+    def post(self, request):
+        accepter_id = request.POST.get('accepter_id')
+        accepter = User.objects.get(pk=accepter_id)
+        Friendship.objects.create(requester=request.user, accepter=accepter)
+        return JsonResponse({'message': 'Friendship request sent!'}, status=201)
+
+class AcceptFriendshipView(View):
+    def post(self, request):
+        friendship_id = request.POST.get('friendship_id')
+        friendship = Friendship.objects.get(pk=friendship_id, accepter=request.user)
+        friendship.status = 'accepted'
+        friendship.save()
+        return JsonResponse({'message': 'Friendship accepted!'}, status=200)
+
+class FriendshipStatusView(View):
+    def get(self, request):
+        # Return the friendship status between two users
+        user_id = request.GET.get('user_id')
+        friendships = Friendship.objects.filter(
+            Q(requester_id=request.user.id, accepter_id=user_id) |
+            Q(requester_id=user_id, accepter_id=request.user.id)
+        ).first()
+        if friendships:
+            return JsonResponse({
+                'status': friendships.status
+            })
+        return JsonResponse({'status': 'not_friends'})
+
+@method_decorator(login_required, name='dispatch')
+class FriendListView(View):
+    def get(self, request):
+        friendships = Friendship.objects.filter(
+            Q(requester=request.user) | Q(accepter=request.user)
+        ).distinct()
+        friends_data = []
+        for friendship in friendships:
+            friend = friendship.accepter if friendship.requester == request.user else friendship.requester
+            friends_data.append({
+                'id': friend.id,
+                'displayName': friend.display_name,
+                'profilePictureUrl': friend.profile_picture.url if friend.profile_picture else friend.intra_cdn_profile_picture_url,
+                'status': friendship.status,
+                'friendshipId': friendship.id,  # Include the friendship ID for accept action
+            })
+        return JsonResponse(friends_data, safe=False)
+
 
 class IndexView(View):
     """Renders the home page."""

@@ -55,3 +55,11 @@
 .overflowList::-webkit-scrollbar {
 	display: none;
 }
+
+.friendCardHtml.pending {
+	background-color: #f0ad4e; /* Bootstrap's 'btn-warning' color */
+}
+
+.friendCardHtml.accepted {
+	background-color: #337ab7; /* Bootstrap's 'btn-primary' color */
+}
