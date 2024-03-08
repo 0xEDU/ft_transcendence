@@ -1,0 +1,51 @@
+[
+	{
+		"model": "soninha.achievements",
+		"pk": 1,
+		"fields": {
+			"user": 1,
+			"ball_distance": 150,
+			"friends_count": 10,
+			"hours_played": 30,
+			"matches_classic": 20,
+			"matches_coop": 15,
+			"matches_won": 12
+		}
+	},
+	{
+		"model": "soninha.user",
+		"pk": 2,
+		"fields": {
+			"login_intra": "guribeir",
+			"display_name": "Gui",
+			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/5302f4ddaa3a261b0d58520e6cda3ee5/guribeir.png"
+		}
+	},
+	{
+		"model": "soninha.user",
+		"pk": 3,
+		"fields": {
+			"login_intra": "etachott",
+			"display_name": "0xEDU",
+			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/e3925dd9727731f5df93df52990edfd7/etachott.jpg"
+		}
+	},
+	{
+		"model": "soninha.user",
+		"pk": 4,
+		"fields": {
+			"login_intra": "feralves",
+			"display_name": "Fer",
+			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/5decd4781f37e4d733049129cb24b20c/feralves.jpg"
+		}
+	},
+	{
+		"model": "soninha.user",
+		"pk": 5,
+		"fields": {
+			"login_intra": "viferrei",
+			"display_name": "Vini",
+			"intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/a9a073a50f7d49694db13aeda8b6763a/viferrei.jpg"
+		}
+	}
+  ]
