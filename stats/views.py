@@ -168,11 +168,11 @@ class UserStatsTemplateView(TemplateView):
         current_user_id = self.request.session["user_id"]
         if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
             return context
-        test = UserStats.objects.get(user=current_user_id)
-        context["hours_played"] = test.total_hours_played
-        context["high_five"] = test.coop_hits_record
-        context["distance"] = test.classic_cumulative_ball_distance + test.coop_cumulative_ball_distance
-        context["companions"] = test.classic_oponents.count() + test.coop_companions.count()
+        userdb = UserStats.objects.get(user=current_user_id)
+        context["hours_played"] = userdb.total_hours_played
+        context["high_five"] = userdb.coop_hits_record
+        context["distance"] = userdb.classic_cumulative_ball_distance + userdb.coop_cumulative_ball_distance
+        context["companions"] = userdb.classic_oponents.count() + userdb.coop_companions.count()
         context["bff_matches"] = 25
         context["bff_login"] = "roaraujo"
         return context
