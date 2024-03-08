@@ -8,7 +8,9 @@
 			"coop_cumulative_ball_distance": 1200,
 			"classic_cumulative_ball_distance": 50,
 			"coop_hits_record": 40,
-			"classic_victories": 30
+			"classic_victories": 30,
+			"coop_companions": [2,3],
+			"classic_oponents": [5,4]
 		}
 	},
 	{
@@ -20,7 +22,9 @@
 			"coop_cumulative_ball_distance": 800,
 			"classic_cumulative_ball_distance": 30,
 			"coop_hits_record": 25,
-			"classic_victories": 18
+			"classic_victories": 18,
+			"coop_companions": [1,5],
+			"classic_oponents": [3,4]
 		}
 	},
 	{
@@ -32,7 +36,9 @@
 			"coop_cumulative_ball_distance": 1500,
 			"classic_cumulative_ball_distance": 60,
 			"coop_hits_record": 50,
-			"classic_victories": 40
+			"classic_victories": 40,
+			"coop_companions": [1,4],
+			"classic_oponents": [1,5]
 		}
 	},
 	{
@@ -44,7 +50,9 @@
 			"coop_cumulative_ball_distance": 500,
 			"classic_cumulative_ball_distance": 15,
 			"coop_hits_record": 12,
-			"classic_victories": 8
+			"classic_victories": 8,
+			"coop_companions": [3,5],
+			"classic_oponents": [1,2]
 		}
 	},
 	{
@@ -56,7 +64,9 @@
 			"coop_cumulative_ball_distance": 1000,
 			"classic_cumulative_ball_distance": 40,
 			"coop_hits_record": 35,
-			"classic_victories": 25
+			"classic_victories": 25,
+			"coop_companions": [4,2],
+			"classic_oponents": [3,1]
 		}
 	}
 ]
