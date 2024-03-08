@@ -30,8 +30,8 @@ const winningScore = 3;
 // randomize this later
 let dx = -3.2;
 let dy = 2.4;
-let speedX = 5;
-let speedY = 5;
+let speedX = 1;
+let speedY = 1;
 
 // Players movement
 let rightUpPressed = false;
@@ -60,8 +60,6 @@ const randomizeBallMovement = () => {
 	// Randomize direction and speed
 	dx = (Math.random() > 0.5 ? 1 : -1) * (2.5 + Math.random() * 2); // Randomize between -5 and 5
 	dy = (Math.random() > 0.5 ? 1 : -1) * (2.5 + Math.random() * 2); // Randomize between -5 and 5
-	speedX = 5;
-	speedY = 5;
 }
 
 function adjustCanvasSizeToWindow() {
@@ -394,8 +392,7 @@ const launchGame = (match_id, players_array) => {
 }
 
 function startGameAfterCountdown() {
-	let seconds = 1; // TODO: VOLTAR PRA 3
-	// let seconds = 3; // Initial value for the countdown
+	let seconds = 3; // Initial value for the countdown
 
 	function countdown() {
 		if (seconds >= 0) {
