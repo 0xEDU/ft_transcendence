@@ -15,29 +15,13 @@ div#coopHistoryDiv {
     margin-bottom: 10vh;
 }
 
-div#matchRow {
-    min-width: 100px;
-    width: 50vw;
+div.matchRow {
     background-color: var(--LIGHT_GRAY);
-    font-size: 1.5em;
+    font-size: 1.3rem;
 }
 
 div#matchesDiv {
-    max-width: 50vw;
-    height: 60vh;
-}
-
-p#matchText {
-    min-width: 10vh;
-    width: 35vh;
-}
-
-p#matchScore,
-p#matchHour,
-p#matchDate {
-    min-width: 2vh;
-    width: 20vh;
-    text-align: center;
+    height: 57vh;
 }
 
 div#rectangle {

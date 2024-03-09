@@ -67,7 +67,7 @@ h6 {
 /* Scrollbar styling for the whole website */
 /* Change scrollbar width, height, and color */
 #matchesDiv::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
     height: 10px;
 }
 
