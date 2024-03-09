@@ -91,7 +91,9 @@ class MatchView(View):
         new_match = Match.objects.create(type=incoming_request['gameType'])
         for player in incoming_request['players']:
             user = User.objects.get(login_intra=player)
-            Score.objects.create(player=user, match=new_match, score=0)
+            other_players = [User.objects.get(login_intra=player).id for player in incoming_request['players'] if player != user.login_intra]
+            score = Score.objects.create(player=user, match=new_match, score=0)
+            score.vs_id.add(*other_players)
             new_match.players.add(user)
 
         response_data = {"match_id": new_match.id}
