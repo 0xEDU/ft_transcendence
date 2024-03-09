@@ -1,6 +1,6 @@
 import { scrollToSection } from "./control-panel.js";
 import { showControlPanel } from "./play-button.js";
-import insertInElement from "./tinyDOM/insertInElement.js"; 
+import insertInElement from "./tinyDOM/insertInElement.js";
 import styleGuide from "./style-guide.js"
 
 // Game constants (trying to avoid magic numbers)
@@ -24,6 +24,7 @@ let rightPaddlePosition = 0;
 
 let rightScore = 0;
 let leftScore = 0;
+let coopMatchIsOver = false;
 let rightPlayerLogin;
 let leftPlayerLogin;
 const winningScore = 3;
@@ -64,10 +65,6 @@ const randomizeBallMovement = () => {
 }
 
 function adjustCanvasSizeToWindow() {
-	context.fillStyle = styleGuide.__YELLOW_100;
-	context.font = "48px sans serif";
-	context.textAlign = "center";
-	context.fillText(55, canvas.width / 2, canvas.height / 2);
 	//Gets the devicePixelRatio
 	var pixelRatio = window.devicePixelRatio || 1;
 
@@ -97,8 +94,7 @@ const drawStartingScreen = () => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
 	drawPlayersNames();
-	context.fillStyle = styleGuide.__RED; // Text color
-	// context.fillStyle = styleGuide.__WHITE; // Text color
+	context.fillStyle = styleGuide.__WHITEr
 	context.font = "48px sans serif"; // Text font and size
 	context.textAlign = "center"; // Align text to the center
 	context.fillText("Pong Game", canvas.width / 2, canvas.height / 4); // Game title
@@ -106,23 +102,33 @@ const drawStartingScreen = () => {
 	context.fillText("Press Enter to Start", canvas.width / 2, canvas.height / 2); // Start instructions
 }
 
-const drawEndingScreen = () => {
+const drawEndingScreen = (game_type) => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 	resetBall();
 	if (gameState === States.GAME_OVER) {
-		context.textAlign = 'center';
-		context.font = "bold 48px sans serif";
-		context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
-		context.fillText(leftPlayerLogin + ' ' + leftScore + " x " + rightScore + ' ' + rightPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
-		context.font = "bold 18px sans serif";
-		context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + 100);
+		if (game_type === "classic") {
+			context.textAlign = 'center';
+			context.font = "bold 48px sans serif";
+			context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+			context.fillText(leftPlayerLogin + ' ' + leftScore + " x " + rightScore + ' ' + rightPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
+			context.font = "bold 18px sans serif";
+			context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + 100);
+		}
+		if (game_type === "co-op") {
+			context.textAlign = 'center';
+			context.font = "bold 48px sans serif";
+			context.fillText("Game Over", canvas.width / 2, canvas.height / 2 - 60);
+			context.fillText(matchStats.paddleHits, canvas.width / 2, canvas.height / 2);
+			context.fillText(leftPlayerLogin + ' + ' + rightPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
+			context.font = "bold 18px sans serif";
+			context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + 120);
+		}
 	}
 }
 
 const drawBall = () => {
-	context.fillStyle = styleGuide.__YELLOW_100;
-	// context.fillStyle = styleGuide.__WHITE;
-	context.fill();
+	context.fillStyle = styleGuide.__WHITE;
+
 	context.beginPath();
 	context.arc(
 		canvas.width / 2 + ballX, canvas.height / 2 + ballY,
@@ -133,7 +139,7 @@ const drawBall = () => {
 
 const drawPaddles = () => {
 	// Right paddle
-	context.fillStyle = styleGuide.__ORANGE;
+	context.fillStyle = styleGuide.__WHITE;
 	rightPaddlePosition = (canvas.height / 2) - (paddleHeight / 2) + rightPaddleY;
 	context.beginPath();
 	context.rect(
@@ -144,7 +150,7 @@ const drawPaddles = () => {
 	context.closePath();
 
 	// Left paddle
-	context.fillStyle = styleGuide.__ORANGE;
+	context.fillStyle = styleGuide.__WHITE;
 	context.beginPath();
 	context.rect(
 		paddlePadding, (canvas.height / 2) - (paddleHeight / 2) + leftPaddleY,
@@ -159,7 +165,7 @@ const drawMiddleLine = () => {
 	const gap = paddleWidth; // Gap between dashes
 	let y = 0;
 
-	context.fillStyle = styleGuide.__GREEN;
+	context.fillStyle = styleGuide.__WHITE;
 
 	while (y < canvas.height) {
 		context.fillRect(canvas.width / 2 - lineLength / 2, y, paddleWidth, lineLength);
@@ -167,16 +173,24 @@ const drawMiddleLine = () => {
 	}
 }
 
-const drawScore = () => {
+const drawScore = (game_type) => {
 	context.fillStyle = styleGuide.__WHITE
 	let y = canvas.height / 15;
 	let margin = canvas.width / 20;
 
 	context.font = "bold 48px sans serif";
-	context.textAlign = "left";
-	context.fillText(leftScore, margin, y);
-	context.textAlign = "right";
-	context.fillText(rightScore, canvas.width - margin, y);
+	if (game_type === "classic") {
+		context.textAlign = "left";
+		context.fillText(leftScore, margin, y);
+		context.textAlign = "right";
+		context.fillText(rightScore, canvas.width - margin, y);
+	}
+	if (game_type === "co-op") {
+		const x = canvas.width / 2;
+		context.textAlign = 'center';
+		context.textBaseline = 'middle';
+		context.fillText(matchStats.paddleHits, x, y);
+	}
 	return;
 }
 
@@ -216,7 +230,7 @@ const checkCollisionWithPaddle = () => {
 		ballX = -canvas.width / 2 + paddleWidth + paddlePadding + ballRadius;
 		matchStats.paddleHits++;
 	}
-	
+
 	// Collision with Right Paddle
 	if (ballCanvasX + ballRadius > canvas.width - paddleWidth && ballCanvasY > rightPaddleTop && ballCanvasY < rightPaddleBottom) {
 		dx = -dx;
@@ -301,7 +315,7 @@ const sendMatchDataToServer = (match_id, players_array) => {
 	const url = `/pong/match/${match_id}`;
 
 	const matchData = {
-		"match_duration": (matchStats.endTime - matchStats.startTime) / 1000,
+		"match_duration_secs": (matchStats.endTime - matchStats.startTime) / 1000,
 		"ball_traveled_distance_cm": (matchStats.ballTraveledDistance / window.devicePixelRatio) * (2.54 / 96), // 1 inch = 2.54 centimeters, 1 inch = 96 CSS pixels
 		"paddle_hits": matchStats.paddleHits,
 		"scores": {
@@ -338,24 +352,34 @@ const sendMatchDataToServer = (match_id, players_array) => {
 		});
 }
 
-const launchGame = (match_id, players_array) => {
+const runGame = (match_id, players_array, game_type) => {
 	if (gameState === States.RUNNING) {
-		if (rightScore === winningScore || leftScore === winningScore) {
+		if ((game_type === "classic" && rightScore === winningScore || leftScore === winningScore)
+			|| (game_type === "co-op" && coopMatchIsOver)) {
 			// Somebody won. The game is over.
 			gameState = States.GAME_OVER;
 			matchStats.endTime = performance.now();
 			clearInterval(gameLoopIntervalId); // stop game execution
-			drawEndingScreen();
+			drawEndingScreen(game_type);
 			sendMatchDataToServer(match_id, players_array);
 			leftScore = 0;
 			rightScore = 0;
+			coopMatchIsOver = false;
+			rightPaddleY = 0;
+			leftPaddleY = 0;
+			matchStats = {
+				startTime: 0,
+				endTime: 0,
+				paddleHits: 0,
+				ballTraveledDistance: 0
+			};
 			return;
 		}
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		drawMiddleLine();
 		drawPlayersNames();
-		drawScore();
+		drawScore(game_type);
 		drawBall();
 		drawPaddles();
 		movePaddles();
@@ -368,17 +392,24 @@ const launchGame = (match_id, players_array) => {
 
 		// Check if ball hit side walls (score)
 		if (ballX + dx > canvas.width / 2) {
-			leftScore++;
+			if (game_type === "classic")
+				leftScore++;
+			if (game_type === "co-op")
+				coopMatchIsOver = true;
 			resetBall();
 			return;
 		}
 
 		if (ballX + dx < -canvas.width / 2) {
-			rightScore++;
+			if (game_type === "classic")
+				rightScore++;
+			if (game_type === "co-op")
+				coopMatchIsOver = true;
 			resetBall();
 			return;
 		}
 
+		// Calculate the distance traveled by the ball
 		// Store the initial coordinates of the ball
 		let initialX = ballX;
 		let initialY = ballY;
@@ -387,7 +418,7 @@ const launchGame = (match_id, players_array) => {
 		ballX += dx * speedX;
 		ballY += dy * speedY;
 
-		// Calculate the distance traveled
+		// Increment distance
 		matchStats.ballTraveledDistance += Math.sqrt(Math.pow(ballX - initialX, 2) + Math.pow(ballY - initialY, 2));
 	}
 }
@@ -400,8 +431,9 @@ function startGameAfterCountdown() {
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
 			drawPaddles();
+			drawPlayersNames();
 
-			context.fillStyle = styleGuide.__RED;
+			context.fillStyle = styleGuide.__WHITE;
 			context.font = "48px sans serif";
 			context.textAlign = "center";
 			context.fillText(seconds, canvas.width / 2, canvas.height / 2);
@@ -422,8 +454,8 @@ function startGameAfterCountdown() {
 }
 
 // main
-export default function launchClassicPongMatch(match_id, players_array) {
-	console.log(`about to start match number ${match_id} with ${players_array}...`)
+export default function launchMatch(match_id, players_array, game_type) {
+	// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
 	canvas = document.getElementById("pongGameCanvas");
 	context = canvas.getContext("2d");
 	gameCanvasDiv = document.getElementById("gameDiv");
@@ -444,7 +476,7 @@ export default function launchClassicPongMatch(match_id, players_array) {
 
 	// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
 	gameLoopIntervalId = setInterval(() => {
-		launchGame(match_id, players_array); // Pass arguments to launchGame function
+		runGame(match_id, players_array, game_type); // Pass arguments to runGame function
 	}, 10);
 };
 

@@ -2,7 +2,7 @@ import { scrollToSection } from "./control-panel.js";
 import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
-import launchClassicPongMatch from "./pong.js"
+import launchMatch from "./pong.js"
 
 class ModalObj {
     constructor(form, modalElement, modalInstance, playButtonSvg, playButtonDiv, fourPlayersRadio, redCircle) {
@@ -98,7 +98,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleFormSubmit(modalObj, event) {
         event.preventDefault();
-        const url = "/pong/match";
+
+        const url = event.target.getAttribute('action');
+        const method = event.target.getAttribute('method');
+
         const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const formData = new FormData(event.target);
 
@@ -106,8 +109,8 @@ document.addEventListener('DOMContentLoaded', function () {
             key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== "")
 
         const gameData = {
-            "gameType": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
-            "gameMode": formData.get('gameModeDefault'),
+            "gameMode": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
+            "gameType": formData.get('gameTypeDefault'),
             "playerQuantity": Number(formData.get('playerDefault')),
             "mapSkin": formData.get('mapDefault'),
             "players": playersArray,
@@ -135,11 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(responseData => {
-                launchClassicPongMatch(responseData.match_id, playersArray);
-                // TODO: if/else => launchCoopPongMatch();
+                launchMatch(responseData.match_id, playersArray, gameData.gameType);
             })
             .catch(error => {
-                // throw error;
+                throw error;
                 error.text().then(errorBody => {
                     if (hasElement(modalObj.playButtonDiv.id, "playerNotFound"))
                         deleteElement("playerNotFound");

@@ -50,7 +50,7 @@ class MatchView(View):
     def _validate_incoming_request(self, incoming_request):
         players = incoming_request['players']
         player_quantity = incoming_request['playerQuantity']
-        match_type = incoming_request['gameMode']
+        match_type = incoming_request['gameType']
 
         if match_type not in [choice[0] for choice in Match.MATCH_TYPE_CHOICES]:
             raise ValueError(_("Invalid game mode: '%(match_type)s'") % {'match_type': match_type})
@@ -68,8 +68,8 @@ class MatchView(View):
     def post(self, request):
         incoming_request = json.loads(request.body)
         required_params = [
-            "gameType",
             "gameMode",
+            "gameType",
             "playerQuantity",
             "mapSkin",
             "players",
@@ -88,7 +88,7 @@ class MatchView(View):
             }, status=HTTPStatus.BAD_REQUEST)
 
         # Form data is valid at this point, now create a new match and return its id
-        new_match = Match.objects.create(type=incoming_request['gameMode'])
+        new_match = Match.objects.create(type=incoming_request['gameType'])
         for player in incoming_request['players']:
             user = User.objects.get(login_intra=player)
             Score.objects.create(player=user, match=new_match, score=0)
@@ -108,10 +108,10 @@ class MatchView(View):
             for login_intra, score in scores.items():
                 user = User.objects.get(login_intra=login_intra)
                 scoreObj = Score.objects.get(player=user, match=match)
-                scoreObj.score = score
+                scoreObj.score = score if (match.type == "classic") else data.get("paddle_hits")
                 scoreObj.save() # important! doing this before updating stats
                 statsObj = UserStats.objects.get(user=user)
-                statsObj.total_hours_played = statsObj.total_hours_played + data.get("match_duration")
+                statsObj.total_hours_played = statsObj.total_hours_played + data.get("match_duration_secs")
                 # TODO: if/else pra classic / co-op
                 statsObj.coop_cumulative_ball_distance = statsObj.coop_cumulative_ball_distance + data.get("ball_traveled_distance_cm")
                 statsObj.classic_cumulative_ball_distance = statsObj.classic_cumulative_ball_distance + data.get("ball_traveled_distance_cm")

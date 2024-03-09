@@ -50,11 +50,13 @@
 		<div class="bffText">B F F</div>
 		{% if bff_matches %}
 		<div class="bffImage">
-			<div id="bffImage" class="roundedImage" style="background-image: url('{{ user_image }}');"></div>
+			<div id="image" class="roundedImage" style="background-image: url('{{ bff_image }}');"></div>
 		</div>
-		<p id="userStatsBFF">
-			{% blocktrans %}You played {{ bff_matches }} matches with {{ bff_login }}!{% endblocktrans %}
-		  </p>
+		<div>
+			<p id="userStatsBFF">
+				{% blocktrans %}You played {{ bff_matches }} matches with {{ bff_login }}!{% endblocktrans %}
+			</p>
+		</div>
 		{% else %}
 		<p id="userStatsBFF">{% translate "You did not play with anyone yet!"%}</p>
 		{% endif %}
