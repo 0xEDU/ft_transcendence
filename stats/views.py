@@ -3,10 +3,11 @@ from typing import List
 
 # Our imports
 from stats.models import UserStats
+from pong.models import Score
+from soninha.models import User
 
 # Django imports
 from django.views.generic import TemplateView
-from pong.models import Score
 from dataclasses import dataclass
 
 # Constants
@@ -188,4 +189,6 @@ class UserStatsTemplateView(TemplateView):
         context["companions"] = userdb.classic_opponents.count() + userdb.coop_companions.count()
         context["bff_matches"] = 25
         context["bff_login"] = "roaraujo"
+        bffUser = User.objects.get(id=1)
+        context["bff_image"] = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
         return context
