@@ -3,7 +3,7 @@ from typing import List
 
 # Our imports
 from stats.models import UserStats
-from pong.models import Score
+from pong.models import Score, Match
 from soninha.models import User
 
 # Django imports
@@ -112,11 +112,11 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest matches as a list."""
 
         def __get_match_description(match, player1_score, player2_name) -> str:
-            if match.type == "coop":
+            if match.type == "co-op":
                 return f"🤝 joined forces with {player2_name}"
-            if match.type == "versus" and player1_score == 5:
+            if match.type == "classic" and player1_score == 5:
                 return f"🥇 won against {player2_name}"
-            if match.type == "versus":
+            if match.type == "classic":
                 return f"🥈 lost to {player2_name}"
 
         def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
