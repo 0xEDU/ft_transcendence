@@ -48,11 +48,19 @@
 	  <!-- Bff Column -->
 	  <div class="col-2 col-md-2 d-flex flex-column align-items-center justify-content-center">
 		<div class="bffText">B F F</div>
+		{% if bff_matches %}
 		<div class="bffImage">
-			<img class="roundedImage" src="{% static 'images/roaraujo.jpeg' %}" alt="BFF">
+			<div id="image" class="roundedImage" style="background-image: url('{{ bff_image }}');"></div>
 		</div>
-		<p id="userStatsBFF">{% translate "you played " %} {{ bff_matches }} {% translate "matches with " %} {{ bff_login }}!</p>
-	  </div>
+		<div>
+			<p id="userStatsBFF">
+				{% blocktrans %}You played {{ bff_matches }} matches with {{ bff_login }}!{% endblocktrans %}
+			</p>
+		</div>
+		{% else %}
+		<p id="userStatsBFF">{% translate "You did not play with anyone yet!"%}</p>
+		{% endif %}
+	</div>
 	  <!-- Second Column -->
 	  <div class="col-6 col-md-4">
 		<!-- Hours Row -->
