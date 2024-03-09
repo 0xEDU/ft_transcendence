@@ -191,8 +191,19 @@ class UserStatsTemplateView(TemplateView):
         companions_with_counts = [companion for companion in userdb.coop_companions.all()]
         combined_set = set(opponents_with_counts + companions_with_counts)
         context["companions"] = len(combined_set)
-        context["bff_matches"] = 25
-        context["bff_login"] = "roaraujo"
-        bffUser = User.objects.get(id=1)
-        context["bff_image"] = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
+        gameData = Score.objects.filter(player_id=current_user_id)
+        vs_id_counts = gameData.values('vs_id').annotate(vs_id_count=Count('vs_id'))
+        most_common_vs_id = vs_id_counts.order_by('-vs_id_count').first()
+        if most_common_vs_id:
+            most_common_vs_id_value = most_common_vs_id['vs_id']
+            bffUser_matches = most_common_vs_id['vs_id_count']
+            bffUser = User.objects.get(id=most_common_vs_id_value)
+            bffUser_id = bffUser.login_intra
+            bffProfile = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
+            context["bff_matches"] = bffUser_matches
+            context["bff_login"] = bffUser_id
+            context["user_image"] = bffProfile
+            context["bff_image"] = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
+        else:
+            context["bff_matches"] = 0
         return context
