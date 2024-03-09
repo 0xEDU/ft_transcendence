@@ -18,6 +18,7 @@ export function scrollToSection(sectionName, behaviour = "smooth") {
 
             // Update the state or perform any other actions
             state.position = sectionName;
+            history.pushState(state,  "", window.location.href)
         } else {
             console.error(`Section "${sectionName}" not found.`);
         }

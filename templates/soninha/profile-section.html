@@ -15,13 +15,8 @@
     <!-- User Digest Column -->
     <div class="col-6 col-md-6">
       {% include "soninha/partials/display-name.html" %}
-      <h4>{{ user_login }}</h4>
-      <div id="userStatsDiv" class="d-flex mt-3">
-        <h4 class="me-3">🙌 {{ user_helps }}</h4>
-        <h4 class="me-3">📍 {{ user_ball_distance }}</h4>
-        <h4 class="me-3">🕰️ {{ user_time_played }}</h4>
-        <h4 class="me-3">👯 {{ user_number_of_friends }}</h4>
-      </div>
+      <h3>{{ user_login }}</h3>
+      {% include "soninha/partials/user-stats.html" %}
     </div>
 
     <!-- Empty Space Column -->

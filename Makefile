@@ -35,6 +35,9 @@ run:
 migrate:
 	$(PYTHON_VERSION) manage.py migrate
 
+load_fixtures: migrate
+	$(PYTHON_VERSION) manage.py loaddata users achievements userstats pong_score pong_match
+
 clean: clean-db clean-app
 
 fclean: fclean-db fclean-app fclean-ganache fclean-contract-deployer
@@ -147,7 +150,7 @@ create-venv: check-python
 delete-venv:
 	rm -rf $(VENV_DIR)
 
-install:
+install_dependencies:
 	@read -p "Have you already activated the virtual environment? (y/n): " choice; \
 	if [ "$$choice" = "y" ] || [ "$$choice" = "Y" ]; then \
 		pip install -r requirements.txt; \
@@ -158,7 +161,7 @@ install:
 
 # ---------------------------------------------------------------------------- #
 
-.PHONY: start stop restart run migrate clean fclean frestart \
+.PHONY: start stop restart run migrate seed clean fclean frestart \
 		db-start db-stop db-restart db-clean db-fclean db-frestart \
 		app-start app-stop app-restart app-clean app-fclean app-frestart \
 		ganache-start ganache-stop ganache-restart ganache-clean ganache-fclean ganache-frestart \

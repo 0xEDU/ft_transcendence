@@ -6,7 +6,7 @@
       <div class="modal-header border-0">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form id="tournamentForm" action="/pong/form" method="POST">
+      <form id="tournamentForm" action="{% url "pong:match" %}" method="POST">
         {% csrf_token %}
         <div class="modal-body text-white pt-0">
           <h1 class="ms-3 mb-5 w-100 text-center">{% translate "TOURNAMENT" %}</h1>
@@ -15,11 +15,11 @@
               <h3 class="settingName">{% translate "GAME MODE" %}</h3>
               <div class="d-flex flex-column align-items-start">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="gameModeDefault" id="coopRadio" value="coop" checked />
+                  <input class="form-check-input" type="radio" name="gameTypeDefault" id="coopRadio" value="co-op" checked />
                   <label class="form-check-label" for="coopRadio">{% translate "CO-OP" %}</label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="gameModeDefault" id="classicRadio" value="classic" />
+                  <input class="form-check-input" type="radio" name="gameTypeDefault" id="classicRadio" value="classic" />
                   <label class="form-check-label" for="classicRadio">{% translate "CLASSIC" %}</label>
                 </div>
               </div>

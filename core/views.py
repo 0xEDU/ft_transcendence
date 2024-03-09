@@ -2,7 +2,9 @@
 # Python Std Libs
 import os
 # Our imports
-from soninha.models import User,Achievements
+from pong.models import Score
+from soninha.models import User, Achievements
+from stats.models import UserStats
 
 # Django's imports
 from django.shortcuts import render
@@ -166,13 +168,7 @@ class IndexView(View):
                         "&redirect_uri=" + protocol + "%3A%2F%2F" + \
                         redirect_uri + "%3A8000%2Fauth%2Flogin%2F&response_type=code"
 
-        context = {
-            "redirect_url": redirect_url,
-            "user_helps": 120,
-            "user_ball_distance": "10 mi",
-            "user_time_played": "15h",
-            "user_number_of_friends": 12,
-        }
+        context = {"redirect_url": redirect_url}
 
         # Check if there is a logged in user
         session = request.session
@@ -184,6 +180,28 @@ class IndexView(View):
             context["user_login"] = user.login_intra
             context["user_display_name"] = user.display_name
             context["user_image"] = user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url
+
+            # Get user stats
+            userStats = UserStats.objects.get(user=user)
+            context["ball_hits_record"] = userStats.coop_hits_record
+            distance = userStats.coop_cumulative_ball_distance + userStats.classic_cumulative_ball_distance
+            if distance < 10:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance) + " mm"
+            elif distance < 1000:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 10) + " cm"
+            elif distance < 1000000:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 1000) + " m"
+            else:
+                context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 1000000) + " km"
+            hours = userStats.total_hours_played
+            if hours < 60:
+                context["total_hours_played"] = "{:,.2f}".format(hours) + " sec"
+            elif hours < 3600:
+                context["total_hours_played"] = "{:,.2f}".format(hours / 60) + " min"
+            else:
+                context["total_hours_played"] = "{:,.2f}".format(hours / 3600) + " hours"
+            context["unique_companions_encountered"] = userStats.coop_companions.count()
+
             # Get user achievements info
             context.update(self._get_achievements_context(user))
 

@@ -1,8 +1,14 @@
 """Views for the stats app."""
 from typing import List
 
-from django.views.generic import TemplateView
+# Our imports
+from stats.models import UserStats
 from pong.models import Score
+from soninha.models import User
+
+# Django imports
+from django.db.models import Count
+from django.views.generic import TemplateView
 from dataclasses import dataclass
 
 # Constants
@@ -10,14 +16,14 @@ ROWS_SIZE = 15
 TOTAL_NUM_OF_CELLS = 88
 COOP_COLORS = {
     "none": "var(--HEAVY_GRAY)",
-    "low": "#ffe988",
-    "medium": "#ffde4f",
-    "high": "#facb03",
+    "low": "var(--YELLOW_30)",
+    "medium": "var(--YELLOW_60)",
+    "high": "var(--YELLOW_100)",
 }
 VERSUS_COLORS = {
     "none": "var(--HEAVY_GRAY)",
-    "win": "#00ff00",
-    "loss": "#ff0000",
+    "win": "var(--GREEN)",
+    "loss": "var(--RED)",
 }
 
 
@@ -136,7 +142,7 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the context data."""
 
         context = super().get_context_data(**kwargs)
-        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+        if "user_id" not in self.request.session.keys() or not self.request.session["user_id"]:
             return context
         context["coop_cell_rows"] = self._get_latest_coop_scores()
         context["versus_cell_rows"] = self._get_latest_versus_scores()
@@ -161,4 +167,43 @@ class UserStatsTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        current_user_id = self.request.session["user_id"]
+        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+            return context
+        userdb = UserStats.objects.get(user=current_user_id)
+        if userdb.total_hours_played < 60:
+            context["hours_played"] = str(round(userdb.total_hours_played, 2)) + " sec"
+        elif userdb.total_hours_played < 3600:
+            context["hours_played"] = "{:,.2f}".format(userdb.total_hours_played / 60) + " min"
+        else:
+            context["hours_played"] = "{:,.2f}".format(userdb.total_hours_played / 3600) + " hours"
+        context["high_five"] = userdb.coop_hits_record
+        distance = userdb.classic_cumulative_ball_distance + userdb.coop_cumulative_ball_distance
+        if distance < 10:
+            context["distance"] = "{:,.2f}".format(distance) + " mm"
+        elif distance < 1000:
+            context["distance"] = "{:,.2f}".format(distance / 10) + " cm"
+        elif distance < 1000000:
+            context["distance"] = "{:,.2f}".format(distance / 1000) + " m"
+        else:
+            context["distance"] = "{:,.2f}".format(distance / 1000000) + " km"
+        opponents_with_counts = [opponent for opponent in userdb.classic_opponents.all()]
+        companions_with_counts = [companion for companion in userdb.coop_companions.all()]
+        combined_set = set(opponents_with_counts + companions_with_counts)
+        context["companions"] = len(combined_set)
+        gameData = Score.objects.filter(player_id=current_user_id)
+        vs_id_counts = gameData.values('vs_id').annotate(vs_id_count=Count('vs_id'))
+        most_common_vs_id = vs_id_counts.order_by('-vs_id_count').first()
+        if most_common_vs_id:
+            most_common_vs_id_value = most_common_vs_id['vs_id']
+            bffUser_matches = most_common_vs_id['vs_id_count']
+            bffUser = User.objects.get(id=most_common_vs_id_value)
+            bffUser_id = bffUser.login_intra
+            bffProfile = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
+            context["bff_matches"] = bffUser_matches
+            context["bff_login"] = bffUser_id
+            context["user_image"] = bffProfile
+            context["bff_image"] = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
+        else:
+            context["bff_matches"] = 0
         return context

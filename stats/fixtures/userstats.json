@@ -1,0 +1,72 @@
+[
+	{
+		"model": "stats.userstats",
+		"pk": 1,
+		"fields": {
+			"user": 1,
+			"total_hours_played": 60,
+			"coop_cumulative_ball_distance": 1200,
+			"classic_cumulative_ball_distance": 50,
+			"coop_hits_record": 40,
+			"classic_victories": 30,
+			"coop_companions": [2,3],
+			"classic_opponents": [5,4]
+		}
+	},
+	{
+		"model": "stats.userstats",
+		"pk": 2,
+		"fields": {
+			"user": 2,
+			"total_hours_played": 40,
+			"coop_cumulative_ball_distance": 800,
+			"classic_cumulative_ball_distance": 30,
+			"coop_hits_record": 25,
+			"classic_victories": 18,
+			"coop_companions": [1,5],
+			"classic_opponents": [3,4]
+		}
+	},
+	{
+		"model": "stats.userstats",
+		"pk": 3,
+		"fields": {
+			"user": 3,
+			"total_hours_played": 80,
+			"coop_cumulative_ball_distance": 1500,
+			"classic_cumulative_ball_distance": 60,
+			"coop_hits_record": 50,
+			"classic_victories": 40,
+			"coop_companions": [1,4],
+			"classic_opponents": [1,5]
+		}
+	},
+	{
+		"model": "stats.userstats",
+		"pk": 4,
+		"fields": {
+			"user": 4,
+			"total_hours_played": 20,
+			"coop_cumulative_ball_distance": 500,
+			"classic_cumulative_ball_distance": 15,
+			"coop_hits_record": 12,
+			"classic_victories": 8,
+			"coop_companions": [3,5],
+			"classic_opponents": [1,2]
+		}
+	},
+	{
+		"model": "stats.userstats",
+		"pk": 5,
+		"fields": {
+			"user": 5,
+			"total_hours_played": 50,
+			"coop_cumulative_ball_distance": 1000,
+			"classic_cumulative_ball_distance": 40,
+			"coop_hits_record": 35,
+			"classic_victories": 25,
+			"coop_companions": [4,2],
+			"classic_opponents": [3,1]
+		}
+	}
+]

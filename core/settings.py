@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'pong',
     'soninha',
-	'core',
+    'core',
+    'stats',
 ]
 
 MIDDLEWARE = [

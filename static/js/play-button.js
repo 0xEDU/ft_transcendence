@@ -2,8 +2,7 @@ import { scrollToSection } from "./control-panel.js";
 import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
-import insertElement from "./tinyDOM/insertElement.js";
-import pongMain from "./pong.js"
+import launchMatch from "./pong.js"
 
 class ModalObj {
     constructor(form, modalElement, modalInstance, playButtonSvg, playButtonDiv, fourPlayersRadio, redCircle) {
@@ -99,16 +98,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleFormSubmit(modalObj, event) {
         event.preventDefault();
-        const url = "/pong/form";
+
+        const url = event.target.getAttribute('action');
+        const method = event.target.getAttribute('method');
+
         const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const formData = new FormData(event.target);
+
+        const playersArray = Array.from(formData.keys()).filter(key =>
+            key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== "")
+
         const gameData = {
-            "gameType": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
-            "gameMode": formData.get('gameModeDefault'),
+            "gameMode": event.target.id === "singleMatchForm" ? "singleMatch" : "tournament",
+            "gameType": formData.get('gameTypeDefault'),
             "playerQuantity": Number(formData.get('playerDefault')),
             "mapSkin": formData.get('mapDefault'),
-            "players": Array.from(formData.keys()).filter(key =>
-                key.startsWith('player') && key.endsWith('Name')).map(key => formData.get(key)).filter(name => name !== ""),
+            "players": playersArray,
         }
 
         fetch(url, {
@@ -130,19 +135,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearPlayerInputs('secondPlayer', 'thirdPlayer', 'fourthPlayer');
                 scrollToSection("arena");
                 hideControlPanel();
-                return response.text();
+                return response.json();
             })
-            .then(responseText => {
-                console.log("Response:", responseText);
-                insertElement("gameDiv", responseText);
-                pongMain();
-
+            .then(responseData => {
+                launchMatch(responseData.match_id, playersArray, gameData.gameType);
             })
             .catch(error => {
+                throw error;
                 error.text().then(errorBody => {
-                    if (!hasElement(modalObj.playButtonDiv.id, "playerNotFound")) {
-                        appendElement(modalObj.playButtonSvg.id, errorBody);
-                    }
+                    if (hasElement(modalObj.playButtonDiv.id, "playerNotFound"))
+                        deleteElement("playerNotFound");
+                    appendElement(modalObj.playButtonSvg.id, errorBody);
                 });
             });
     }
