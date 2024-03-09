@@ -1,5 +1,4 @@
 import insertInElement from "./tinyDOM/insertInElement.js";
-import deleteElement from "./tinyDOM/deleteElement.js";
 import emptyElement from "./tinyDOM/emptyElement.js";
 
 let currentStatPage = "matchesHistoryText"
