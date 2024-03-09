@@ -1,0 +1,25 @@
+{% load static i18n %}
+
+<div class="friendsPage-container">
+	<div class="d-flex justify-content-between friendsPage-title">
+		<div class="col-6">
+			<h2><span>{{ user_display_name }}'s friends</span></h2>
+		</div>
+		<div class="d-flex flex-column">
+			<form id="userSearchForm" class="input-group friendsPage-inputGroup">
+				<input type="text" id="searchField" class="form-control friendsPage-formControl"
+					placeholder="search for someone" aria-label="Search for someone">
+				<button class="btn btn-outline-secondary friendsPage-btnOutlineSecondary" type="submit"><i
+						class="fa fa-search"></i></button>
+			</form>
+			<div id="resultsContainer"></div>
+		</div>
+	</div>
+	<div class="overflow-y-scroll overflowList">
+		<div id="friendsList">
+			<!-- Friend cards will be dynamically inserted here -->
+		</div>
+	</div>
+</div>
+
+<script type="module" src="{% static 'js/friends.js' %}" defer></script>
