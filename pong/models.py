@@ -20,5 +20,6 @@ class Score(models.Model):
     """Model for a score."""
 
     player = models.ForeignKey(User, on_delete=models.CASCADE)
+    vs_id = models.ManyToManyField(User, related_name="games_with")
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     score = models.IntegerField()
