@@ -6,7 +6,7 @@
 			"player": 1,
 			"match": 1,
 			"score": 2,
-			"vs_id": 2
+			"vs_id": [2]
 		}
 	},
 	{
@@ -16,7 +16,7 @@
 			"player": 2,
 			"match": 1,
 			"score": 3,
-			"vs_id": 1
+			"vs_id": [1]
 		}
 	},
 	{
@@ -26,7 +26,7 @@
 			"player": 1,
 			"match": 2,
 			"score": 3,
-			"vs_id": 3
+			"vs_id": [3]
 		}
 	},
 	{
@@ -36,7 +36,7 @@
 			"player": 3,
 			"match": 2,
 			"score": 6,
-			"vs_id": 1
+			"vs_id": [1]
 		}
 	},
 	{
@@ -46,7 +46,7 @@
 			"player": 1,
 			"match": 3,
 			"score": 2,
-			"vs_id": 5
+			"vs_id": [5]
 		}
 	},
 	{
@@ -56,7 +56,7 @@
 			"player": 5,
 			"match": 3,
 			"score": 3,
-			"vs_id": 1
+			"vs_id": [1]
 		}
 	},
 	{
@@ -66,7 +66,7 @@
 			"player": 1,
 			"match": 4,
 			"score": 3,
-			"vs_id": 4
+			"vs_id": [4]
 		}
 	},
 	{
@@ -76,7 +76,7 @@
 			"player": 4,
 			"match": 4,
 			"score": 1,
-			"vs_id": 1
+			"vs_id": [1]
 		}
 	},
 	{
@@ -86,7 +86,7 @@
 			"player": 2,
 			"match": 5,
 			"score": 3,
-			"vs_id": 5
+			"vs_id": [5]
 		}
 	},
 	{
@@ -96,7 +96,7 @@
 			"player": 5,
 			"match": 5,
 			"score": 2,
-			"vs_id": 2
+			"vs_id": [2]
 		}
 	},
 	{
@@ -106,7 +106,7 @@
 			"player": 2,
 			"match": 6,
 			"score": 1,
-			"vs_id": 3
+			"vs_id": [3]
 		}
 	},
 	{
@@ -116,7 +116,7 @@
 			"player": 3,
 			"match": 6,
 			"score": 3,
-			"vs_id": 2
+			"vs_id": [2]
 		}
 	},
 	{
@@ -126,7 +126,7 @@
 			"player": 2,
 			"match": 7,
 			"score": 0,
-			"vs_id": 4
+			"vs_id": [4]
 		}
 	},
 	{
@@ -136,7 +136,7 @@
 			"player": 4,
 			"match": 7,
 			"score": 3,
-			"vs_id": 2
+			"vs_id": [2]
 		}
 	},
 	{
@@ -146,7 +146,7 @@
 			"player": 3,
 			"match": 8,
 			"score": 2,
-			"vs_id": 4
+			"vs_id": [4]
 		}
 	},
 	{
@@ -156,7 +156,7 @@
 			"player": 4,
 			"match": 8,
 			"score": 3,
-			"vs_id": 3
+			"vs_id": [3]
 		}
 	},
 	{
@@ -166,7 +166,7 @@
 			"player": 3,
 			"match": 9,
 			"score": 0,
-			"vs_id": 5
+			"vs_id": [5]
 		}
 	},
 	{
@@ -176,7 +176,7 @@
 			"player": 5,
 			"match": 9,
 			"score": 3,
-			"vs_id": 3
+			"vs_id": [3]
 		}
 	},
 	{
@@ -186,7 +186,7 @@
 			"player": 4,
 			"match": 10,
 			"score": 3,
-			"vs_id": 5
+			"vs_id": [5]
 		}
 	},
 	{
@@ -196,7 +196,7 @@
 			"player": 5,
 			"match": 10,
 			"score": 1,
-			"vs_id": 4
+			"vs_id": [4]
 		}
 	}
 ]

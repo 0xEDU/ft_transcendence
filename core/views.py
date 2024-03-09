@@ -54,7 +54,7 @@ class IndexView(View):
                 context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 1000000) + " km"
             hours = userStats.total_hours_played
             if hours < 60:
-                context["total_hours_played"] = str(round(hours, 2)) + " sec"
+                context["total_hours_played"] = "{:,.2f}".format(hours) + " sec"
             elif hours < 3600:
                 context["total_hours_played"] = "{:,.2f}".format(hours / 60) + " min"
             else:
