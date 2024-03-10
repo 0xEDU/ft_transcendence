@@ -1,4 +1,4 @@
-import insertInElement from "./tinyDOM/insertInElement.js";
+import swapInnerHTMLOfElement from "./tinyDOM/swapInnerHTMLOfElement.js";
 import emptyElement from "./tinyDOM/emptyElement.js";
 
 let currentStatPage = "matchesHistoryText"
@@ -27,7 +27,7 @@ function fetchStatsPage(page) {
 		.then(text => {
 			if (text) {
 				emptyElement("statsDiv");
-				insertInElement("statsDiv", text);
+				swapInnerHTMLOfElement("statsDiv", text);
 			}
 		})
 }

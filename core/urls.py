@@ -34,6 +34,8 @@ urlpatterns = [
     path('blockchain/', include('blockchain.urls')),
 	path('search-user/', views.SearchUserView.as_view(), name='search_user'),
 	path('friends-list/', views.FriendListView.as_view(), name='friends-list'),
+    path('create-friendship/', views.CreateFriendshipView.as_view(), name='create-friendship'),
+    path('accept-friendship/', views.AcceptFriendshipView.as_view(), name='accept-friendship'),
 ]
 
 # # Add the media URL pattern only during development

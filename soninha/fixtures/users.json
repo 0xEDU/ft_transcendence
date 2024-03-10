@@ -43,5 +43,23 @@
           "display_name": "Vini",
           "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/a9a073a50f7d49694db13aeda8b6763a/viferrei.jpg"
       }
+  },
+  {
+      "model": "soninha.user",
+      "pk": 6,
+      "fields": {
+          "login_intra": "marcrodr",
+          "display_name": "Marcelo",
+          "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/8e878fec38f31531fe04988675b0af70/marcrodr.jpg"
+      }
+  },
+  {
+    "model": "soninha.user",
+    "pk": 7,
+    "fields": {
+        "login_intra": "julberna",
+        "display_name": "Ju",
+        "intra_cdn_profile_picture_url": "https://cdn.intra.42.fr/users/1d888bf5eec59bd27f25b5342572fafa/julberna.jpg"
+    }
   }
 ]

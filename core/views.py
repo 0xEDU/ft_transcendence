@@ -1,6 +1,7 @@
 """Core views."""
 # Python Std Libs
 import os
+import json
 # Our imports
 from pong.models import Score
 from soninha.models import User, Achievements
@@ -13,17 +14,50 @@ from django.http import JsonResponse
 
 from django.db.models import Q
 from .models import Friendship
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 
+
+class CreateFriendshipView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            accepter_id = data.get('accepter_id')
+            requester_id = request.session.get("user_id")
+
+            if not requester_id:
+                return JsonResponse({"error": "Authentication required."}, status=401)
+
+            requester = User.objects.get(pk=requester_id)
+            accepter = User.objects.get(pk=accepter_id)
+
+            if Friendship.objects.filter(
+                Q(requester=requester, accepter=accepter) | 
+                Q(requester=accepter, accepter=requester)
+            ).exists():
+                if Friendship.objects.filter(requester=requester, accepter=accepter).exists():
+                    return JsonResponse({"error": "Request alredy sent!"}, status=409)
+                elif Friendship.objects.filter(requester=accepter, accepter=requester).exists():
+                    return JsonResponse({"error": "You can't add twice!"}, status=409)
+
+            Friendship.objects.create(requester=requester, accepter=accepter, status='pending')
+            return JsonResponse({"message": "Friend request sent successfully."}, status=201)
+
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User not found."}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON."}, status=400)
+        except Exception as e:
+            print(e)  # Log the error for debugging
+            return JsonResponse({"error": "Internal Server Error"}, status=500)
 
 class SearchUserView(View):
     def get(self, request, *args, **kwargs):
         search_term = request.GET.get('search', '')
         try:
-            user = User.objects.get(display_name__icontains=search_term)
+            user = User.objects.get(login_intra__icontains=search_term)
             data = {
+                'id': user.id,
                 'displayName': user.display_name,
+                'loginIntra': user.login_intra,
                 'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
                 'profileUrl': f'/profile/{user.id}/',
             }
@@ -31,52 +65,63 @@ class SearchUserView(View):
         except User.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
 
-class FriendshipRequestView(View):
-    def post(self, request):
-        accepter_id = request.POST.get('accepter_id')
-        accepter = User.objects.get(pk=accepter_id)
-        Friendship.objects.create(requester=request.user, accepter=accepter)
-        return JsonResponse({'message': 'Friendship request sent!'}, status=201)
 
 class AcceptFriendshipView(View):
     def post(self, request):
-        friendship_id = request.POST.get('friendship_id')
-        friendship = Friendship.objects.get(pk=friendship_id, accepter=request.user)
-        friendship.status = 'accepted'
-        friendship.save()
-        return JsonResponse({'message': 'Friendship accepted!'}, status=200)
+        data = json.loads(request.body)
+        friendship_id = data.get('friendshipId')
+        # Assuming you're keeping consistency with accessing the user_id from the session
+        requester_id = request.session.get("user_id")
+        if not requester_id:
+            return JsonResponse({'error': 'User not authenticated'}, status=403)
+        current_user = User.objects.get(pk=requester_id)
+        
+        try:
+            friendship = Friendship.objects.get(pk=friendship_id, accepter=current_user)
+            friendship.status = 'accepted'
+            friendship.save()
+            return JsonResponse({'message': 'Friendship accepted!'}, status=200)
+        except Friendship.DoesNotExist:
+            return JsonResponse({'error': 'Friendship not found or you do not have permission to accept this friendship.'}, status=404)
 
-class FriendshipStatusView(View):
-    def get(self, request):
-        # Return the friendship status between two users
-        user_id = request.GET.get('user_id')
-        friendships = Friendship.objects.filter(
-            Q(requester_id=request.user.id, accepter_id=user_id) |
-            Q(requester_id=user_id, accepter_id=request.user.id)
-        ).first()
-        if friendships:
-            return JsonResponse({
-                'status': friendships.status
-            })
-        return JsonResponse({'status': 'not_friends'})
+# class FriendshipStatusView(View):
+#     def get(self, request):
+#         # Return the friendship status between two users
+#         user_id = request.GET.get('user_id')
+#         friendships = Friendship.objects.filter(
+#             Q(requester_id=request.user.id, accepter_id=user_id) |
+#             Q(requester_id=user_id, accepter_id=request.user.id)
+#         ).first()
+#         if friendships:
+#             return JsonResponse({
+#                 'status': friendships.status
+#             })
+#         return JsonResponse({'status': 'not_friends'})
 
-@method_decorator(login_required, name='dispatch')
+
 class FriendListView(View):
     def get(self, request):
+        requester_id = request.session["user_id"]
+        current_user = User.objects.get(pk=requester_id)
+
         friendships = Friendship.objects.filter(
-            Q(requester=request.user) | Q(accepter=request.user)
+            Q(requester=current_user) | Q(accepter=current_user)
         ).distinct()
-        friends_data = []
+
+        friends_list = []
         for friendship in friendships:
-            friend = friendship.accepter if friendship.requester == request.user else friendship.requester
-            friends_data.append({
+            friend = friendship.accepter if friendship.requester == current_user else friendship.requester
+            friend_data = {
                 'id': friend.id,
                 'displayName': friend.display_name,
                 'profilePictureUrl': friend.profile_picture.url if friend.profile_picture else friend.intra_cdn_profile_picture_url,
                 'status': friendship.status,
-                'friendshipId': friendship.id,  # Include the friendship ID for accept action
-            })
-        return JsonResponse(friends_data, safe=False)
+                'isRequester': friendship.requester == current_user,
+                'friendshipId': friendship.id,
+            }
+            friends_list.append(friend_data)
+
+        return JsonResponse(friends_list, safe=False)
 
 
 class IndexView(View):
