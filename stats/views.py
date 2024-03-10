@@ -76,7 +76,7 @@ class MatchesHistoryTemplateView(TemplateView):
 
         current_user_id = self.request.session["user_id"]
         scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-                  .exclude(match__type="versus"))
+                  .exclude(match__type="classic"))
         scores = list(map(lambda score: CoopCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M") + f"\nScore: {score.score}",
             score=score.score,
@@ -91,15 +91,15 @@ class MatchesHistoryTemplateView(TemplateView):
 
         def __calculate_color(score):
             if score == 0:
-                return VERSUS_COLORS["none"]
+                return VERSUS_COLORS["loss"]
             elif score == 5:
                 return VERSUS_COLORS["win"]
             else:
-                return VERSUS_COLORS["loss"]
+                return VERSUS_COLORS["none"]
 
         current_user_id = self.request.session["user_id"]
         scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-                  .exclude(match__type="coop"))
+                  .exclude(match__type="co-op"))
         scores = list(map(lambda score: VersusCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
             color=f"background-color:{__calculate_color(score.score)}"

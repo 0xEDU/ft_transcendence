@@ -7,7 +7,7 @@
     <div class="col-3">
         <div id="historyDiv">
             <h5 class="m-0 ms-1">{% translate "CO-OP" %}</h5>
-            <div id="coopHistoryDiv" class="d-flex flex-column">
+            <div id="coopHistoryDiv">
                 <table>
                     <tbody>
                     {% for coop_cell_row in coop_cell_rows %}
@@ -47,7 +47,7 @@
                     <p id="matchText" class="m-2">{% translate "No matches played yet" %}</p>
                 </div>
             {% else %}
-                {% for match in match_rows %}
+                {% for match in match_rows|slice:"::-1" %}
                     {% include "stats/components/matches-history-entry.html" %}
                 {% endfor %}
             {% endif %}
