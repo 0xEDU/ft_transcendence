@@ -9,6 +9,7 @@ let context;
 let gameCanvasDiv;
 let gameLoopIntervalId;
 let hasFourPlayers;
+let lastPaddleHit;
 
 // ball variables
 const ballRadius = 10;
@@ -218,17 +219,30 @@ const drawScore = (game_type) => {
 	let margin = canvas.width / 20;
 
 	context.font = "bold 48px sans serif";
-	if (game_type === "classic") {
+	if (game_type === "classic" && !hasFourPlayers) {
 		context.textAlign = "left";
 		context.fillText(leftScore, margin, y);
 		context.textAlign = "right";
 		context.fillText(rightScore, canvas.width - margin, y);
 	}
-	if (game_type === "co-op") {
+	if (game_type === "co-op" && !hasFourPlayers) {
 		const x = canvas.width / 2;
 		context.textAlign = 'center';
 		context.textBaseline = 'middle';
 		context.fillText(matchStats.paddleHits, x, y);
+	}
+	if (game_type === "classic" && hasFourPlayers) {
+		// context.textAlign = "left";
+		// context.fillText(leftScore, margin, y);
+		// context.textAlign = "right";
+		// context.fillText(rightScore, canvas.width - margin, y);
+	}
+	if (game_type === "co-op" && hasFourPlayers) {
+		const x = canvas.width / 2;
+		const middleY = canvas.height / 2;
+		context.textAlign = 'center';
+		context.textBaseline = 'middle';
+		context.fillText(matchStats.paddleHits, x, middleY);
 	}
 	return;
 }
@@ -281,6 +295,7 @@ const checkCollisionWithPaddle = () => {
 		// Adjust the ball's position to ensure it bounces from the paddle's edge
 		ballX = -canvas.width / 2 + paddleWidth + paddlePadding + ballRadius;
 		matchStats.paddleHits++;
+		lastPaddleHit = "left";
 	}
 
 	// Collision with Right Paddle
@@ -288,6 +303,7 @@ const checkCollisionWithPaddle = () => {
 		dx = -dx;
 		ballX = canvas.width / 2 - paddleWidth - ballRadius; // Reposition ball after collision
 		matchStats.paddleHits++;
+		lastPaddleHit = "right";
 	}
 
 	if (!hasFourPlayers) {
@@ -299,6 +315,7 @@ const checkCollisionWithPaddle = () => {
 		dy = -dy;
 		ballY = -canvas.height / 2 + horizontalPaddleHeight + horizontalPaddlePadding + ballRadius; // Reposition ball after collision
 		matchStats.paddleHits++;
+		lastPaddleHit = "top";
 	}
 
 	// Collision with Bottom Paddle
@@ -307,6 +324,7 @@ const checkCollisionWithPaddle = () => {
 		dy = -dy;
 		ballY = canvas.height / 2 - (horizontalPaddleHeight + horizontalPaddlePadding - horizontalPaddleHeight / 2) - ballRadius; // Reposition ball after collision
 		matchStats.paddleHits++;
+		lastPaddleHit = "bottom";
 	}
 }
 
@@ -475,6 +493,25 @@ const sendMatchDataToServer = (match_id, players_array) => {
 		});
 }
 
+function lastPaddleScore() {
+	switch (lastPaddleHit) {
+		case "left":
+			leftScore++;
+			break;
+		case "right":
+			rightScore++;
+			break;
+		case "top":
+			topScore++;
+			break;
+		case "bottom":
+			bottomScore++;
+			break;
+		default:
+			break;
+	}
+}
+
 const runGame = (match_id, players_array, game_type) => {
 	if (gameState === States.RUNNING) {
 		if ((game_type === "classic" && rightScore === winningScore || leftScore === winningScore)
@@ -517,19 +554,23 @@ const runGame = (match_id, players_array, game_type) => {
 
 		// Check if ball hit side walls (score)
 		if (ballX + dx > canvas.width / 2) {
-			if (game_type === "classic")
+			if (game_type === "classic" && !hasFourPlayers)
 				leftScore++;
+			if (game_type === "classic")
+				lastPaddleScore();
 			if (game_type === "co-op")
-				coopMatchIsOver = false;
+				coopMatchIsOver = true;
 			resetBall();
 			return;
 		}
 
 		if (ballX + dx < -canvas.width / 2) {
-			if (game_type === "classic")
+			if (game_type === "classic" && !hasFourPlayers)
 				rightScore++;
+			if (game_type === "classic")
+				lastPaddleScore();
 			if (game_type === "co-op")
-				coopMatchIsOver = false;
+				coopMatchIsOver = true;
 			resetBall();
 			return;
 		}
@@ -537,18 +578,18 @@ const runGame = (match_id, players_array, game_type) => {
 		// Check if ball hit vertical walls (score 4 players)
 		if ((ballY + dy > canvas.height / 2) && hasFourPlayers) {
 			if (game_type === "classic")
-				topScore++;
+				lastPaddleScore();
 			if (game_type === "co-op")
-				coopMatchIsOver = false;
+				coopMatchIsOver = true;
 			resetBall();
 			return;
 		}
 
 		if ((ballY + dy < -canvas.height / 2) && hasFourPlayers) {
 			if (game_type === "classic")
-				bottomScore++;
+				lastPaddleScore();
 			if (game_type === "co-op")
-				coopMatchIsOver = false;
+				coopMatchIsOver = true;
 			resetBall();
 			return;
 		}
