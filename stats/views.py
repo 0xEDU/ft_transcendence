@@ -18,7 +18,6 @@ ROWS_SIZE = 15
 TOTAL_NUM_OF_CELLS = 88
 COOP_COLORS = {
     "none": "var(--HEAVY_GRAY)",
-    "nil": "var(--LIGHT_GRAY)",
     "low": "var(--YELLOW_30)",
     "medium": "var(--YELLOW_60)",
     "high": "var(--YELLOW_100)",
@@ -70,8 +69,6 @@ class MatchesHistoryTemplateView(TemplateView):
         def __calculate_color(score):
             if score < 0:
                 return COOP_COLORS["none"]
-            elif score == 0:
-                return COOP_COLORS["nil"]
             elif score <= 5:
                 return COOP_COLORS["low"]
             elif score <= 10:
