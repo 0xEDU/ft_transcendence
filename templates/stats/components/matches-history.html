@@ -1,50 +1,59 @@
 {% load static i18n %}
 
-<div id="matchesHistoryDiv" class="text-white d-flex justify-content-evenly">
-    <div id="historyDiv" class="d-flex flex-column mt-5 me-5">
-        <h4 class="m-0 ms-1">{% translate "CO-OP" %}</h4>
-        <div id="coopHistoryDiv" class="d-flex flex-column">
-            <table>
-                <tbody>
-                {% for coop_cell_row in coop_cell_rows %}
-                    <tr>
-                        {% for coop_cell in coop_cell_row %}
-                            <td id="coopSquare" title="{{ coop_cell.match_date }}" style={{ coop_cell.color }}></td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <h4 class="m-0 ms-1">{% translate "CLASSIC" %}</h4>
-        <div id="versusHistoryDiv">
-            <table>
-                <tbody>
-                {% for versus_cell_row in versus_cell_rows %}
-                    <tr>
-                        {% for versus_cell in versus_cell_row %}
-                            <td id="versusSquare" title="{{ versus_cell.match_date }}" style={{ versus_cell.color }}></td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div id="matchesDiv" class="overflow-scroll">
-        {% if not match_rows %}
-            <div id="matchRow" class="d-flex justify-content-between text-white align-items-center px-2 py-2 mb-2">
-                <p id="matchText" class="m-0">{% translate "No matches played yet" %}</p>
+<div id="matchesHistoryDiv" class="row">
+    {% comment %} Empty space {% endcomment %}
+    <div class="col-1"></div>
+
+    <div class="col-3">
+        <div id="historyDiv">
+            <h5 class="m-0 ms-1">{% translate "CO-OP" %}</h5>
+            <div id="coopHistoryDiv">
+                <table>
+                    <tbody>
+                    {% for coop_cell_row in coop_cell_rows %}
+                        <tr>
+                            {% for coop_cell in coop_cell_row %}
+                                <td id="coopSquare" title="{{ coop_cell.match_date }}" style={{ coop_cell.color }}></td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        {% else %}
-            {% for match in match_rows %}
-                <div id="matchRow" class="d-flex justify-content-between text-white align-items-center px-2 py-2 mb-2">
-                    <p id="matchText" class="m-0">{{ match.description }}</p>
-                    <p id="matchScore" class="m-0">{{ match.score }}</p>
-                    <p id="matchHour" class="m-0">{{ match.match_hour }}</p>
-                    <p id="matchDate" class="m-0">{{ match.match_date }}</p>
-                </div>
-            {% endfor %}
-        {% endif %}
+            <h5 class="m-0 ms-1">{% translate "CLASSIC" %}</h5>
+            <div id="versusHistoryDiv">
+                <table>
+                    <tbody>
+                    {% for versus_cell_row in versus_cell_rows %}
+                        <tr>
+                            {% for versus_cell in versus_cell_row %}
+                                <td id="versusSquare" title="{{ versus_cell.match_date }}" style={{ versus_cell.color }}></td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    {% comment %} Empty space {% endcomment %}
+    <div class="col-1"></div>
+
+    <div class="col-6">
+        <div id="matchesDiv" class="overflow-scroll pe-2">
+            {% if not match_rows %}
+                <div class="row matchRow mb-3 me-2">
+                    <p id="matchText" class="m-2">{% translate "No matches played yet" %}</p>
+                </div>
+            {% else %}
+                {% for match in match_rows|slice:"::-1" %}
+                    {% include "stats/components/matches-history-entry.html" %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    {% comment %} Empty space {% endcomment %}
+    <div class="col-1"></div>
 </div>

@@ -1,7 +1,6 @@
 """Core views."""
 # Python Std Libs
 import os
-
 # Our imports
 from pong.models import Score
 from soninha.models import User, Achievements
@@ -10,10 +9,152 @@ from stats.models import UserStats
 # Django's imports
 from django.shortcuts import render
 from django.views import View
+from django.http import JsonResponse
+
+from django.db.models import Q
+from .models import Friendship
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+
+class SearchUserView(View):
+    def get(self, request, *args, **kwargs):
+        search_term = request.GET.get('search', '')
+        try:
+            user = User.objects.get(display_name__icontains=search_term)
+            data = {
+                'displayName': user.display_name,
+                'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
+                'profileUrl': f'/profile/{user.id}/',
+            }
+            return JsonResponse(data)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+class FriendshipRequestView(View):
+    def post(self, request):
+        accepter_id = request.POST.get('accepter_id')
+        accepter = User.objects.get(pk=accepter_id)
+        Friendship.objects.create(requester=request.user, accepter=accepter)
+        return JsonResponse({'message': 'Friendship request sent!'}, status=201)
+
+class AcceptFriendshipView(View):
+    def post(self, request):
+        friendship_id = request.POST.get('friendship_id')
+        friendship = Friendship.objects.get(pk=friendship_id, accepter=request.user)
+        friendship.status = 'accepted'
+        friendship.save()
+        return JsonResponse({'message': 'Friendship accepted!'}, status=200)
+
+class FriendshipStatusView(View):
+    def get(self, request):
+        # Return the friendship status between two users
+        user_id = request.GET.get('user_id')
+        friendships = Friendship.objects.filter(
+            Q(requester_id=request.user.id, accepter_id=user_id) |
+            Q(requester_id=user_id, accepter_id=request.user.id)
+        ).first()
+        if friendships:
+            return JsonResponse({
+                'status': friendships.status
+            })
+        return JsonResponse({'status': 'not_friends'})
+
+@method_decorator(login_required, name='dispatch')
+class FriendListView(View):
+    def get(self, request):
+        friendships = Friendship.objects.filter(
+            Q(requester=request.user) | Q(accepter=request.user)
+        ).distinct()
+        friends_data = []
+        for friendship in friendships:
+            friend = friendship.accepter if friendship.requester == request.user else friendship.requester
+            friends_data.append({
+                'id': friend.id,
+                'displayName': friend.display_name,
+                'profilePictureUrl': friend.profile_picture.url if friend.profile_picture else friend.intra_cdn_profile_picture_url,
+                'status': friendship.status,
+                'friendshipId': friendship.id,  # Include the friendship ID for accept action
+            })
+        return JsonResponse(friends_data, safe=False)
 
 
 class IndexView(View):
     """Renders the home page."""
+
+    ACHIEVEMENTS_THRESHOLDS = {
+        "ball_distance": {
+            "gold": 42,
+            "silver": 21,
+            "copper": 10,
+        },
+        "friends_count": {
+            "gold": 21,
+            "silver": 10,
+            "copper": 5,
+        },
+        "hours_played": {
+            "gold": 7,
+            "silver": 3,
+            "copper": 1,
+        },
+        "matches_classic": {
+            "gold": 42,
+            "silver": 21,
+            "copper": 10,
+        },
+        "matches_coop": {
+            "gold": 42,
+            "silver": 21,
+            "copper": 10,
+        },
+        "matches_won": {
+            "gold": 42,
+            "silver": 21,
+            "copper": 10,
+        },
+    }
+
+    def _determine_grade(self, achievement_name, value) -> str:
+        if achievement_name in self.ACHIEVEMENTS_THRESHOLDS:
+            thresholds = self.ACHIEVEMENTS_THRESHOLDS[achievement_name]
+            for grade, threshold in thresholds.items():
+                if value >= threshold:
+                    return grade
+            return "white"
+
+    def _build_achievement_strings_dict(self, achievement_name, value) -> dict:
+        string_mapping = {
+            "ball_distance": "distance traveled",
+            "friends_count": "friends",
+            "hours_played": "hours played",
+            "matches_classic": "classic matches",
+            "matches_coop": "co-op matches",
+            "matches_won": "wins",
+        }
+        grade = self._determine_grade(achievement_name, value)
+
+        src = "images/achievements/" + achievement_name + "-" + grade + ".png"
+        alt_text = grade.title() + " " + string_mapping[achievement_name].title() + " achievement"
+        title = "No " + string_mapping[achievement_name].title() + " achievement aquired yet, go play some matches!" \
+            if (grade == "white") \
+            else grade.title() + " " + string_mapping[achievement_name].title() + " achievement acquired!"
+        return ({
+            "src": src,
+            "alt_text": alt_text,
+            "title": title,
+        })
+
+    def _get_achievements_context(self, user) -> dict:
+        achievements = Achievements.objects.get(user=user)
+        context = {}
+
+        for field in Achievements._meta.get_fields():
+            field_name = field.name
+            if (field_name not in ["id", "user"]):
+                context[field_name] = self._build_achievement_strings_dict(field_name, getattr(achievements, field_name))
+
+        return context
 
     def get(self, request, *args, **kwargs):
         # Get context
@@ -54,7 +195,7 @@ class IndexView(View):
                 context["cumulative_ball_distance"] = "{:,.2f}".format(distance / 1000000) + " km"
             hours = userStats.total_hours_played
             if hours < 60:
-                context["total_hours_played"] = str(round(hours, 2)) + " sec"
+                context["total_hours_played"] = "{:,.2f}".format(hours) + " sec"
             elif hours < 3600:
                 context["total_hours_played"] = "{:,.2f}".format(hours / 60) + " min"
             else:
@@ -62,12 +203,6 @@ class IndexView(View):
             context["unique_companions_encountered"] = userStats.coop_companions.count()
 
             # Get user achievements info
-            achievement = Achievements.objects.get(user=user)
-            context["achievement_ball_distance"] = achievement.ball_distance
-            context["achievement_friends_count"] = achievement.friends_count
-            context["achievement_hours_played"] = achievement.hours_played
-            context["achievement_matches_classic"] = achievement.matches_classic
-            context["achievement_matches_coop"] = achievement.matches_coop
-            context["achievement_matches_won"] = achievement.matches_won
+            context.update(self._get_achievements_context(user))
 
         return render(request, 'index.html', context)

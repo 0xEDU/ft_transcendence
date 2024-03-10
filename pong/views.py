@@ -91,7 +91,9 @@ class MatchView(View):
         new_match = Match.objects.create(type=incoming_request['gameType'])
         for player in incoming_request['players']:
             user = User.objects.get(login_intra=player)
-            Score.objects.create(player=user, match=new_match, score=0)
+            other_players = [User.objects.get(login_intra=player).id for player in incoming_request['players'] if player != user.login_intra]
+            score = Score.objects.create(player=user, match=new_match, score=0)
+            score.vs_id.add(*other_players)
             new_match.players.add(user)
 
         response_data = {"match_id": new_match.id}
@@ -126,10 +128,26 @@ class MatchView(View):
 
             logged_in_user = User.objects.get(pk=request.session["user_id"])
             logged_user_stats = UserStats.objects.get(user=logged_in_user)
+            distance = logged_user_stats.coop_cumulative_ball_distance + logged_user_stats.classic_cumulative_ball_distance
+            if distance < 10:
+                finalDist = "{:,.2f}".format(distance) + " mm"
+            elif distance < 1000:
+                finalDist = "{:,.2f}".format(distance / 10) + " cm"
+            elif distance < 1000000:
+                finalDist = "{:,.2f}".format(distance / 1000) + " m"
+            else:
+                finalDist = "{:,.2f}".format(distance / 1000000) + " km"
+            hours = logged_user_stats.total_hours_played
+            if hours < 60:
+                finalTime = "{:,.2f}".format(hours) + " sec"
+            elif hours < 3600:
+                finalTime = "{:,.2f}".format(hours / 60) + " min"
+            else:
+                finalTime = "{:,.2f}".format(hours / 3600) + " hours"
             context = {
                 "ball_hits_record": logged_user_stats.coop_hits_record,
-                "cumulative_ball_distance": logged_user_stats.coop_cumulative_ball_distance + logged_user_stats.classic_cumulative_ball_distance,
-                "total_hours_played": logged_user_stats.total_hours_played,
+                "cumulative_ball_distance": finalDist,
+                "total_hours_played": finalTime,
                 "unique_companions_encountered": logged_user_stats.coop_companions.count(),
             }
 

@@ -16,7 +16,7 @@ function highlightCurrentPage() {
 	document.getElementById(currentStatPage).style.textDecoration = "underline";
 }
 
-function fetchStatsPage(page) {
+export function fetchStatsPage(page) {
 	fetch(page)
 		.then(response => {
 			if (response.status !== 200)

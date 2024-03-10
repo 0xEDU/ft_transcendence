@@ -1,0 +1,65 @@
+.friendsPage-container {
+	padding-top: 10vh;
+	padding-left: 7vw;
+	padding-right: 7vw;
+}
+.friendsPage-title {
+	margin-bottom:5vh;
+}
+.friendsPage-inputGroup {
+	margin-top: 2vh;
+	width: auto;
+}
+.friendsPage-btnOutlineSecondary {
+	color: #888686;
+}
+.friendsPage-formControl {
+	color: #888686;
+	background-color: #282525;
+}
+.friendsPage-formControl::placeholder {
+	color: #888686;
+}
+.friendsPage-formControl:focus {
+	color: #888686;
+	background-color: #282525;
+}
+
+.friendCard {
+    background-color: #222; /* Or any color you prefer */
+    padding: 10px;
+    margin-bottom: 10px; /* Adds space between cards */
+    border-radius: 4px; /* Optional: if you want rounded corners */
+	width: 80vw;
+}
+
+.imgProfile {
+    width: 5vw;
+    height: 9vh;
+    border-radius: 0.375rem;
+    object-fit: cover; /* Ensures the image covers the area */
+	margin-right: 1vw;
+	border-color: white;
+	border: 1px solid;
+}
+
+.friendCardHtml {
+	height: 10vh;
+}
+
+.overflowList {
+	max-height: 50vh;
+	-ms-overflow-style: none;
+}
+
+.overflowList::-webkit-scrollbar {
+	display: none;
+}
+
+.friendCardHtml.pending {
+	background-color: #f0ad4e; /* Bootstrap's 'btn-warning' color */
+}
+
+.friendCardHtml.accepted {
+	background-color: #337ab7; /* Bootstrap's 'btn-primary' color */
+}

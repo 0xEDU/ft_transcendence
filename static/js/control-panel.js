@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedPegToDrag;
 
     // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
-    state.isLoggedIn = document.getElementById("userImage") !== null;
+    state.isLoggedIn = document.getElementById("profilePicture") !== null;
 
     scrollToSection("login", "instant");
     if (state.isLoggedIn === true) {
@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (state.isLoggedIn) {
                     // LOG USER OUT
                     // Do the logging out magic
-                    fetch("/auth/logout").then(() => deleteElement("userImage"));
+                    fetch("/auth/logout").then(() => deleteElement("profilePicture"));
                     state.isLoggedIn = false;
 
                     // Trigger animations

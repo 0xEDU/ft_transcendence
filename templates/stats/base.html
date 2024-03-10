@@ -2,13 +2,17 @@
 
 <script type="module" src="{% static 'js/stats-nav.js' %}"></script>
 
-<nav id="statsNav" class="text-white d-flex justify-content-around mt-5">
-	<h2 id="matchesHistoryText">{% translate "MATCHES HISTORY" %}</h2>
-	<h2 id="tournamentsText">{% translate "TOURNAMENTS" %}</h2>
-	<h2 id="userStatsText">{% translate "USER STATS" %}</h2>
-</nav>
-<div id="statsDiv">
-	{% comment %}
-	All htmls will be inserted here using tinyDOM, as we need to insert information dynamically 
-	{% endcomment %}
+<div class="container-fluid">
+	<nav id="statsNav" class="row mt-5 mb-4">
+		<div class="col-1"></div>
+		<h3 id="matchesHistoryText" class="col-3 text-center">{% translate "MATCHES HISTORY" %}</h3>
+		<h3 id="tournamentsText" class="col-4 text-center">{% translate "TOURNAMENTS" %}</h3>
+		<h3 id="userStatsText" class="col-3 text-center">{% translate "USER STATS" %}</h3>
+		<div class="col-1"></div>
+	</nav>
+	<div id="statsDiv">
+		{% comment %}
+		All htmls will be inserted here using tinyDOM, as we need to insert information dynamically 
+		{% endcomment %}
+	</div>
 </div>
