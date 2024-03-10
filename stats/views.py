@@ -9,6 +9,7 @@ from stats.models import UserStats
 
 # Django imports
 from django.db.models import Count
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 
@@ -122,8 +123,9 @@ class MatchesHistoryTemplateView(TemplateView):
                 return f"🥈 lost to {player2_name}"
 
         def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
-            match_hour = match.match_date.strftime("%H:%M")
-            match_date = match.match_date.strftime("%d/%m/%y")
+            match_datetime_IN_BRAZIL_IDC = timezone.localtime(match.match_date, timezone=timezone.get_fixed_timezone(-3 * 60))
+            match_hour = match_datetime_IN_BRAZIL_IDC.strftime("%H:%M")
+            match_date = match_datetime_IN_BRAZIL_IDC.strftime("%d/%m/%y")
             score_str = f"{player1_score} x {player2_score}"
             return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
                                   match_date)
