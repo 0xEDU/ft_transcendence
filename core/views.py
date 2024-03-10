@@ -24,7 +24,7 @@ def home(request):
         user = User.objects.get(pk=session["user_id"])
         context["user_login"] = user.login_intra
         context["user_display_name"] = user.display_name
-        context["user_image"] = user.avatar_image_url
+        context["user_image"] = user.intra_cdn_profile_picture_url
         user_is_logged_in = True
     else:
         context["h1_text"] = "You are not logged"

@@ -20,7 +20,7 @@ class UserTemplateView(TemplateView):
             user = User.objects.get(pk=session["user_id"])
             context["h1_margin"] = "mb-4"
             context["h1_text"] = "Logged as " + user.login_intra
-            context["user_image"] = user.avatar_image_url
+            context["user_image"] = user.intra_cdn_profile_picture_url
             context["anchor_function"] = 'id=logoutButton'
             context["anchor_text"] = "Logout"
             return context
@@ -67,7 +67,7 @@ class LoginView(View):
         if not pfp_intra:
             pfp_intra = "/static/images/default_user_image.svg"
         new_user, _ = User.objects.get_or_create(
-            display_name=login_intra, login_intra=login_intra, avatar_image_url=pfp_intra)
+            display_name=login_intra, login_intra=login_intra, intra_cdn_profile_picture_url=pfp_intra)
         request.session["user_id"] = new_user.id
         return redirect('/')  # This will return the html
 
