@@ -1,11 +1,11 @@
-import emptyElement from "./tinyDOM/emptyElement.js";
+import deleteElement from "./tinyDOM/deleteElement.js";
 
 export const state = {
     position: "",
     isLoggedIn: false,
 };
 
-export default function scrollToSection(sectionName, behaviour = "smooth") {
+export function scrollToSection(sectionName, behaviour = "smooth") {
     if (typeof sectionName === "string") {
         let targetSection = document.getElementById(sectionName);
 
@@ -18,6 +18,7 @@ export default function scrollToSection(sectionName, behaviour = "smooth") {
 
             // Update the state or perform any other actions
             state.position = sectionName;
+            history.pushState(state,  "", window.location.href)
         } else {
             console.error(`Section "${sectionName}" not found.`);
         }
@@ -86,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedPegToDrag;
 
     // Sends user to profile is the user is logged in, otherwise keeps them in the login screen
-    state.isLoggedIn = document.getElementById("userImage") !== null;
+    state.isLoggedIn = document.getElementById("profilePicture") !== null;
 
     scrollToSection("login", "instant");
     if (state.isLoggedIn === true) {
@@ -106,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // If a peg is merely clicked, it shouldn't scroll anywhere, and an animation is triggered indicating that further action should be performed.
     controlPanel.addEventListener("click", function (event) {
         // Find the closest switch element or null if not found
-        var clickedSwitch = event.target.closest(
+        let clickedSwitch = event.target.closest(
             "div#control-panel .right-side svg circle"
         );
         let switchName;
@@ -177,6 +178,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
                 if (displacementPctg < -0.7 || displacementPctg > 0.7)
                     activateFullMotion = true;
+                else
+                    activateFullMotion = false;
             }
         }
     });
@@ -206,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (state.isLoggedIn) {
                     // LOG USER OUT
                     // Do the logging out magic
-                    fetch("/auth/logout").then(() => emptyElement("userDiv"));
+                    fetch("/auth/logout").then(() => deleteElement("profilePicture"));
                     state.isLoggedIn = false;
 
                     // Trigger animations

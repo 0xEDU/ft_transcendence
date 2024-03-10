@@ -1,7 +1,7 @@
 version: '3'
 services:
   ganache-transcendence:
-    image: trufflesuite/ganache:latest
+    image: trufflesuite/ganache-cli:latest
     container_name: ganache-transcendence
     restart: always
     ports:
@@ -14,7 +14,7 @@ services:
     container_name: contract-deployer-transcendence
     networks:
       - ft_transcendence
-    build: 
+    build:
       context: ./truffle
     depends_on:
       - ganache-transcendence
@@ -24,14 +24,14 @@ services:
   postgres-transcendence:
     image: postgres:16-alpine
     container_name: postgres-transcendence
-    env_file: .env  
+    env_file: .env
     restart: always
     ports:
         - '${POSTGRES_PORT}:5432'
     networks:
       - ft_transcendence
     volumes:
-      - postgres-vol:/var/lib/postgresql
+      - postgres-vol:/var/lib/postgresql/data
 
   django-transcendence:
     image: django
@@ -44,7 +44,8 @@ services:
       - ft_transcendence
     depends_on:
       - postgres-transcendence
-      - contract-deployer-transcendence
+    volumes:
+      - django-vol:/ft_transcendence/media
 
 networks:
   ft_transcendence:
@@ -52,15 +53,21 @@ networks:
     name: ft_transcendence
 
 volumes:
-  postgres-vol:
+  django-vol:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '~/goinfre/ft_transcendence/postgres'
+      device: '~/goinfre/ft_transcendence/django'
   ganache-vol:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
       device: '~/goinfre/ft_transcendence/ganache'
+  postgres-vol:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '~/goinfre/ft_transcendence/postgres'

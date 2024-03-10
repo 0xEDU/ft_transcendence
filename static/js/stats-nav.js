@@ -1,5 +1,4 @@
-import insertElement from "./tinyDOM/insertElement.js";
-import deleteElement from "./tinyDOM/deleteElement.js";
+import insertInElement from "./tinyDOM/insertInElement.js";
 import emptyElement from "./tinyDOM/emptyElement.js";
 
 let currentStatPage = "matchesHistoryText"
@@ -17,7 +16,7 @@ function highlightCurrentPage() {
 	document.getElementById(currentStatPage).style.textDecoration = "underline";
 }
 
-function fetchStatsPage(page) {
+export function fetchStatsPage(page) {
 	fetch(page)
 		.then(response => {
 			if (response.status !== 200)
@@ -28,7 +27,7 @@ function fetchStatsPage(page) {
 		.then(text => {
 			if (text) {
 				emptyElement("statsDiv");
-				insertElement("statsDiv", text);
+				insertInElement("statsDiv", text);
 			}
 		})
 }

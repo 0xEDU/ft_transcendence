@@ -1,8 +1,8 @@
 """Views for the stats app."""
+from dataclasses import dataclass
 from typing import List
+
 from django.views.generic import TemplateView
-from blockchain.views import TournamentView
-from soninha.models import User
 from pong.models import Score
 from dataclasses import dataclass
 
@@ -11,14 +11,15 @@ ROWS_SIZE = 15
 TOTAL_NUM_OF_CELLS = 88
 COOP_COLORS = {
     "none": "var(--HEAVY_GRAY)",
-    "low": "#ffe988",
-    "medium": "#ffde4f",
-    "high": "#facb03",
+    "nil": "var(--LIGHT_GRAY)",
+    "low": "var(--YELLOW_30)",
+    "medium": "var(--YELLOW_60)",
+    "high": "var(--YELLOW_100)",
 }
 VERSUS_COLORS = {
     "none": "var(--HEAVY_GRAY)",
-    "win": "#00ff00",
-    "loss": "#ff0000",
+    "win": "var(--GREEN)",
+    "loss": "var(--RED)",
 }
 
 
@@ -70,8 +71,10 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest scores as a list."""
 
         def __calculate_color(score):
-            if score <= 0:
+            if score < 0:
                 return COOP_COLORS["none"]
+            elif score == 0:
+                return COOP_COLORS["nil"]
             elif score <= 5:
                 return COOP_COLORS["low"]
             elif score <= 10:
@@ -81,7 +84,7 @@ class MatchesHistoryTemplateView(TemplateView):
 
         current_user_id = self.request.session["user_id"]
         scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-                  .exclude(match__type="versus"))
+                  .exclude(match__type="classic"))
         scores = list(map(lambda score: CoopCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M") + f"\nScore: {score.score}",
             score=score.score,
@@ -95,16 +98,14 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest scores as a list."""
 
         def __calculate_color(score):
-            if score == 0:
-                return VERSUS_COLORS["none"]
-            elif score == 5:
+            if score == 3:
                 return VERSUS_COLORS["win"]
             else:
                 return VERSUS_COLORS["loss"]
 
         current_user_id = self.request.session["user_id"]
-        scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-                  .exclude(match__type="coop"))
+        scores = (Score.objects.filter(player_id=current_user_id).exclude(match__type="co-op")
+                  .order_by("match__match_date"))
         scores = list(map(lambda score: VersusCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
             color=f"background-color:{__calculate_color(score.score)}"
@@ -117,17 +118,18 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest matches as a list."""
 
         def __get_match_description(match, player1_score, player2_name) -> str:
-            if match.type == "coop":
+            if match.type == "co-op":
                 return f"🤝 joined forces with {player2_name}"
-            if match.type == "versus" and player1_score == 5:
+            if match.type == "classic" and player1_score == 3:
                 return f"🥇 won against {player2_name}"
-            if match.type == "versus":
+            if match.type == "classic" and player1_score in [0, 1, 2]:
                 return f"🥈 lost to {player2_name}"
             return ""
 
         def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
-            match_hour = match.match_date.strftime("%H:%M")
-            match_date = match.match_date.strftime("%d/%m/%y")
+            match_datetime_IN_BRAZIL_IDC = timezone.localtime(match.match_date, timezone=timezone.get_fixed_timezone(-3 * 60))
+            match_hour = match_datetime_IN_BRAZIL_IDC.strftime("%H:%M")
+            match_date = match_datetime_IN_BRAZIL_IDC.strftime("%d/%m/%y")
             score_str = f"{player1_score} x {player2_score}"
             return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
                                   match_date)
@@ -135,7 +137,7 @@ class MatchesHistoryTemplateView(TemplateView):
         current_user_id = self.request.session["user_id"]
         player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
         player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
-                          .exclude(player_id=current_user_id))
+                          .exclude(player_id=current_user_id)).order_by("match__match_date")
         player1_scores_dict = {score.match_id: score for score in player1_scores}
         match_row_objects: List[MatchRowObject] = [
             __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score,
@@ -148,7 +150,7 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the context data."""
 
         context = super().get_context_data(**kwargs)
-        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] == '':
+        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
             return context
         context["coop_cell_rows"] = self._get_latest_coop_scores()
         context["versus_cell_rows"] = self._get_latest_versus_scores()
@@ -188,4 +190,43 @@ class UserStatsTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        current_user_id = self.request.session["user_id"]
+        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+            return context
+        userdb = UserStats.objects.get(user=current_user_id)
+        if userdb.total_hours_played < 60:
+            context["hours_played"] = str(round(userdb.total_hours_played, 2)) + " sec"
+        elif userdb.total_hours_played < 3600:
+            context["hours_played"] = "{:,.2f}".format(userdb.total_hours_played / 60) + " min"
+        else:
+            context["hours_played"] = "{:,.2f}".format(userdb.total_hours_played / 3600) + " hours"
+        context["high_five"] = userdb.coop_hits_record
+        distance = userdb.classic_cumulative_ball_distance + userdb.coop_cumulative_ball_distance
+        if distance < 10:
+            context["distance"] = "{:,.2f}".format(distance) + " mm"
+        elif distance < 1000:
+            context["distance"] = "{:,.2f}".format(distance / 10) + " cm"
+        elif distance < 1000000:
+            context["distance"] = "{:,.2f}".format(distance / 1000) + " m"
+        else:
+            context["distance"] = "{:,.2f}".format(distance / 1000000) + " km"
+        opponents_with_counts = [opponent for opponent in userdb.classic_opponents.all()]
+        companions_with_counts = [companion for companion in userdb.coop_companions.all()]
+        combined_set = set(opponents_with_counts + companions_with_counts)
+        context["companions"] = len(combined_set)
+        gameData = Score.objects.filter(player_id=current_user_id)
+        vs_id_counts = gameData.values('vs_id').annotate(vs_id_count=Count('vs_id'))
+        most_common_vs_id = vs_id_counts.order_by('-vs_id_count').first()
+        if most_common_vs_id:
+            most_common_vs_id_value = most_common_vs_id['vs_id']
+            bffUser_matches = most_common_vs_id['vs_id_count']
+            bffUser = User.objects.get(id=most_common_vs_id_value)
+            bffUser_id = bffUser.login_intra
+            bffProfile = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
+            context["bff_matches"] = bffUser_matches
+            context["bff_login"] = bffUser_id
+            context["user_image"] = bffProfile
+            context["bff_image"] = bffUser.profile_picture.url if bffUser.profile_picture else bffUser.intra_cdn_profile_picture_url
+        else:
+            context["bff_matches"] = 0
         return context

@@ -35,6 +35,9 @@ run:
 migrate:
 	$(PYTHON_VERSION) manage.py migrate
 
+load_fixtures: migrate
+	$(PYTHON_VERSION) manage.py loaddata users achievements userstats pong_score pong_match
+
 clean: clean-db clean-app
 
 fclean: fclean-db fclean-app fclean-ganache fclean-contract-deployer
@@ -128,8 +131,9 @@ chmod-scripts: $(DOCKER_SCRIPTS)
 	chmod +x $(DOCKER_SCRIPTS)
 
 volumes:
-	mkdir -p ~/goinfre/ft_transcendence/postgres \
-			 ~/goinfre/ft_transcendence/ganache
+	mkdir -p ~/goinfre/ft_transcendence/django \
+			 ~/goinfre/ft_transcendence/ganache \
+			 ~/goinfre/ft_transcendence/postgres
 
 fetch-translation-hooks:
 	django-admin makemessages -a
@@ -146,17 +150,18 @@ create-venv: check-python
 delete-venv:
 	rm -rf $(VENV_DIR)
 
-install:
+install_dependencies:
 	@read -p "Have you already activated the virtual environment? (y/n): " choice; \
 	if [ "$$choice" = "y" ] || [ "$$choice" = "Y" ]; then \
 		pip install -r requirements.txt; \
 	else \
-		echo "Please activate the virtual environment first."; \
+		printf "\nPlease activate the virtual environment first.\n"; \
+		printf "To create the virtual environment, run $(BOLD_YELLOW)'make create-venv'$(RESET).\n"; \
 	fi
 
 # ---------------------------------------------------------------------------- #
 
-.PHONY: start stop restart run migrate clean fclean frestart \
+.PHONY: start stop restart run migrate seed clean fclean frestart \
 		db-start db-stop db-restart db-clean db-fclean db-frestart \
 		app-start app-stop app-restart app-clean app-fclean app-frestart \
 		ganache-start ganache-stop ganache-restart ganache-clean ganache-fclean ganache-frestart \

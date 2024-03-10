@@ -1,1 +1,104 @@
-<h1>user</h1>
+{% load static i18n %}
+<link rel="stylesheet" href="{% static 'css/sections/stats.css' %}">
+
+<div class="container-fluid">
+	<!-- Empty Space Row -->
+	<div class="row mt-2"></div>
+  
+	<!-- Profile Header Section -->
+	<div class="row profile-header">
+	  <!-- Empty Space Column -->
+	  <div class="col-0 col-md-1"></div>
+	  
+	  <!-- First Column -->
+	  <div class="col-6 col-md-4">
+		<!-- Distance Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-3"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-2">
+					<img style="max-height: 80px; width: auto;" src="{% static 'images/achievements/icon-distance.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMax">{{ distance }}</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "DISTANCE WALKED TOGETHER" %}</p>
+		</div>
+		<!-- Empty Row -->
+		<div class="row mt-5"></div>
+		<!-- High Five Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-3"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-2">
+					<img style="max-height: 80px; width: auto;" src="{% static 'images/achievements/icon-friends.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMax">{{ high_five }}</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "HIGH FIVE COUNT" %}</p>
+		</div>
+	  </div>
+	  <!-- Bff Column -->
+	  <div class="col-2 col-md-2 d-flex flex-column align-items-center justify-content-center">
+		<div class="bffText">B F F</div>
+		{% if bff_matches %}
+		<div class="bffImage">
+			<div id="image" class="roundedImage" style="background-image: url('{{ bff_image }}');"></div>
+		</div>
+		<div>
+			<p id="userStatsBFF">
+				{% blocktrans %}You played {{ bff_matches }} matches with {{ bff_login }}!{% endblocktrans %}
+			</p>
+		</div>
+		{% else %}
+		<p id="userStatsBFF">{% translate "You did not play with anyone yet!"%}</p>
+		{% endif %}
+	</div>
+	  <!-- Second Column -->
+	  <div class="col-6 col-md-4">
+		<!-- Hours Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-3"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-2">
+					<img style="max-height: 80px; width: auto;" src="{% static 'images/achievements/icon-time.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMax">{{ hours_played }}</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "TIME PLAYED" %}</p>
+		</div>
+		<!-- Empty Row -->
+		<div class="row mt-5"></div>
+		<!-- Companions Row -->
+		<div id="rectangle" class="row">
+			<div class="row mt-3"></div>
+			<!-- Image + Words Row -->
+			<div class="row d-flex align-items-justified">
+				<div class="col-0 col-md-2"></div>
+				<div class="col-0 col-md-2">
+					<img style="max-height: 80px; width: auto;" src="{% static 'images/achievements/icon-person.png' %}" alt="{% translate 'Distance icon' %}" title="{% translate 'Distance walked together' %}">
+				</div>
+				<div class="col-0 col-md-6">
+					<p id="userStatsMax">{{ companions }}</p>
+				</div>
+			</div>
+			<p id="userStatsText">{% translate "PLAYERS MET" %}</p>
+		</div>
+	  </div>
+  
+	  <!-- Empty Space Column -->
+	  <div class="col-0 col-md-1"></div>
+	</div>
+	
+  </div>

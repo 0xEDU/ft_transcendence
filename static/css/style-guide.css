@@ -1,6 +1,13 @@
 :root {
     --HEAVY_GRAY: #1C1A1A;
-    --ORANGE: #F6790B;
+    --MEDIUM_GRAY: #3A3535;
+    --LIGHT_GRAY: #423f3f;
     --OFF_WHITE: #D9D9D9;
     --WHITE: #FCFCFD;
+    --GREEN: #33B84E;
+    --RED: #D72B35;
+    --ORANGE: #F6790B;
+    --YELLOW_30: #FFF1B6;
+    --YELLOW_60: #FFE162;
+    --YELLOW_100: #FFCE00;
 }

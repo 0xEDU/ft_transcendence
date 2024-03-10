@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<form id="profilePictureEditionForm"
+  method="post"
+  action="{% url 'soninha:profile_picture' %}"
+  enctype="multipart/form-data"
+>
+  {% csrf_token %}
+  <div class="mb-3">
+    <input id="profilePicEditionInput" name="profilePicture" class="form-control" type="file" id="formFile" accept="image/jpeg, image/png">
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">{% translate "Upload Picture" %}</button>
+  </div>
+</form>

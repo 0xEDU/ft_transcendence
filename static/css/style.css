@@ -1,10 +1,18 @@
 @import 'components/control-panel/base.css';
 @import 'components/control-panel/switch.css';
+@import 'sections/kudos.css';
+@import 'sections/lobby.css';
 @import 'sections/login.css';
+@import 'sections/profile.css';
+@import 'sections/stats.css';
+@import 'sections/friends.css';
 
 * {
     margin: 0;
     padding: 0;
+
+    /* DEBUGGING */
+    /* outline: 1px solid magenta; */
 }
 
 body {
@@ -13,9 +21,11 @@ body {
     display: flex;
     flex-direction: column;
     font-family: 'Bakbak One', sans-serif;
+    color: var(--OFF_WHITE);
 }
 
-body, html {
+body,
+html {
     height: 100vh;
 }
 
@@ -24,11 +34,58 @@ section {
     height: 100vh;
 }
 
-section h1 {
-    color: var(--OFF_WHITE);
-}
-
 .board-row {
     height: 100vh;
     display: flex;
+}
+
+/* Define specific sizes for each heading level */
+h1 {
+    font-size: 4em;
+}
+
+h2 {
+    font-size: 3em;
+}
+
+h3 {
+    font-size: 2.125em;
+}
+
+h4 {
+    font-size: 1.8em;
+}
+
+h5 {
+    font-size: 1.75em;
+}
+
+h6 {
+    font-size: 1.5em;
+}
+
+/* Scrollbar styling for the whole website */
+/* Change scrollbar width, height, and color */
+#matchesDiv::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+
+/* Handle portion of the scrollbar */
+#matchesDiv::-webkit-scrollbar-thumb {
+    background-color: var(--LIGHT_GRAY);
+    border-radius: 5px;
+}
+
+#matchesDiv:hover::-webkit-scrollbar-thumb {
+    background-color: var(--WHITE);
+}
+
+/* Track portion of the scrollbar */
+#matchesDiv::-webkit-scrollbar-track {
+    background-color: var(--HEAVY_GRAY);
+}
+
+#matchesDiv::-webkit-scrollbar-corner {
+    background-color: var(--HEAVY_GRAY);
 }

@@ -1,0 +1,100 @@
+
+
+td#coopSquare,
+td#versusSquare {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--HEAVY_GRAY);
+}
+
+table {
+    border-spacing: 30px;
+}
+
+div#coopHistoryDiv {
+    margin-bottom: 10vh;
+}
+
+div.matchRow {
+    background-color: var(--LIGHT_GRAY);
+    font-size: 1.3rem;
+}
+
+div#matchesDiv {
+    height: 57vh;
+}
+
+div#rectangle {
+    background-color: var(--MEDIUM_GRAY);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+p#userStatsText {
+    min-width: 12vh;
+    width: 80vh;
+    font-size: 1.8em;
+    text-align: center;
+}
+
+p#userStatsMax {
+    font-size: 3.3em;
+    text-align: center;
+}
+
+p#userStatsBFF {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.bffImage {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.roundedImage {
+    object-fit: cover;
+    background-size: cover;
+    border: 3px solid var(--WHITE);
+    border-radius: 50%;
+    /* Scale the background image to cover the entire container */
+    background-position: center;
+    /* Center the background image within the container */
+    width: 200px;
+    height: 200px;
+}
+
+.bffText {
+    text-align: center; /* Centralizar o texto horizontalmente */
+    font-size: 3.3em;
+    font-weight: bold;
+}
+
+
+div#tournamentCard {
+    background-color: #3a3535;
+}
+
+div#tournamentStatsDiv {
+    background-color: #3a3535;
+}
+
+img#winnerImg {
+    border: 1px solid #fcc914;
+}
+
+img#runnerUpImg {
+    border: 1px solid #f0e4e4;
+}
+
+img#thirdPlaceImg {
+    border: 1px solid #bc6b3d;
+}
+
+div#tournamentContainerDiv {
+    background-color: var(--HEAVY_GRAY);
+}
