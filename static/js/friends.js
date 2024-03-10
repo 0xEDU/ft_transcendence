@@ -1,41 +1,47 @@
 import { scrollToSection } from "./control-panel.js";
 import appendElement from "./tinyDOM/appendElement.js";
 import deleteElement from "./tinyDOM/deleteElement.js";
+import hasElement from "./tinyDOM/hasElement.js";
+import emptyElement from "./tinyDOM/emptyElement.js";
+import insertInElement from "./tinyDOM/insertInElement.js";
 
 document.getElementById('addSign').addEventListener('click', function() {
   scrollToSection('findFriends');
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-	fetchFriends();
 	var searchForm = document.getElementById('userSearchForm');
 
 	searchForm.addEventListener('submit', function(event) {
 	event.preventDefault();
 	var searchTerm = document.getElementById('searchField').value;
 
-	// Make sure to replace '/search-user/' with the correct URL to your Django search view
 	fetch(`/search-user/?search=${encodeURIComponent(searchTerm)}`)
-		.then(function(response) {
-			if (response.ok) {
-				return response.json();
-		} else if (response.status === 404) {
-			// Show the user not found message
-			displayUserNotFound();
-			return Promise.reject('User not found'); // Reject the promise chain
-		} else {
-			return Promise.reject('An error occurred'); // Reject the promise chain
-		}
-		})
-		.then(function(userData) {
-			addFriend(userData);
-		})
-		.catch(function(error) {
-		// If we reach this point, there was either a network error or a 404 error
-		console.error('Error:', error);
-		});
-	});
+            .then(response => response.json())
+            .then(userData => {
+                if (userData.error) {
+                    displayUserNotFound();
+                } else {
+					if (hasElement("addFriendModal", "errorMessage")){
+						emptyElement("errorMessage");
+					}
+                    showAddFriendModal(userData);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
 });
+
+function showAddFriendModal(userData) {
+    document.getElementById('modalUserName').innerText = userData.displayName;
+    document.getElementById('addFriendButton').onclick = function() {
+        sendFriendRequest(userData.id);
+    };
+
+    // Show the modal
+    const addFriendModal = new bootstrap.Modal(document.getElementById('addFriendModal'));
+    addFriendModal.show();
+}
 
 // Function to create a friend card HTML
 // function createFriendCardHtml(friend) {
@@ -51,10 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
 //     `;
 // }
 
-function addFriend(friend) {
-	const htmlString = createFriendCardHtml(friend);
-	appendElement('friendsList', htmlString);
-}
+// function addFriend(friend) {
+// 	const htmlString = createFriendCardHtml(friend);
+// 	appendElement('friendsList', htmlString);
+// }
 
 
 function displayUserNotFound() {
@@ -67,27 +73,37 @@ function displayUserNotFound() {
 }
 
 function fetchFriends() {
+	// Use the endpoint you've set up in your Django urls.py
 	fetch('/friends-list/')
-	.then(response => response.json())
-	.then(data => {
-	data.forEach(friend => {
+	.then(response => {
+		if (!response.ok) {
+		throw new Error('Network response was not ok ' + response.statusText);
+		}
+		return response.json();
+	})
+	.then(friendsData => {
+		// Call a function to create and insert the friend cards into the DOM
+		friendsData.forEach(friend => {
 		const friendCardHtml = createFriendCardHtml(friend);
 		document.getElementById('friendsList').innerHTML += friendCardHtml;
-	});
-	});
+		});
+	})
+	.catch(error => console.error('There has been a problem with your fetch operation:', error));
 }
 
 function createFriendCardHtml(friend) {
-	const btnClass = friend.status === 'pending' ? 'btn-warning' : 'btn-primary';
-	const btnText = friend.status === 'pending' ? 'Accept' : 'View Profile';
-	const btnOnClick = friend.status === 'pending' ? `acceptFriend('${friend.friendshipId}')` : `viewProfile('${friend.id}')`;
+	// Adjust the class and button text based on friendship status
+	const cardClass = friend.status === 'pending' && !friend.isRequester ? 'friendCard-pending' : 'friendCard';
+	const buttonText = friend.status === 'pending' ? 'Accept' : 'View Profile';
+	const buttonAction = friend.status === 'pending' ? `acceptFriendship('${friend.id}');` : `viewProfile('${friend.id}');`;
 	
+	// Return the HTML string for the friend card
 	return `
-	<div class="friendCardHtml d-flex ${friend.status}">
-		<img src="${friend.profilePictureUrl}" alt="Profile Picture" class="imgProfile">
-		<div class="friendCard d-flex align-items-center justify-content-between">
-			<div class="friendName">${friend.displayName}</div>
-			<button type="button" class="btn ${btnClass} ml-auto" onclick="${btnOnClick}">${btnText}</button>
+	<div class="${cardClass}">
+		<img src="${friend.profilePictureUrl}" alt="Profile Picture" class="friend-img">
+		<div class="friend-info">
+		<h3>${friend.displayName}</h3>
+		<button onclick="${buttonAction}" class="friend-btn">${buttonText}</button>
 		</div>
 	</div>
 	`;
@@ -109,8 +125,34 @@ function acceptFriend(friendshipId) {
   }
   
   // Utility function to get CSRF token from cookie
-  function getCsrfToken() {
-	return document.cookie.split(';').find(c => c.trim().startsWith('csrftoken=')).split('=')[1];
-  }
+function getCsrfToken() {
+	return document.getElementsByName('csrfmiddlewaretoken')[0].value;
+}
 
-  
+
+function sendFriendRequest(friendId) {
+	const addFriendModal = bootstrap.Modal.getInstance(document.getElementById('addFriendModal'));
+	fetch('/create-friendship/', {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/json',
+		'X-CSRFToken': getCsrfToken(),
+	},
+	body: JSON.stringify({ 'accepter_id': friendId }),
+	})
+	.then(response => {
+		if (response.status == 406) {
+			throw new Error('User already exists')
+		}
+		return response.json()
+	})
+	.then(data => {
+	addFriendModal.hide();
+	})
+	.catch(error => {
+		if (hasElement("addFriendModal", "errorMessage")){
+			emptyElement("errorMessage");
+		}
+		insertInElement('errorMessage', '<p id="userAlredyFriend" class="text-danger">Invitation alredy sent!</p>');
+	});
+}

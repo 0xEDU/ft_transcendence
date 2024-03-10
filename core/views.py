@@ -1,6 +1,7 @@
 """Core views."""
 # Python Std Libs
 import os
+import json
 # Our imports
 from pong.models import Score
 from soninha.models import User, Achievements
@@ -15,15 +16,33 @@ from django.db.models import Q
 from .models import Friendship
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
+
+class CreateFriendshipView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        accepter_id = data.get('accepter_id')
+        requester_id = request.session["user_id"]
+        requester = User.objects.get(pk=requester_id)
+        accepter = User.objects.get(pk=accepter_id)
+
+        # Check if the friendship already exists to avoid duplicates
+        if not Friendship.objects.filter(requester=requester, accepter=accepter).exists():
+            Friendship.objects.create(requester=requester, accepter=accepter, status='pending')
+            return JsonResponse({"message": "Friend request sent successfully."}, status=201)
+        else:
+            return JsonResponse({"error": "Friend request already sent."}, status=406)
 
 class SearchUserView(View):
     def get(self, request, *args, **kwargs):
         search_term = request.GET.get('search', '')
         try:
-            user = User.objects.get(display_name__icontains=search_term)
+            user = User.objects.get(login_intra__icontains=search_term)
             data = {
+                'id': user.id,
                 'displayName': user.display_name,
+                'loginIntra': user.login_intra,
                 'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
                 'profileUrl': f'/profile/{user.id}/',
             }
@@ -60,23 +79,28 @@ class FriendshipStatusView(View):
             })
         return JsonResponse({'status': 'not_friends'})
 
-@method_decorator(login_required, name='dispatch')
+#@method_decorator(login_required, name='dispatch')
 class FriendListView(View):
     def get(self, request):
+        current_user = request.user
+
         friendships = Friendship.objects.filter(
-            Q(requester=request.user) | Q(accepter=request.user)
+            Q(requester=current_user) | Q(accepter=current_user)
         ).distinct()
-        friends_data = []
+
+        friends_list = []
         for friendship in friendships:
-            friend = friendship.accepter if friendship.requester == request.user else friendship.requester
-            friends_data.append({
+            friend = friendship.accepter if friendship.requester == current_user else friendship.requester
+            friend_data = {
                 'id': friend.id,
                 'displayName': friend.display_name,
                 'profilePictureUrl': friend.profile_picture.url if friend.profile_picture else friend.intra_cdn_profile_picture_url,
                 'status': friendship.status,
-                'friendshipId': friendship.id,  # Include the friendship ID for accept action
-            })
-        return JsonResponse(friends_data, safe=False)
+                'isRequester': friendship.requester == current_user,
+            }
+            friends_list.append(friend_data)
+
+        return JsonResponse(friends_list, safe=False)  # 'safe=False' is required for non-dict objects
 
 
 class IndexView(View):

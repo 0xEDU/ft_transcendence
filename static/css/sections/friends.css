@@ -63,3 +63,7 @@
 .friendCardHtml.accepted {
 	background-color: #337ab7; /* Bootstrap's 'btn-primary' color */
 }
+
+#userAlredyFriend, #addFriendButton {
+	margin-right: 1vw;
+}
