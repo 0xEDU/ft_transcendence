@@ -8,6 +8,7 @@ let canvas;
 let context;
 let gameCanvasDiv;
 let gameLoopIntervalId;
+let hasFourPlayers;
 
 // ball variables
 const ballRadius = 10;
@@ -18,15 +19,25 @@ let ballY = 0;
 const paddlePadding = 10;
 const paddleWidth = 15;
 const paddleHeight = 130;
+const horizontalPaddleHeight = 15;
+const horizontalPaddleWidth = 170;
+const horizontalPaddlePadding = 20;
 let rightPaddleY = 0;
+let topPaddleX = 0;
 let leftPaddleY = 0;
+let bottomPaddleX = 0;
 let rightPaddlePosition = 0;
+let topPaddlePosition = 0;
 
 let rightScore = 0;
 let leftScore = 0;
+let topScore = 0;
+let bottomScore = 0;
 let coopMatchIsOver = false;
 let rightPlayerLogin;
 let leftPlayerLogin;
+let topPlayerLogin;
+let bottomPlayerLogin;
 const winningScore = 3;
 
 // randomize this later
@@ -40,6 +51,11 @@ let rightUpPressed = false;
 let rightDownPressed = false;
 let leftUpPressed = false;
 let leftDownPressed = false;
+
+let topLeftPressed = false;
+let topRightPressed = false;
+let bottomLeftPressed = false;
+let bottomRightPressed = false;
 
 // Stats
 let matchStats = {
@@ -93,8 +109,7 @@ function adjustCanvasSizeToWindow() {
 const drawStartingScreen = () => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
-	drawPlayersNames();
-	context.fillStyle = styleGuide.__WHITEr
+	context.fillStyle = styleGuide.__WHITE
 	context.font = "48px sans serif"; // Text font and size
 	context.textAlign = "center"; // Align text to the center
 	context.fillText("Pong Game", canvas.width / 2, canvas.height / 4); // Game title
@@ -158,6 +173,30 @@ const drawPaddles = () => {
 	);
 	context.fill();
 	context.closePath();
+	
+	if (hasFourPlayers) {
+		// Top paddle
+		context.fillStyle = styleGuide.__WHITE;
+		topPaddlePosition = horizontalPaddlePadding - (horizontalPaddleHeight / 2);
+		context.beginPath();
+		context.rect(
+			(canvas.width / 2) - (horizontalPaddleWidth / 2) + topPaddleX, topPaddlePosition,
+			horizontalPaddleWidth, horizontalPaddleHeight
+		);
+		context.fill();
+		context.closePath();
+
+		// Bottom paddle
+		context.fillStyle = styleGuide.__WHITE;
+		context.beginPath();
+		context.rect(
+			(canvas.width / 2) - (horizontalPaddleWidth / 2) + bottomPaddleX, canvas.height - horizontalPaddlePadding - (horizontalPaddleHeight / 2),
+			horizontalPaddleWidth, horizontalPaddleHeight
+		);
+		context.fill();
+		context.closePath();
+
+	}
 }
 
 const drawMiddleLine = () => {
@@ -196,13 +235,21 @@ const drawScore = (game_type) => {
 
 const drawPlayersNames = () => {
 	context.fillStyle = styleGuide.__WHITE
-	let y = canvas.height / 15 + 60;
 	let margin = canvas.width / 20;
 	context.font = "bold 18px sans serif";
-	context.textAlign = "left";
-	context.fillText(leftPlayerLogin, margin, y);
-	context.textAlign = "right";
-	context.fillText(rightPlayerLogin, canvas.width - margin, y);
+	if (!hasFourPlayers) {
+		let y = canvas.height / 15 + 60;
+		context.textAlign = "left";
+		context.fillText(leftPlayerLogin, margin, y);
+		context.textAlign = "right";
+		context.fillText(rightPlayerLogin, canvas.width - margin, y);
+
+	} else {
+		context.fillText(leftPlayerLogin, canvas.width / 2 - 60 - 60, canvas.height / 2);
+		context.fillText(rightPlayerLogin, canvas.width / 2 + 60 + 60, canvas.height / 2);
+		context.fillText(topPlayerLogin, canvas.width / 2, canvas.height / 2 - 60);
+		context.fillText(bottomPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
+	}
 	return;
 }
 
@@ -223,6 +270,11 @@ const checkCollisionWithPaddle = () => {
 	let rightPaddleTop = (canvas.height / 2) + rightPaddleY - (paddleHeight / 2);
 	let rightPaddleBottom = rightPaddleTop + paddleHeight;
 
+	let topPaddleLeft = (canvas.width / 2) + topPaddleX - (horizontalPaddleWidth / 2);
+	let topPaddleRight = topPaddleLeft + horizontalPaddleWidth;
+	let bottomPaddleLeft = (canvas.width / 2) + bottomPaddleX - (horizontalPaddleWidth / 2);
+	let bottomPaddleRight = bottomPaddleLeft + horizontalPaddleWidth;
+
 	// Collision with Left Paddle
 	if (ballCanvasX - ballRadius <= paddleWidth + paddlePadding && ballCanvasY >= leftPaddleTop && ballCanvasY <= leftPaddleBottom) {
 		dx = -dx;
@@ -235,6 +287,25 @@ const checkCollisionWithPaddle = () => {
 	if (ballCanvasX + ballRadius > canvas.width - paddleWidth && ballCanvasY > rightPaddleTop && ballCanvasY < rightPaddleBottom) {
 		dx = -dx;
 		ballX = canvas.width / 2 - paddleWidth - ballRadius; // Reposition ball after collision
+		matchStats.paddleHits++;
+	}
+
+	if (!hasFourPlayers) {
+		return ;
+	}
+	// Collision with Top Paddle
+	if (ballCanvasY - ballRadius <= horizontalPaddleHeight + horizontalPaddlePadding - (horizontalPaddleHeight / 2)
+		&& ballCanvasX >= topPaddleLeft && ballCanvasX <= topPaddleRight) {
+		dy = -dy;
+		ballY = -canvas.height / 2 + horizontalPaddleHeight + horizontalPaddlePadding + ballRadius; // Reposition ball after collision
+		matchStats.paddleHits++;
+	}
+
+	// Collision with Bottom Paddle
+	if (ballCanvasY + ballRadius > canvas.height - horizontalPaddleHeight
+		&& ballCanvasX > bottomPaddleLeft && ballCanvasX < bottomPaddleRight) {
+		dy = -dy;
+		ballY = canvas.height / 2 - (horizontalPaddleHeight + horizontalPaddlePadding - horizontalPaddleHeight / 2) - ballRadius; // Reposition ball after collision
 		matchStats.paddleHits++;
 	}
 }
@@ -262,6 +333,28 @@ const movePaddles = () => {
 			leftPaddleY = canvas.height / 2 - paddleHeight / 2 - paddlePadding;
 		};
 	}
+	if (topLeftPressed && hasFourPlayers) {
+		topPaddleX -= 7;
+		if (topPaddleX - (horizontalPaddleWidth / 2) - horizontalPaddlePadding < -canvas.width / 2) {
+			topPaddleX = -canvas.width / 2 + horizontalPaddleWidth / 2 + horizontalPaddlePadding;
+		}
+	} else if (topRightPressed && hasFourPlayers) {
+		topPaddleX += 7;
+		if (topPaddleX + (horizontalPaddleWidth / 2) + horizontalPaddlePadding >= canvas.width / 2) {
+			topPaddleX = canvas.width / 2 - horizontalPaddleWidth / 2 - horizontalPaddlePadding;
+		}
+	}
+	if (bottomLeftPressed && hasFourPlayers) {
+		bottomPaddleX -= 7;
+		if (bottomPaddleX - (horizontalPaddleWidth / 2) - horizontalPaddlePadding < -canvas.width / 2) {
+			bottomPaddleX = -canvas.width / 2 + horizontalPaddleWidth / 2 + horizontalPaddlePadding;
+		}
+	} else if (bottomRightPressed && hasFourPlayers) {
+		bottomPaddleX += 7;
+		if (bottomPaddleX + (horizontalPaddleWidth / 2) + horizontalPaddlePadding >= canvas.width / 2) {
+			bottomPaddleX = canvas.width / 2 - horizontalPaddleWidth / 2 - horizontalPaddlePadding;
+		}
+	}
 }
 
 const keyDownHandler = (e) => {
@@ -279,6 +372,20 @@ const keyDownHandler = (e) => {
 	}
 	if (e.key === "s" || e.key === "S") {
 		leftDownPressed = true;
+	}
+
+	// Top-side player
+	if ((e.key === "i" || e.key === "I") && hasFourPlayers) {
+		topLeftPressed = true;
+	}
+	if ((e.key === "o" || e.key === "O") && hasFourPlayers) {
+		topRightPressed = true;
+	}
+	if ((e.key === "b" || e.key === "B") && hasFourPlayers) {
+		bottomLeftPressed = true;
+	}
+	if ((e.key === "n" || e.key === "N") && hasFourPlayers) {
+		bottomRightPressed = true;
 	}
 
 	// Transitions for starting and ending screens
@@ -308,6 +415,22 @@ const keyUpHandler = (e) => {
 	}
 	if (e.key === "s" || e.key === "S") {
 		leftDownPressed = false;
+	}
+
+	// Top-hand player
+	if ((e.key === "i" || e.key === "I") && hasFourPlayers) {
+		topLeftPressed = false;
+	}
+	if ((e.key === "o" || e.key === "O") && hasFourPlayers) {
+		topRightPressed = false;
+	}
+
+	// Bottom-hand player
+	if ((e.key === "b" || e.key === "B") && hasFourPlayers) {
+		bottomLeftPressed = false;
+	}
+	if ((e.key === "n" || e.key === "N") && hasFourPlayers) {
+		bottomRightPressed = false;
 	}
 }
 
@@ -377,14 +500,16 @@ const runGame = (match_id, players_array, game_type) => {
 		}
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		drawMiddleLine();
+		if (!hasFourPlayers) {
+			drawMiddleLine();
+		}
 		drawPlayersNames();
 		drawScore(game_type);
 		drawBall();
 		drawPaddles();
 		movePaddles();
 
-		if (ballY + dy > canvas.height / 2 || ballY + dy < (-canvas.height / 2) + ballRadius) {
+		if ((ballY + dy > canvas.height / 2 || ballY + dy < (-canvas.height / 2) + ballRadius) && !hasFourPlayers) {
 			dy = -dy;
 		}
 
@@ -395,7 +520,7 @@ const runGame = (match_id, players_array, game_type) => {
 			if (game_type === "classic")
 				leftScore++;
 			if (game_type === "co-op")
-				coopMatchIsOver = true;
+				coopMatchIsOver = false;
 			resetBall();
 			return;
 		}
@@ -404,7 +529,26 @@ const runGame = (match_id, players_array, game_type) => {
 			if (game_type === "classic")
 				rightScore++;
 			if (game_type === "co-op")
-				coopMatchIsOver = true;
+				coopMatchIsOver = false;
+			resetBall();
+			return;
+		}
+
+		// Check if ball hit vertical walls (score 4 players)
+		if ((ballY + dy > canvas.height / 2) && hasFourPlayers) {
+			if (game_type === "classic")
+				topScore++;
+			if (game_type === "co-op")
+				coopMatchIsOver = false;
+			resetBall();
+			return;
+		}
+
+		if ((ballY + dy < -canvas.height / 2) && hasFourPlayers) {
+			if (game_type === "classic")
+				bottomScore++;
+			if (game_type === "co-op")
+				coopMatchIsOver = false;
 			resetBall();
 			return;
 		}
@@ -431,8 +575,6 @@ function startGameAfterCountdown() {
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
 			drawPaddles();
-			drawPlayersNames();
-
 			context.fillStyle = styleGuide.__WHITE;
 			context.font = "48px sans serif";
 			context.textAlign = "center";
@@ -459,9 +601,14 @@ export default function launchMatch(match_id, players_array, game_type) {
 	canvas = document.getElementById("pongGameCanvas");
 	context = canvas.getContext("2d");
 	gameCanvasDiv = document.getElementById("gameDiv");
+	hasFourPlayers = players_array.length == 4;
 
 	leftPlayerLogin = players_array[0];
 	rightPlayerLogin = players_array[1];
+	if (hasFourPlayers) {
+		topPlayerLogin = players_array[2];
+		bottomPlayerLogin = players_array[3];
+	}
 
 	// Initial set up of the canvas
 	adjustCanvasSizeToWindow();
