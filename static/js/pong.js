@@ -2,6 +2,7 @@ import { scrollToSection } from "./control-panel.js";
 import { showControlPanel } from "./play-button.js";
 import insertInElement from "./tinyDOM/insertInElement.js";
 import styleGuide from "./style-guide.js"
+import { fetchStatsPage } from "./stats-nav.js"
 
 // Game constants (trying to avoid magic numbers)
 let canvas;
@@ -345,7 +346,11 @@ const sendMatchDataToServer = (match_id, players_array) => {
 			return response.text();
 		})
 		.then(responseHTML => {
+			// update front end dynamically
 			insertInElement("userStatsDiv", responseHTML);
+			fetchStatsPage("/stats/matches-history");
+			fetchStatsPage("/stats/tournaments");
+			fetchStatsPage("/stats/user-stats");
 		})
 		.catch(error => {
 			console.error('Error updating match data:', error);

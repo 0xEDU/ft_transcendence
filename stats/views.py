@@ -17,6 +17,7 @@ ROWS_SIZE = 15
 TOTAL_NUM_OF_CELLS = 88
 COOP_COLORS = {
     "none": "var(--HEAVY_GRAY)",
+    "nil": "var(--LIGHT_GRAY)",
     "low": "var(--YELLOW_30)",
     "medium": "var(--YELLOW_60)",
     "high": "var(--YELLOW_100)",
@@ -66,8 +67,10 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest scores as a list."""
 
         def __calculate_color(score):
-            if score <= 0:
+            if score < 0:
                 return COOP_COLORS["none"]
+            elif score == 0:
+                return COOP_COLORS["nil"]
             elif score <= 5:
                 return COOP_COLORS["low"]
             elif score <= 10:
@@ -128,7 +131,7 @@ class MatchesHistoryTemplateView(TemplateView):
         current_user_id = self.request.session["user_id"]
         player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
         player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
-                          .exclude(player_id=current_user_id))
+                          .exclude(player_id=current_user_id)).order_by("match__match_date")
         player1_scores_dict = {score.match_id: score for score in player1_scores}
         match_row_objects: List[MatchRowObject] = [
             __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score,
