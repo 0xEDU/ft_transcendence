@@ -1,15 +1,16 @@
 """Views for the stats app."""
+from dataclasses import dataclass
 from typing import List
 
 # Our imports
-from stats.models import UserStats
-from pong.models import Score, Match
+from pong.models import Score
 from soninha.models import User
+from stats.models import UserStats
 
 # Django imports
 from django.db.models import Count
 from django.views.generic import TemplateView
-from dataclasses import dataclass
+
 
 # Constants
 ROWS_SIZE = 15
