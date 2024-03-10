@@ -2,11 +2,11 @@ import { scrollToSection } from "./control-panel.js";
 import { showControlPanel } from "./play-button.js";
 import insertInElement from "./tinyDOM/insertInElement.js";
 import styleGuide from "./style-guide.js"
+import { fetchStatsPage } from "./stats-nav.js"
 
 // Game constants (trying to avoid magic numbers)
 let canvas;
 let context;
-let gameCanvasDiv;
 let gameLoopIntervalId;
 
 // ball variables
@@ -65,29 +65,33 @@ const randomizeBallMovement = () => {
 }
 
 function adjustCanvasSizeToWindow() {
-	//Gets the devicePixelRatio
-	var pixelRatio = window.devicePixelRatio || 1;
+	// Width will always be proportional to the width of the screen
+	let canvasWidth = window.innerWidth * 0.7;
+	// Height is calculated proportional to canvas width
+	let canvasHeight = 0.7 * canvasWidth;
+	if (canvasHeight > window.innerHeight)
+		canvasHeight = 0.7 * window.innerHeight;
 
-	//The viewport is in portrait mode, so var width should be based off viewport WIDTH
-	if (window.innerHeight > window.innerWidth) {
-		//Makes the canvas 100% of the viewport width
-		var width = Math.round(1.3 * window.innerWidth);
+	// Calculate the minimum and maximum allowable heights for the canvas
+	let minHeight = 0.6 * canvasWidth;
+	let maxHeight = 0.8 * canvasWidth;
+
+	// Check if the canvas height is within the allowable range
+	if (canvasHeight < minHeight) {
+			canvasHeight = minHeight;
+	} else if (canvasHeight > maxHeight) {
+			canvasHeight = maxHeight;
 	}
-	//The viewport is in landscape mode, so var width should be based off viewport HEIGHT
-	else {
-		//Makes the canvas 100% of the viewport height
-		var width = Math.round(1.3 * window.innerHeight);
-	}
 
-	//This is done in order to maintain the 1:1 aspect ratio, adjust as needed
-	var height = width * 0.7;
+	canvas.width = canvasWidth;
+	canvas.height = canvasHeight;
 
-	//This will be used to downscale the canvas element when devicePixelRatio > 1
-	gameCanvasDiv.style.width = width + "px";
-	gameCanvasDiv.style.height = height + "px";
-
-	canvas.width = width * pixelRatio;
-	canvas.height = height * pixelRatio;
+	// TODO: redraw the screen, when a window 'resize' event happens
+	// drawMiddleLine();
+	// drawPlayersNames();
+	// drawScore("classic");
+	// drawBall();
+	// drawPaddles();
 }
 
 const drawStartingScreen = () => {
@@ -345,7 +349,11 @@ const sendMatchDataToServer = (match_id, players_array) => {
 			return response.text();
 		})
 		.then(responseHTML => {
+			// update front end dynamically
 			insertInElement("userStatsDiv", responseHTML);
+			fetchStatsPage("/stats/matches-history");
+			fetchStatsPage("/stats/tournaments");
+			fetchStatsPage("/stats/user-stats");
 		})
 		.catch(error => {
 			console.error('Error updating match data:', error);
@@ -458,7 +466,6 @@ export default function launchMatch(match_id, players_array, game_type) {
 	// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
 	canvas = document.getElementById("pongGameCanvas");
 	context = canvas.getContext("2d");
-	gameCanvasDiv = document.getElementById("gameDiv");
 
 	leftPlayerLogin = players_array[0];
 	rightPlayerLogin = players_array[1];
