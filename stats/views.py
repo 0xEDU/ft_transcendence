@@ -2,9 +2,16 @@
 from dataclasses import dataclass
 from typing import List
 
-from django.views.generic import TemplateView
+# Our imports
+from blockchain.views import TournamentView
 from pong.models import Score
-from dataclasses import dataclass
+from soninha.models import User
+from stats.models import UserStats
+
+# Django imports
+from django.db.models import Count
+from django.utils import timezone
+from django.views.generic import TemplateView
 
 # Constants
 ROWS_SIZE = 15
@@ -150,7 +157,7 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the context data."""
 
         context = super().get_context_data(**kwargs)
-        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+        if "user_id" not in self.request.session.keys() or not self.request.session["user_id"]:
             return context
         context["coop_cell_rows"] = self._get_latest_coop_scores()
         context["versus_cell_rows"] = self._get_latest_versus_scores()
