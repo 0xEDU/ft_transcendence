@@ -74,27 +74,31 @@ p#userStatsBFF {
     font-weight: bold;
 }
 
-
 div#tournamentCard {
-    background-color: #3a3535;
+    background-color: var(--LIGHT_GRAY);
 }
 
 div#tournamentStatsDiv {
-    background-color: #3a3535;
+    background-color: var(--LIGHT_GRAY);
 }
 
 img#winnerImg {
-    border: 1px solid #fcc914;
+    border: 1px solid var(--GOLD);
 }
 
 img#runnerUpImg {
-    border: 1px solid #f0e4e4;
+    border: 1px solid var(--SILVER);
 }
 
 img#thirdPlaceImg {
-    border: 1px solid #bc6b3d;
+    border: 1px solid var(--COPPER);
 }
 
 div#tournamentContainerDiv {
     background-color: var(--HEAVY_GRAY);
+}
+
+.empty-tournament-card {
+    width: 100%;
+    background-color: var(--LIGHT_GRAY);
 }

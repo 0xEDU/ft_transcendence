@@ -1,74 +1,26 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/stats/style.css' %}">
 
-<div id="tournamentContainerDiv" class="container text-white mt-3">
-	<div class="row">
-	  <div class="col-8">
-		{% for tournament_data in tournaments_data %}
-			<div id="tournamentCard" class="row mb-5 w-100"> 
-				<div class="d-flex align-items-center justify-content-between">
-					<div class="ms-3">
-						<h1 class="p-0 m-0 text-white">{{tournament_data.name}}</h1>
-						<h3>ID: {{tournament_data.id}}</h3>
-						<h3>{{tournament_data.date}}</h3>
-					</div>
-					<div class="d-flex align-items-end justify-content-evenly w-50">
-						<img id="winnerImg" src="{{tournament_data.winner_img}}" height=84 width=84>
-						<img id="runnerUpImg" src="{{tournament_data.runner_up_img}}" height=64 width=66>
-						<img id="thirdPlaceImg" src="{{tournament_data.third_place_img}}" height=64 width=66>
-					</div>
-				</div>
+{% load static i18n %}
+
+<div id="tournamentsDiv" class="row">
+		{% comment %} Empty space {% endcomment %}
+		<div class="col-3"></div>
+
+		<div class="col-6">
+			{% if not tournaments_data %}
+			<div class="empty-tournament-card d-flex justify-content-center align-items-center">
+				<p class="m-5">
+					{% translate "You haven't played any tournaments yet." %}
+				</p>
 			</div>
-		{% endfor %}
-		{% comment %} <div id="tournamentCard" class="row mb-5 w-100"> 
-			<div class="d-flex align-items-center justify-content-between">
-				<div class="ms-3">
-					<h1 class="p-0 m-0 text-white">Tournament 3</h1>
-					<h3>ID: 0x424242</h3>
-					<h3>05/07/2024</h3>
-				</div>
-				<div class="d-flex align-items-end justify-content-evenly w-50">
-					<img id="winnerImg" src="https://dummyimage.com/84x84/000/ffffff" height=84 width=84>
-					<img id="runnerUpImg" src="https://dummyimage.com/64x66/000/ffffff" height=64 width=66>
-					<img id="thirdPlaceImg" src="https://dummyimage.com/64x66/000/ffffff" height=64 width=66>
-				</div>
-			</div>
+			{% else %}
+				{% for tournament_data in tournaments_data %}
+					{% include "stats/components/tournament-card.html" %}
+				{% endfor %}
+			{% endif %}
 		</div>
-		<div id="tournamentCard" class="row mb-5 w-100"> 
-			<div class="d-flex align-items-center justify-content-between">
-				<div class="ms-3">
-					<h1 class="p-0 m-0 text-white">Tournament 3</h1>
-					<h3>ID: 0x424242</h3>
-					<h3>05/07/2024</h3>
-				</div>
-				<div class="d-flex align-items-end justify-content-evenly w-50">
-					<img id="winnerImg" src="https://dummyimage.com/84x84/000/ffffff" height=84 width=84>
-					<img id="runnerUpImg" src="https://dummyimage.com/64x66/000/ffffff" height=64 width=66>
-					<img id="thirdPlaceImg" src="https://dummyimage.com/64x66/000/ffffff" height=64 width=66>
-				</div>
-			</div>
-		</div>
-		<div id="tournamentCard" class="row w-100"> 
-			<div class="d-flex align-items-center justify-content-between">
-				<div class="ms-3">
-					<h1 class="p-0 m-0 text-white">Tournament 3</h1>
-					<h3>ID: 0x424242</h3>
-					<h3>05/07/2024</h3>
-				</div>
-				<div class="d-flex align-items-end justify-content-evenly w-50">
-					<img id="winnerImg" src="https://dummyimage.com/84x84/000/ffffff" height=84 width=84>
-					<img id="runnerUpImg" src="https://dummyimage.com/64x66/000/ffffff" height=64 width=66>
-					<img id="thirdPlaceImg" src="https://dummyimage.com/64x66/000/ffffff" height=64 width=66>
-				</div>
-			</div>
-		</div> {% endcomment %}
-	  </div>
-	  <div id="tournamentStatsDiv" class="col">
-		  <h2>dale</h2>
-		  <h2>pra</h2>
-		  <h2>não</h2>
-		  <h2>toma</h2>
-		  <h2>le</h2>
-	  </div>
-	</div>
-  </div>
+
+		{% comment %} Empty space {% endcomment %}
+		<div class="col-3"></div>
+</div>
