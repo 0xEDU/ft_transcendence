@@ -689,7 +689,7 @@ export default function launchMatch(match_id, players_array, game_type) {
 	// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
 	canvas = document.getElementById("pongGameCanvas");
 	context = canvas.getContext("2d");
-	gameCanvasDiv = document.getElementById("gameDiv");
+	const gameCanvasDiv = document.getElementById("gameDiv");
 	hasFourPlayers = players_array.length == 4;
 
 	leftPlayerLogin = players_array[0];
