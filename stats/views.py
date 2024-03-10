@@ -90,16 +90,14 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest scores as a list."""
 
         def __calculate_color(score):
-            if score == 0:
-                return VERSUS_COLORS["loss"]
-            elif score == 5:
+            if score == 3:
                 return VERSUS_COLORS["win"]
             else:
-                return VERSUS_COLORS["none"]
+                return VERSUS_COLORS["loss"]
 
         current_user_id = self.request.session["user_id"]
-        scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-                  .exclude(match__type="co-op"))
+        scores = (Score.objects.filter(player_id=current_user_id).exclude(match__type="co-op")
+                  .order_by("match__match_date"))
         scores = list(map(lambda score: VersusCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
             color=f"background-color:{__calculate_color(score.score)}"
@@ -114,9 +112,9 @@ class MatchesHistoryTemplateView(TemplateView):
         def __get_match_description(match, player1_score, player2_name) -> str:
             if match.type == "co-op":
                 return f"🤝 joined forces with {player2_name}"
-            if match.type == "classic" and player1_score == 5:
+            if match.type == "classic" and player1_score == 3:
                 return f"🥇 won against {player2_name}"
-            if match.type == "classic":
+            if match.type == "classic" and player1_score in [0, 1, 2]:
                 return f"🥈 lost to {player2_name}"
 
         def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
