@@ -98,7 +98,6 @@ class AcceptFriendshipView(View):
 #             })
 #         return JsonResponse({'status': 'not_friends'})
 
-
 class FriendListView(View):
     def get(self, request):
         requester_id = request.session["user_id"]

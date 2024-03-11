@@ -24,11 +24,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (hasElement('resultsContainer','userNotFoundDel')){
 		emptyElement('resultsContainer');
 	}
+	var searchTerm = document.getElementById('searchField').value;
+
 	fetch(`/search-user/?search=${encodeURIComponent(searchTerm)}`)
             .then(response => response.json())
             .then(userData => {
                 if (userData.error) {
                     swapInnerHTMLOfElement('resultsContainer', '<p id="userNotFoundDel" class="text-danger">User not found!</p>');
+                    displayUserNotFound();
                 } else {
 					if (hasElement("addFriendModal", "errorMessage")){
 						emptyElement("errorMessage");
@@ -53,6 +56,7 @@ function showAddFriendModal(userData) {
 
 
 function fetchFriends() {
+	// Use the endpoint you've set up in your Django urls.py
 	fetch('/friends-list/')
 	.then(response => {
 		if (!response.ok) {
