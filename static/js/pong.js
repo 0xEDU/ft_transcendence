@@ -10,6 +10,7 @@ let context;
 let gameLoopIntervalId;
 let hasFourPlayers;
 let lastPaddleHit = "";
+let isLastMatch;
 
 // ball variables
 const ballRadius = 10;
@@ -452,8 +453,10 @@ const keyDownHandler = (e) => {
 	}
 	if (e.key == "Enter" && gameState === States.GAME_OVER) {
 		gameState = States.NOT_STARTED;
-		scrollToSection("lobby");
-		showControlPanel();
+		if (isLastMatch) {
+			scrollToSection("lobby");
+			showControlPanel();
+		}
 	}
 }
 
@@ -561,25 +564,16 @@ function lastPaddleScore() {
 	}
 }
 
-const resetGameData = () => {
-	scores = {
-		rightScore: 0,
-		leftScore: 0,
-		topScore: 0,
-		bottomScore: 0
-	};
-	matchStats = {
-		startTime: 0,
-		endTime: 0,
-		paddleHits: 0,
-		ballTraveledDistance: 0
-	};
-	paddleCoords = {
-		rightPaddleY: 0,
-		leftPaddleY: 0,
-		topPaddleX: 0,
-		bottomPaddleX: 0,
-	}
+const resetMatchData = () => {
+	Object.keys(scores).forEach(score => {
+		scores[score] = 0;
+	})
+	Object.keys(matchStats).forEach(stat => {
+		matchStats[stat] = 0;
+	})
+	Object.keys(paddleCoords).forEach(coord => {
+		paddleCoords[coord] = 0;
+	})
 }
 
 const runGame = (match_id, players_array, game_type) => {
@@ -593,9 +587,15 @@ const runGame = (match_id, players_array, game_type) => {
 			drawEndingScreen(game_type);
 			sendMatchDataToServer(match_id, players_array);
 			ballColor = styleGuide.__WHITE;
-			resetGameData();
+			resetMatchData();
 			coopMatchIsOver = false;
-			return;
+			const finalObj = {
+				"gameOver": true,
+			}
+			if (game_type === "classic") {
+				finalObj["winner"] = scores.leftScore > scores.rightScore ? players_array[0] : players_array[1]
+			}
+			return finalObj;
 		}
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
@@ -616,29 +616,25 @@ const runGame = (match_id, players_array, game_type) => {
 
 		// Check if ball hit side walls (score)
 		if (ballX + dx > canvas.width / 2) {
-			if (game_type === "classic") {
-				if (hasFourPlayers)
-					lastPaddleScore();
-				else
-					scores.leftScore++;
-			}
+			if (game_type === "classic" && !hasFourPlayers)
+				scores.leftScore++;
+			if (game_type === "classic" && hasFourPlayers)
+				lastPaddleScore();
 			if (game_type === "co-op")
 				coopMatchIsOver = true;
 			resetBall();
-			return;
+			return {"gameOver": false};
 		}
 
 		if (ballX + dx < -canvas.width / 2) {
-			if (game_type === "classic") {
-				if (hasFourPlayers)
-					lastPaddleScore();
-				else
-					scores.rightScore++;
-			}
+			if (game_type === "classic" && !hasFourPlayers)
+				scores.rightScore++;
+			if (game_type === "classic" && hasFourPlayers)
+				lastPaddleScore();
 			if (game_type === "co-op")
 				coopMatchIsOver = true;
 			resetBall();
-			return;
+			return {"gameOver": false};
 		}
 
 		// Check if ball hit vertical walls (score 4 players)
@@ -648,7 +644,7 @@ const runGame = (match_id, players_array, game_type) => {
 			if (game_type === "co-op")
 				coopMatchIsOver = true;
 			resetBall();
-			return;
+			return {"gameOver": false};
 		}
 
 		if ((ballY + dy < -canvas.height / 2) && hasFourPlayers) {
@@ -657,7 +653,7 @@ const runGame = (match_id, players_array, game_type) => {
 			if (game_type === "co-op")
 				coopMatchIsOver = true;
 			resetBall();
-			return;
+			return {"gameOver": false};
 		}
 
 		// Calculate the distance traveled by the ball
@@ -671,7 +667,9 @@ const runGame = (match_id, players_array, game_type) => {
 
 		// Increment distance
 		matchStats.ballTraveledDistance += Math.sqrt(Math.pow(ballX - initialX, 2) + Math.pow(ballY - initialY, 2));
+		return {"gameOver": false};
 	}
+	return {"gameOver": false};
 }
 
 function startGameAfterCountdown() {
@@ -703,36 +701,39 @@ function startGameAfterCountdown() {
 }
 
 // main
-export default function launchMatch(match_id, players_array, game_type) {
-	// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
-	canvas = document.getElementById("pongGameCanvas");
-	context = canvas.getContext("2d");
-	const gameCanvasDiv = document.getElementById("gameDiv");
-	hasFourPlayers = players_array.length == 4;
+export default async function launchMatch(match_id, players_array, game_type, lastMatch) {
+	return new Promise((resolve, _reject) => {
+		// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
+		canvas = document.getElementById("pongGameCanvas");
+		context = canvas.getContext("2d");
+		hasFourPlayers = players_array.length == 4;
+		isLastMatch = lastMatch
 
-	leftPlayerLogin = players_array[0];
-	rightPlayerLogin = players_array[1];
-	if (hasFourPlayers) {
-		topPlayerLogin = players_array[2];
-		bottomPlayerLogin = players_array[3];
-	}
+		leftPlayerLogin = players_array[0];
+		rightPlayerLogin = players_array[1];
+		if (hasFourPlayers) {
+			topPlayerLogin = players_array[2];
+			bottomPlayerLogin = players_array[3];
+		}
 
-	// Initial set up of the canvas
-	adjustCanvasSizeToWindow(game_type);
-	randomizeBallMovement();
-	drawStartingScreen();
+		// Initial set up of the canvas
+		adjustCanvasSizeToWindow();
+		randomizeBallMovement();
+		drawStartingScreen();
 
-	// Readjusts the size of the canvas in case of window resizing mid-game
-	window.addEventListener("resize", (event) => {
-		adjustCanvasSizeToWindow(game_type);
+		// Readjusts the size of the canvas in case of window resizing mid-game
+		window.addEventListener("resize", adjustCanvasSizeToWindow);
+		// Set keyboard event handlers.
+		document.addEventListener("keydown", keyDownHandler);
+		document.addEventListener("keyup", keyUpHandler);
+
+		// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
+		gameLoopIntervalId = setInterval(() => {
+			const finalObj = runGame(match_id, players_array, game_type); // Pass arguments to runGame function
+			if (finalObj.gameOver) {
+				resolve(finalObj.winner);
+			}
+		}, 10);
 	});
-	// Set keyboard event handlers.
-	document.addEventListener("keydown", keyDownHandler);
-	document.addEventListener("keyup", keyUpHandler);
-
-	// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
-	gameLoopIntervalId = setInterval(() => {
-		runGame(match_id, players_array, game_type); // Pass arguments to runGame function
-	}, 10);
 };
 
