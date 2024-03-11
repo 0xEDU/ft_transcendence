@@ -121,10 +121,13 @@ function adjustCanvasSizeToWindow(game_type) {
 	drawPaddles();
 }
 
-const drawStartingScreen = () => {
+const drawStartingScreen = (map_skin) => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
-	context.fillStyle = styleGuide.__WHITE
+	if (map_skin === "map1")
+		context.fillStyle = styleGuide.__WHITE
+	else
+		context.fillStyle = styleGuide.__ORANGE
 	context.font = "48px sans serif"; // Text font and size
 	context.textAlign = "center"; // Align text to the center
 	context.fillText("Pong Game", canvas.width / 2, canvas.height / 4); // Game title
@@ -166,8 +169,11 @@ const drawEndingScreen = (game_type) => {
 	}
 }
 
-const drawBall = () => {
-	context.fillStyle = ballColor;
+const drawBall = (map_skin) => {
+	if (map_skin === "map1" || hasFourPlayers)
+		context.fillStyle = ballColor;
+	else
+		context.fillStyle = styleGuide.__HEAVY_GRAY;
 
 	context.beginPath();
 	context.arc(
@@ -178,9 +184,12 @@ const drawBall = () => {
 	context.fillStyle = styleGuide.__WHITE;
 }
 
-const drawPaddles = () => {
+const drawPaddles = (map_skin) => {
 	// Right paddle
-	context.fillStyle = hasFourPlayers ? rightPaddleColor : styleGuide.__WHITE;
+	if (map_skin === "map1")
+		context.fillStyle = hasFourPlayers ? rightPaddleColor : styleGuide.__WHITE;
+	else
+		context.fillStyle = hasFourPlayers ? rightPaddleColor : styleGuide.__HEAVY_GRAY;
 	rightPaddlePosition = (canvas.height / 2) - (paddleHeight / 2) + paddleCoords.rightPaddleY;
 	context.beginPath();
 	context.rect(
@@ -191,7 +200,10 @@ const drawPaddles = () => {
 	context.closePath();
 
 	// Left paddle
-	context.fillStyle = hasFourPlayers ? leftPaddleColor : styleGuide.__WHITE;
+	if (map_skin === "map1")
+		context.fillStyle = hasFourPlayers ? leftPaddleColor : styleGuide.__WHITE;
+	else
+		context.fillStyle = hasFourPlayers ? rightPaddleColor : styleGuide.__HEAVY_GRAY;
 	context.beginPath();
 	context.rect(
 		paddlePadding, (canvas.height / 2) - (paddleHeight / 2) + paddleCoords.leftPaddleY,
@@ -225,12 +237,15 @@ const drawPaddles = () => {
 	}
 }
 
-const drawMiddleLine = () => {
+const drawMiddleLine = (map_skin) => {
 	const lineLength = 2 * paddleWidth; // Length of each dash
 	const gap = paddleWidth; // Gap between dashes
 	let y = 0;
 
-	context.fillStyle = styleGuide.__WHITE;
+	if (map_skin === "map1")
+		context.fillStyle = styleGuide.__WHITE;
+	else
+		context.fillStyle = styleGuide.__ORANGE;
 
 	while (y < canvas.height) {
 		context.fillRect(canvas.width / 2 - lineLength / 2, y, paddleWidth, lineLength);
@@ -238,8 +253,11 @@ const drawMiddleLine = () => {
 	}
 }
 
-const drawScore = (game_type) => {
-	context.fillStyle = styleGuide.__WHITE
+const drawScore = (game_type, map_skin) => {
+	if (map_skin === "map1")
+		context.fillStyle = styleGuide.__WHITE
+	else
+		context.fillStyle = styleGuide.__HEAVY_GRAY
 	let y = canvas.height / 15;
 	let margin = canvas.width / 20;
 
@@ -273,8 +291,11 @@ const drawScore = (game_type) => {
 	return;
 }
 
-const drawPlayersNames = () => {
-	context.fillStyle = styleGuide.__WHITE
+const drawPlayersNames = (map_skin) => {
+	if (map_skin === "map1")
+		context.fillStyle = styleGuide.__WHITE
+	else
+		context.fillStyle = styleGuide.__HEAVY_GRAY
 	let margin = canvas.width / 20;
 	context.font = "bold 18px sans serif";
 	if (!hasFourPlayers) {
@@ -576,7 +597,22 @@ const resetMatchData = () => {
 	})
 }
 
-const runGame = (match_id, players_array, game_type) => {
+const drawBackground = () => {
+    // Set the background color
+	if (!hasFourPlayers)
+	    context.fillStyle = styleGuide.__GREEN;
+	else
+		context.fillStyle = styleGuide.__OFF_WHITE;
+
+
+    // Draw a rectangle covering the entire canvas
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Reset the fill style to white for other elements
+    context.fillStyle = styleGuide.__WHITE;
+};
+
+const runGame = (match_id, players_array, game_type, map_skin) => {
 	if (gameState === States.RUNNING) {
 		if ((game_type === "classic" && (scores.rightScore === winningScore || scores.leftScore === winningScore || scores.topScore === winningScore || scores.bottomScore === winningScore))
 			|| (game_type === "co-op" && coopMatchIsOver)) {
@@ -599,13 +635,15 @@ const runGame = (match_id, players_array, game_type) => {
 		}
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
+		if (map_skin === "map2")
+			drawBackground();
 		if (!hasFourPlayers) {
-			drawMiddleLine();
+			drawMiddleLine(map_skin);
 		}
-		drawPlayersNames();
-		drawScore(game_type);
-		drawBall();
-		drawPaddles();
+		drawPlayersNames(map_skin);
+		drawScore(game_type, map_skin);
+		drawBall(map_skin);
+		drawPaddles(map_skin);
 		movePaddles();
 
 		if ((ballY + dy > canvas.height / 2 || ballY + dy < (-canvas.height / 2) + ballRadius) && !hasFourPlayers) {
@@ -701,7 +739,7 @@ function startGameAfterCountdown() {
 }
 
 // main
-export default async function launchMatch(match_id, players_array, game_type, lastMatch) {
+export default async function launchMatch(match_id, players_array, game_type, map_skin, lastMatch) {
 	return new Promise((resolve, _reject) => {
 		// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
 		canvas = document.getElementById("pongGameCanvas");
@@ -719,7 +757,7 @@ export default async function launchMatch(match_id, players_array, game_type, la
 		// Initial set up of the canvas
 		adjustCanvasSizeToWindow();
 		randomizeBallMovement();
-		drawStartingScreen();
+		drawStartingScreen(map_skin);
 
 		// Readjusts the size of the canvas in case of window resizing mid-game
 		window.addEventListener("resize", adjustCanvasSizeToWindow);
@@ -729,7 +767,7 @@ export default async function launchMatch(match_id, players_array, game_type, la
 
 		// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
 		gameLoopIntervalId = setInterval(() => {
-			const finalObj = runGame(match_id, players_array, game_type); // Pass arguments to runGame function
+			const finalObj = runGame(match_id, players_array, game_type, map_skin); // Pass arguments to runGame function
 			if (finalObj.gameOver) {
 				resolve(finalObj.winner);
 			}

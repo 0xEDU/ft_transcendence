@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(responseData => {
-                launchMatch(responseData.match_id, playersArray, gameData.gameType);
+                launchMatch(responseData.match_id, playersArray, gameData.gameType, gameData.mapSkin, true);
             })
             .catch(error => {
                 error.text().then(errorBody => {
