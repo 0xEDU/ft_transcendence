@@ -74,6 +74,10 @@ p#userStatsBFF {
     font-weight: bold;
 }
 
+div#tournamentsDiv {
+    height: 57vh;
+}
+
 div#tournamentCard {
     background-color: var(--LIGHT_GRAY);
 }

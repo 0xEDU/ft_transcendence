@@ -3,22 +3,27 @@
 
 {% load static i18n %}
 
-<div id="tournamentsDiv" class="row">
+<div class="row">
 		{% comment %} Empty space {% endcomment %}
 		<div class="col-3"></div>
 
 		<div class="col-6">
-			{% if not tournaments_data %}
-			<div class="empty-tournament-card d-flex justify-content-center align-items-center">
-				<p class="m-5">
-					{% translate "You haven't played any tournaments yet." %}
-				</p>
+			<div id="tournamentsDiv" class="overflow-scroll">
+				{% if not tournaments_data %}
+				<div class="empty-tournament-card d-flex justify-content-center align-items-center">
+					<p class="m-5">
+						{% translate "You haven't played any tournaments yet." %}
+					</p>
+				</div>
+				{% else %}
+					{% for tournament_data in tournaments_data %}
+						{% include "stats/components/tournament-card.html" %}
+						{% include "stats/components/tournament-card.html" %}
+						{% include "stats/components/tournament-card.html" %}
+						{% include "stats/components/tournament-card.html" %}
+					{% endfor %}
+				{% endif %}
 			</div>
-			{% else %}
-				{% for tournament_data in tournaments_data %}
-					{% include "stats/components/tournament-card.html" %}
-				{% endfor %}
-			{% endif %}
 		</div>
 
 		{% comment %} Empty space {% endcomment %}

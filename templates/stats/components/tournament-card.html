@@ -1,14 +1,17 @@
-<div id="tournamentCard" class="row mb-5 w-100"> 
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="ms-3">
-      <h1 class="p-0 m-0 text-white">{{tournament_data.name}}</h1>
-      <h3>ID: {{tournament_data.id}}</h3>
-      <h3>{{tournament_data.date}}</h3>
-    </div>
-    <div class="d-flex align-items-end justify-content-evenly w-50">
-      <img id="winnerImg" src="{{tournament_data.winner_img}}" height=84 width=84>
-      <img id="runnerUpImg" src="{{tournament_data.runner_up_img}}" height=64 width=66>
-      <img id="thirdPlaceImg" src="{{tournament_data.third_place_img}}" height=64 width=66>
-    </div>
+<div id="tournamentCard" class="row mb-5 py-4">
+  <div class="col-5 ps-5">
+    <h3>{{ tournament_data.name }}</h3>
+    <p>ID: {{ tournament_data.id }}</p>
+    <p>{{ tournament_data.date }}</p>
+  </div>
+  <div class="col-7 d-flex flex-wrap align-items-center">
+    <img class="me-3 mb-3" id="winnerImg" src="{{ tournament_data.winner_img }}" height=84 width=84>
+    <img class="me-3 mb-3" id="runnerUpImg" src="{{ tournament_data.runner_up_img }}" height=84 width=84>
+    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
+    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
+    <img class="me-3 mb-3" id="winnerImg" src="{{ tournament_data.winner_img }}" height=84 width=84>
+    <img class="me-3 mb-3" id="runnerUpImg" src="{{ tournament_data.runner_up_img }}" height=84 width=84>
+    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
+    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
   </div>
 </div>
