@@ -91,7 +91,8 @@ const randomizeBallMovement = () => {
 	dy = (Math.random() > 0.5 ? 1 : -1) * (2.5 + Math.random() * 2); // Randomize between -5 and 5
 }
 
-function adjustCanvasSizeToWindow() {
+function adjustCanvasSizeToWindow(game_type) {
+	console.log(game_type)
 	// Width will always be proportional to the width of the screen
 	let canvasWidth = window.innerWidth * 0.7;
 	// Height is calculated proportional to canvas width
@@ -114,11 +115,11 @@ function adjustCanvasSizeToWindow() {
 	canvas.height = canvasHeight;
 
 	// TODO: redraw the screen, when a window 'resize' event happens
-	// drawMiddleLine();
-	// drawPlayersNames();
-	// drawScore("classic");
-	// drawBall();
-	// drawPaddles();
+	drawMiddleLine();
+	drawPlayersNames();
+	drawScore(game_type);
+	drawBall();
+	drawPaddles();
 }
 
 const drawStartingScreen = () => {
