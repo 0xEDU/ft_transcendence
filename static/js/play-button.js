@@ -4,6 +4,7 @@ import deleteElement from "./tinyDOM/deleteElement.js";
 import hasElement from "./tinyDOM/hasElement.js";
 import launchMatch from "./pong.js"
 
+
 class ModalObj {
     constructor(form, modalElement, modalInstance, playButtonSvg, playButtonDiv, fourPlayersRadio, redCircle) {
         this.form = form;
@@ -27,6 +28,34 @@ function curry(f) {
             return f(a, b);
         }
     }
+}
+
+function createNewMatch(players) {
+    const url = '/tournament_match/';
+    const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    const playersData = {
+        "players": players,
+    }
+
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(playersData),
+        headers: {
+            "X-CSRFToken": csrfToken,
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                return Promise.reject(response);
+            }
+            return response.json();
+        })
+        .then(responseData => {
+            return responseData.match_id;
+        })
+        .catch(error => {
+            throw error;
+        });
 }
 
 export const showControlPanel = () => document.getElementById("control-panel").classList.remove('visually-hidden');
@@ -137,8 +166,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 hideControlPanel();
                 return response.json();
             })
-            .then(responseData => {
-                launchMatch(responseData.match_id, playersArray, gameData.gameType);
+            .then(async (responseData) => {
+                if (gameData.gameMode === 'singleMatch') {
+                    await launchMatch(responseData.match_id, playersArray, gameData.gameType, true);
+                } else {
+                    const numberOfMatches = gameData.playerQuantity === 4 ? 3 : 7;
+                    const pairs = [...responseData.players];
+                    const tempPair = []
+                    let isLastMatch = false
+                    for (let i = 0; i < numberOfMatches; i++) {
+                        const players = pairs[i];
+                        const match_id = responseData.matches_ids[i];
+                        const winner = await launchMatch(match_id, players, gameData.gameType, isLastMatch);
+                        isLastMatch = i === numberOfMatches - 1;
+                        tempPair.append(winner);
+                        if (tempPair.length === 2) {
+                            const newMatchId = createNewMatch(tempPair);
+                            responseData.matches_ids.append(newMatchId);
+                            pairs.append(tempPair);
+                            tempPair = [];
+                        }
+                    }
+                }
             })
             .catch(error => {
                 throw error;
