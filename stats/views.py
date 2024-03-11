@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import List
 
 # Our imports
+from blockchain.views import TournamentView
 from pong.models import Score
 from soninha.models import User
 from stats.models import UserStats
@@ -11,7 +12,6 @@ from stats.models import UserStats
 from django.db.models import Count
 from django.utils import timezone
 from django.views.generic import TemplateView
-
 
 # Constants
 ROWS_SIZE = 15
@@ -56,6 +56,16 @@ class MatchRowObject:
     match_hour: str
     match_date: str
 
+@dataclass
+class TournamentObject:
+    """Dataclasse for the tournament object"""
+
+    name: str
+    id: str
+    date: str
+    winner_img: str
+    runner_up_img: str
+    third_place_img: str
 
 # Views
 class MatchesHistoryTemplateView(TemplateView):
@@ -118,6 +128,7 @@ class MatchesHistoryTemplateView(TemplateView):
                 return f"🥇 won against {player2_name}"
             if match.type == "classic" and player1_score in [0, 1, 2]:
                 return f"🥈 lost to {player2_name}"
+            return ""
 
         def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
             match_datetime_IN_BRAZIL_IDC = timezone.localtime(match.match_date, timezone=timezone.get_fixed_timezone(-3 * 60))
@@ -156,8 +167,23 @@ class TournamentsTemplateView(TemplateView):
 
     template_name = "stats/components/tournaments.html"
 
+    def _get_player_tournaments(self, player, tournaments):
+        return list(filter(lambda tournament: player in tournament['players'], tournaments))
+
+    def _serialize_player_tournaments(self, player_tournaments):
+        tournaments_data = []
+        for tournament in player_tournaments:
+            pass
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        tournaments = TournamentView()._get_tournaments()
+        user = User.objects.get(pk=self.request.session["user_id"])
+        player_tournaments = self._get_player_tournaments(user.login_intra, tournaments)
+        tournaments_data = self._serialize_player_tournaments(player_tournaments)
+        player_tournaments = [TournamentObject("Tournament 3", "0x424242", "2021-03-13", "https://dummyimage.com/84x84/000/ffffff", "https://dummyimage.com/84x84/000/ffffff", "https://dummyimage.com/84x84/000/ffffff")]
+        context['tournaments_data'] = player_tournaments
         return context
 
 

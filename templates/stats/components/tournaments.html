@@ -1,1 +1,29 @@
-<h1>dale</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/stats/style.css' %}">
+
+{% load static i18n %}
+
+<div class="row">
+		{% comment %} Empty space {% endcomment %}
+		<div class="col-3"></div>
+
+		<div class="col-6">
+			<div id="tournamentsDiv">
+				{% if not tournaments_data %}
+				<div class="empty-tournament-card d-flex justify-content-center align-items-center">
+					<p class="m-5">
+						{% translate "You haven't played any tournaments yet." %}
+					</p>
+				</div>
+				{% else %}
+					{% for tournament_data in tournaments_data %}
+						{% include "stats/components/tournament-card.html" %}
+					{% endfor %}
+				{% endif %}
+				<div class="spacer"></div>
+			</div>
+		</div>
+
+		{% comment %} Empty space {% endcomment %}
+		<div class="col-3"></div>
+</div>
