@@ -76,9 +76,21 @@ p#userStatsBFF {
 
 div#tournamentsDiv {
     height: 57vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
-div#tournamentCard {
+#tournamentsDiv::before {
+    content: "";
+    position: absolute;
+    width: 48%;
+    height: 30%;
+    bottom: -75vh;
+    background: linear-gradient(to bottom, transparent, var(--HEAVY_GRAY));
+}
+
+div.tournamentCard {
+    width: 100%;
     background-color: var(--LIGHT_GRAY);
 }
 
