@@ -24,6 +24,46 @@ div#matchesDiv {
     height: 57vh;
 }
 
+#matchesDiv::before {
+    content: "";
+    position: absolute;
+    width: 47%;
+    height: 30%;
+    bottom: -75vh;
+    background: linear-gradient(to bottom, transparent, var(--HEAVY_GRAY));
+}
+
+/* Scrollbar styling for the whole website */
+/* Change scrollbar width, height, and color */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+
+/* Handle portion of the scrollbar */
+::-webkit-scrollbar-thumb {
+    background-color: var(--LIGHT_GRAY);
+    border-radius: 5px;
+}
+
+#matchesDiv:hover::-webkit-scrollbar-thumb,
+#tournamentsDiv:hover::-webkit-scrollbar-thumb {
+    background-color: var(--WHITE);
+}
+
+/* Track portion of the scrollbar */
+::-webkit-scrollbar-track {
+    background-color: var(--HEAVY_GRAY);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: var(--HEAVY_GRAY);
+}
+
+.spacer {
+    height: 50%;
+}
+
 div#rectangle {
     background-color: var(--MEDIUM_GRAY);
     display: flex;
