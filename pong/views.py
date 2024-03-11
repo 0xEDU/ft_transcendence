@@ -58,7 +58,7 @@ class MatchView(View):
             raise ValueError(_("Fill in the names of all players to start the match."))
         players_set = set(players)
         if len(players_set) != player_quantity:
-            raise ValueError(_("Error converting players list to set object"))
+            raise ValueError(_("You can't match a player against themselves!"))
         for player in players:
             try:
                 User.objects.get(login_intra=player)

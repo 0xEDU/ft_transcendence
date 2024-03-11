@@ -30,7 +30,7 @@ let paddleCoords = {
 	leftPaddleY: 0,
 	topPaddleX: 0,
 	bottomPaddleX: 0,
-}
+};
 let rightPaddlePosition = 0;
 let topPaddlePosition = 0;
 const rightPaddleColor = "#00A0E9";
@@ -42,8 +42,8 @@ let scores = {
 	rightScore: 0,
 	leftScore: 0,
 	topScore: 0,
-	bottomScore: 0,
-}
+	bottomScore: 0
+};
 let coopMatchIsOver = false;
 let rightPlayerLogin;
 let leftPlayerLogin;
@@ -92,7 +92,6 @@ const randomizeBallMovement = () => {
 }
 
 function adjustCanvasSizeToWindow(game_type) {
-	console.log(game_type)
 	// Width will always be proportional to the width of the screen
 	let canvasWidth = window.innerWidth * 0.7;
 	// Height is calculated proportional to canvas width
@@ -106,9 +105,9 @@ function adjustCanvasSizeToWindow(game_type) {
 
 	// Check if the canvas height is within the allowable range
 	if (canvasHeight < minHeight) {
-			canvasHeight = minHeight;
+		canvasHeight = minHeight;
 	} else if (canvasHeight > maxHeight) {
-			canvasHeight = maxHeight;
+		canvasHeight = maxHeight;
 	}
 
 	canvas.width = canvasWidth;
@@ -136,7 +135,7 @@ const drawStartingScreen = () => {
 const drawEndingScreen = (game_type) => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 	resetBall();
-	context.fillStyle  = styleGuide.__WHITE;
+	context.fillStyle = styleGuide.__WHITE;
 	if (gameState === States.GAME_OVER) {
 		let pressEnterHeight = 100
 		if (game_type === "classic") {
@@ -176,7 +175,7 @@ const drawBall = () => {
 		ballRadius, 0, Math.PI * 2);
 	context.fill();
 	context.closePath();
-	context.fillStyle  = styleGuide.__WHITE;
+	context.fillStyle = styleGuide.__WHITE;
 }
 
 const drawPaddles = () => {
@@ -200,7 +199,7 @@ const drawPaddles = () => {
 	);
 	context.fill();
 	context.closePath();
-	
+
 	if (hasFourPlayers) {
 		// Top paddle
 		context.fillStyle = topPaddleColor;
@@ -342,7 +341,7 @@ const checkCollisionWithPaddle = () => {
 	}
 
 	if (!hasFourPlayers) {
-		return ;
+		return;
 	}
 	// Collision with Top Paddle
 	if (ballCanvasY - ballRadius <= horizontalPaddleHeight + horizontalPaddlePadding - (horizontalPaddleHeight / 2)
@@ -545,28 +544,41 @@ const sendMatchDataToServer = (match_id, players_array) => {
 }
 
 function lastPaddleScore() {
-	switch (lastPaddleHit) {
-		case "left":
-			scores.leftScore++;
-			break;
-		case "right":
-			scores.rightScore++;
-			break;
-		case "top":
-			scores.topScore++;
-			break;
-		case "bottom":
-			scores.bottomScore++;
-			break;
-		default:
-			break;
+	if (hasFourPlayers) {
+		switch (lastPaddleHit) {
+			case "left":
+				scores.leftScore++;
+				break;
+			case "right":
+				scores.rightScore++;
+				break;
+			case "top":
+				scores.topScore++;
+				break;
+			case "bottom":
+				scores.bottomScore++;
+				break;
+			default:
+				break;
+		}	
 	}
+}
+
+const resetMatchData = () => {
+	Object.keys(scores).forEach(score => {
+		scores[score] = 0;
+	})
+	Object.keys(matchStats).forEach(stat => {
+		matchStats[stat] = 0;
+	})
+	Object.keys(paddleCoords).forEach(coord => {
+		paddleCoords[coord] = 0;
+	})
 }
 
 const runGame = (match_id, players_array, game_type) => {
 	if (gameState === States.RUNNING) {
-		if ((game_type === "classic" && scores.rightScore === winningScore || scores.leftScore === winningScore)
-			|| (game_type === "classic" && hasFourPlayers && (scores.topScore === winningScore || scores.bottomScore === winningScore))
+		if ((game_type === "classic" && (scores.rightScore === winningScore || scores.leftScore === winningScore || scores.topScore === winningScore || scores.bottomScore === winningScore))
 			|| (game_type === "co-op" && coopMatchIsOver)) {
 			// Somebody won. The game is over.
 			gameState = States.GAME_OVER;
@@ -575,15 +587,7 @@ const runGame = (match_id, players_array, game_type) => {
 			drawEndingScreen(game_type);
 			sendMatchDataToServer(match_id, players_array);
 			ballColor = styleGuide.__WHITE;
-			Object.keys(scores).forEach(score => {
-				scores[score] = 0;
-			})
-			Object.keys(matchStats).forEach(stat => {
-				matchStats[stat] = 0;
-			})
-			Object.keys(paddleCoords).forEach(coord => {
-				paddleCoords[coord] = 0;
-			})
+			resetMatchData();
 			coopMatchIsOver = false;
 			const finalObj = {
 				"gameOver": true,
