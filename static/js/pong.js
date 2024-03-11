@@ -29,7 +29,7 @@ let paddleCoords = {
 	leftPaddleY: 0,
 	topPaddleX: 0,
 	bottomPaddleX: 0,
-}
+};
 let rightPaddlePosition = 0;
 let topPaddlePosition = 0;
 const rightPaddleColor = "#00A0E9";
@@ -41,8 +41,8 @@ let scores = {
 	rightScore: 0,
 	leftScore: 0,
 	topScore: 0,
-	bottomScore: 0,
-}
+	bottomScore: 0
+};
 let coopMatchIsOver = false;
 let rightPlayerLogin;
 let leftPlayerLogin;
@@ -105,9 +105,9 @@ function adjustCanvasSizeToWindow(game_type) {
 
 	// Check if the canvas height is within the allowable range
 	if (canvasHeight < minHeight) {
-			canvasHeight = minHeight;
+		canvasHeight = minHeight;
 	} else if (canvasHeight > maxHeight) {
-			canvasHeight = maxHeight;
+		canvasHeight = maxHeight;
 	}
 
 	canvas.width = canvasWidth;
@@ -135,7 +135,7 @@ const drawStartingScreen = () => {
 const drawEndingScreen = (game_type) => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 	resetBall();
-	context.fillStyle  = styleGuide.__WHITE;
+	context.fillStyle = styleGuide.__WHITE;
 	if (gameState === States.GAME_OVER) {
 		let pressEnterHeight = 100
 		if (game_type === "classic") {
@@ -175,7 +175,7 @@ const drawBall = () => {
 		ballRadius, 0, Math.PI * 2);
 	context.fill();
 	context.closePath();
-	context.fillStyle  = styleGuide.__WHITE;
+	context.fillStyle = styleGuide.__WHITE;
 }
 
 const drawPaddles = () => {
@@ -199,7 +199,7 @@ const drawPaddles = () => {
 	);
 	context.fill();
 	context.closePath();
-	
+
 	if (hasFourPlayers) {
 		// Top paddle
 		context.fillStyle = topPaddleColor;
@@ -341,7 +341,7 @@ const checkCollisionWithPaddle = () => {
 	}
 
 	if (!hasFourPlayers) {
-		return ;
+		return;
 	}
 	// Collision with Top Paddle
 	if (ballCanvasY - ballRadius <= horizontalPaddleHeight + horizontalPaddlePadding - (horizontalPaddleHeight / 2)
@@ -560,6 +560,27 @@ function lastPaddleScore() {
 	}
 }
 
+const resetGameData = () => {
+	scores = {
+		rightScore: 0,
+		leftScore: 0,
+		topScore: 0,
+		bottomScore: 0
+	};
+	matchStats = {
+		startTime: 0,
+		endTime: 0,
+		paddleHits: 0,
+		ballTraveledDistance: 0
+	};
+	paddleCoords = {
+		rightPaddleY: 0,
+		leftPaddleY: 0,
+		topPaddleX: 0,
+		bottomPaddleX: 0,
+	}
+}
+
 const runGame = (match_id, players_array, game_type) => {
 	if (gameState === States.RUNNING) {
 		if ((game_type === "classic" && scores.rightScore === winningScore || scores.leftScore === winningScore)
@@ -572,15 +593,7 @@ const runGame = (match_id, players_array, game_type) => {
 			drawEndingScreen(game_type);
 			sendMatchDataToServer(match_id, players_array);
 			ballColor = styleGuide.__WHITE;
-			for (const score of scores) {
-				scores[score] = 0;
-			}
-			for (const matchStat of matchStats) {
-				matchStats[matchStat] = 0;
-			}
-			for (const coord of paddleCoords) {
-				paddleCoords[coord] = 0;
-			}
+			resetGameData();
 			coopMatchIsOver = false;
 			return;
 		}
