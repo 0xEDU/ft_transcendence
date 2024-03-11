@@ -60,8 +60,12 @@ div#matchesDiv {
     background-color: var(--HEAVY_GRAY);
 }
 
-.spacer {
+#matchesDiv .spacer {
     height: 50%;
+}
+
+#tournamentsDiv .spacer {
+    height: 30%;
 }
 
 div#rectangle {
