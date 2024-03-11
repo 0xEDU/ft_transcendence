@@ -141,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 launchMatch(responseData.match_id, playersArray, gameData.gameType);
             })
             .catch(error => {
-                throw error;
                 error.text().then(errorBody => {
                     if (hasElement(modalObj.playButtonDiv.id, "playerNotFound"))
                         deleteElement("playerNotFound");
