@@ -91,7 +91,6 @@ const randomizeBallMovement = () => {
 }
 
 function adjustCanvasSizeToWindow(game_type) {
-	console.log(game_type)
 	// Width will always be proportional to the width of the screen
 	let canvasWidth = window.innerWidth * 0.7;
 	// Height is calculated proportional to canvas width
@@ -542,21 +541,23 @@ const sendMatchDataToServer = (match_id, players_array) => {
 }
 
 function lastPaddleScore() {
-	switch (lastPaddleHit) {
-		case "left":
-			scores.leftScore++;
-			break;
-		case "right":
-			scores.rightScore++;
-			break;
-		case "top":
-			scores.topScore++;
-			break;
-		case "bottom":
-			scores.bottomScore++;
-			break;
-		default:
-			break;
+	if (hasFourPlayers) {
+		switch (lastPaddleHit) {
+			case "left":
+				scores.leftScore++;
+				break;
+			case "right":
+				scores.rightScore++;
+				break;
+			case "top":
+				scores.topScore++;
+				break;
+			case "bottom":
+				scores.bottomScore++;
+				break;
+			default:
+				break;
+		}	
 	}
 }
 
@@ -583,8 +584,7 @@ const resetGameData = () => {
 
 const runGame = (match_id, players_array, game_type) => {
 	if (gameState === States.RUNNING) {
-		if ((game_type === "classic" && scores.rightScore === winningScore || scores.leftScore === winningScore)
-			|| (game_type === "classic" && hasFourPlayers && (scores.topScore === winningScore || scores.bottomScore === winningScore))
+		if ((game_type === "classic" && (scores.rightScore === winningScore || scores.leftScore === winningScore || scores.topScore === winningScore || scores.bottomScore === winningScore))
 			|| (game_type === "co-op" && coopMatchIsOver)) {
 			// Somebody won. The game is over.
 			gameState = States.GAME_OVER;
@@ -616,10 +616,12 @@ const runGame = (match_id, players_array, game_type) => {
 
 		// Check if ball hit side walls (score)
 		if (ballX + dx > canvas.width / 2) {
-			if (game_type === "classic" && !hasFourPlayers)
-				scores.leftScore++;
-			if (game_type === "classic")
-				lastPaddleScore();
+			if (game_type === "classic") {
+				if (hasFourPlayers)
+					lastPaddleScore();
+				else
+					scores.leftScore++;
+			}
 			if (game_type === "co-op")
 				coopMatchIsOver = true;
 			resetBall();
@@ -627,10 +629,12 @@ const runGame = (match_id, players_array, game_type) => {
 		}
 
 		if (ballX + dx < -canvas.width / 2) {
-			if (game_type === "classic" && !hasFourPlayers)
-				scores.rightScore++;
-			if (game_type === "classic")
-				lastPaddleScore();
+			if (game_type === "classic") {
+				if (hasFourPlayers)
+					lastPaddleScore();
+				else
+					scores.rightScore++;
+			}
 			if (game_type === "co-op")
 				coopMatchIsOver = true;
 			resetBall();
