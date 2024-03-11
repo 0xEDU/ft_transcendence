@@ -575,15 +575,15 @@ const runGame = (match_id, players_array, game_type) => {
 			drawEndingScreen(game_type);
 			sendMatchDataToServer(match_id, players_array);
 			ballColor = styleGuide.__WHITE;
-			for (const score in scores) {
+			Object.keys(scores).forEach(score => {
 				scores[score] = 0;
-			}
-			for (const matchStat in matchStats) {
-				matchStats[matchStat] = 0;
-			}
-			for (const coord in paddleCoords) {
+			})
+			Object.keys(matchStats).forEach(stat => {
+				matchStats[stat] = 0;
+			})
+			Object.keys(paddleCoords).forEach(coord => {
 				paddleCoords[coord] = 0;
-			}
+			})
 			coopMatchIsOver = false;
 			const finalObj = {
 				"gameOver": true,
