@@ -141,7 +141,7 @@ function sendFriendRequest(friendId) {
     .then(response => response.json().then(data => ({ status: response.status, body: data })))
     .then(({ status, body }) => {
         if (status === 409) {
-            throw new Error(body.error); // Use the customized error message from the server
+            throw new Error(body.error);
         }
         addFriendModal.hide();
         emptyElement('friendsList');

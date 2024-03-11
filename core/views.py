@@ -25,18 +25,17 @@ class CreateFriendshipView(View):
 
             if not requester_id:
                 return JsonResponse({"error": "Authentication required."}, status=401)
+            if requester_id == accepter_id:  # Prevent user from adding themselves
+                return JsonResponse({"error": "Can't add yourfself"}, status=409)
 
             requester = User.objects.get(pk=requester_id)
             accepter = User.objects.get(pk=accepter_id)
 
-            if Friendship.objects.filter(
-                Q(requester=requester, accepter=accepter) | 
-                Q(requester=accepter, accepter=requester)
-            ).exists():
-                if Friendship.objects.filter(requester=requester, accepter=accepter).exists():
-                    return JsonResponse({"error": "Request alredy sent!"}, status=409)
-                elif Friendship.objects.filter(requester=accepter, accepter=requester).exists():
-                    return JsonResponse({"error": "You can't add twice!"}, status=409)
+            # Check if the friendship request already exists in any direction
+            if Friendship.objects.filter(requester=requester, accepter=accepter).exists():
+                return JsonResponse({"error": "Request already sent!"}, status=409)
+            elif Friendship.objects.filter(requester=accepter, accepter=requester).exists():
+                return JsonResponse({"error": "You can't add twice!"}, status=409)
 
             Friendship.objects.create(requester=requester, accepter=accepter, status='pending')
             return JsonResponse({"message": "Friend request sent successfully."}, status=201)
@@ -46,7 +45,7 @@ class CreateFriendshipView(View):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON."}, status=400)
         except Exception as e:
-            print(e)  # Log the error for debugging
+            print(e)  # Log error for debugging
             return JsonResponse({"error": "Internal Server Error"}, status=500)
 
 class SearchUserView(View):
@@ -70,7 +69,6 @@ class AcceptFriendshipView(View):
     def post(self, request):
         data = json.loads(request.body)
         friendship_id = data.get('friendshipId')
-        # Assuming you're keeping consistency with accessing the user_id from the session
         requester_id = request.session.get("user_id")
         if not requester_id:
             return JsonResponse({'error': 'User not authenticated'}, status=403)
@@ -84,19 +82,6 @@ class AcceptFriendshipView(View):
         except Friendship.DoesNotExist:
             return JsonResponse({'error': 'Friendship not found or you do not have permission to accept this friendship.'}, status=404)
 
-# class FriendshipStatusView(View):
-#     def get(self, request):
-#         # Return the friendship status between two users
-#         user_id = request.GET.get('user_id')
-#         friendships = Friendship.objects.filter(
-#             Q(requester_id=request.user.id, accepter_id=user_id) |
-#             Q(requester_id=user_id, accepter_id=request.user.id)
-#         ).first()
-#         if friendships:
-#             return JsonResponse({
-#                 'status': friendships.status
-#             })
-#         return JsonResponse({'status': 'not_friends'})
 
 class FriendListView(View):
     def get(self, request):
