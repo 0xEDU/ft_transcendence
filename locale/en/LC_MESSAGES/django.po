@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-11 20:30-0300\n"
+"POT-Creation-Date: 2024-03-11 23:33-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,6 +52,21 @@ msgstr ""
 #, python-format
 msgid "Missing required parameter: '%(param)s'"
 msgstr ""
+
+#: stats/views.py:127
+#, python-format
+msgid "🤝 joined forces with %(player2_name)s"
+msgstr "🤝 uniu forças com %(player2_name)s"
+
+#: stats/views.py:129
+#, python-format
+msgid "🥇 won against %(player2_name)s"
+msgstr "🥇 ganhou de %(player2_name)s"
+
+#: stats/views.py:131
+#, python-format
+msgid "🥈 lost to %(player2_name)s"
+msgstr "🥈 perdeu para %(player2_name)s"
 
 #: templates/components/errors/empty_display_name_form.html:3
 msgid "Enter your new display name"

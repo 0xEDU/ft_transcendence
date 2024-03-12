@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-11 20:30-0300\n"
+"POT-Creation-Date: 2024-03-11 23:33-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,6 +53,21 @@ msgstr "L'utilisateur '%(player)s' n'existe pas"
 msgid "Missing required parameter: '%(param)s'"
 msgstr "Paramètre requis manquant: '%(param)s'"
 
+#: stats/views.py:127
+#, python-format
+msgid "🤝 joined forces with %(player2_name)s"
+msgstr "🤝 a rejoint les forces avec %(player2_name)s"
+
+#: stats/views.py:129
+#, python-format
+msgid "🥇 won against %(player2_name)s"
+msgstr "🥇 a gagné contre %(player2_name)s"
+
+#: stats/views.py:131
+#, python-format
+msgid "🥈 lost to %(player2_name)s"
+msgstr "🥈 à perdu contre %(player2_name)s"
+
 #: templates/components/errors/empty_display_name_form.html:3
 msgid "Enter your new display name"
 msgstr "Entrez votre nouveau nom d'affichage"
@@ -75,10 +90,14 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        PAR { <span class=\"name\">roaraujo</span> <img src="
+"        BY { <span class=\"name\">roaraujo</span> <img src="
 "\"%(static 'images/roaraujo.jpeg')s\" alt=\"roaraujo's picture\"> }\n"
 "        "
 msgstr ""
+"\n"
+"        PAR { <span class=\"name\">roaraujo</span> <img src="
+"\"%(static 'images/roaraujo.jpeg')s\" alt=\"roaraujo's picture\"> }\n"
+"        "
 
 #: templates/lobby/base.html:4
 #: templates/lobby/components/single-match-modal.html:12
@@ -229,4 +248,4 @@ msgstr "HEURES DE JEU"
 
 #: templates/stats/components/user-stats.html:96
 msgid "PLAYERS MET"
-msgstr "JOUER(E)S RENCONTRÉ(E)S"
+msgstr "JOUEUR(E)S RENCONTRÉ(E)S"
