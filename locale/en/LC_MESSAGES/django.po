@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-22 20:37-0300\n"
+"POT-Creation-Date: 2024-03-11 20:30-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: core/settings.py:123
+#: core/settings.py:129
 msgid "English"
 msgstr "English"
 
-#: core/settings.py:124
+#: core/settings.py:130
 msgid "French"
 msgstr "French"
 
-#: core/settings.py:125
+#: core/settings.py:131
 msgid "Brazilian Portuguese"
 msgstr "Brazilian Portuguese"
 
-#: templates/components/navbar.html:20
-msgid "language"
-msgstr "language"
-
-#: templates/core/pages/index.html:24
-msgid "Hello World!"
-msgstr "Hello World!"
-
-#: templates/core/pages/index.html:25
-msgid "This is a test"
-msgstr "This is a test"
-
-#: templates/core/pages/index.html:27
+#: pong/views.py:56
 #, python-format
-msgid "This website is currently in %(current_language)s "
-msgstr "This website is currently in %(current_language)s "
+msgid "Invalid game mode: '%(match_type)s'"
+msgstr ""
 
-#: templates/pong/pages/index.html:13
-msgid "Play a match!"
-msgstr "Play a match!"
+#: pong/views.py:58
+msgid "Fill in the names of all players to start the match."
+msgstr ""
+
+#: pong/views.py:61
+msgid "You can't match a player against themselves!"
+msgstr ""
+
+#: pong/views.py:66
+#, python-format
+msgid "User '%(player)s' does not exist"
+msgstr ""
+
+#: pong/views.py:80
+#, python-format
+msgid "Missing required parameter: '%(param)s'"
+msgstr ""
+
+#: templates/components/errors/empty_display_name_form.html:3
+msgid "Enter your new display name"
+msgstr ""
+
+#: templates/components/errors/empty_profile_picture_form.html:3
+msgid "Select a file to upload"
+msgstr ""
+
+#: templates/kudos/base.html:6
+msgid ""
+"\n"
+"      MADE WITH { <span class=\"emoji\">❤️</span> }\n"
+"      "
+msgstr ""
+
+#: templates/kudos/base.html:13
+#, python-format
+msgid ""
+"\n"
+"        BY { <span class=\"name\">roaraujo</span> <img src="
+"\"%(static 'images/roaraujo.jpeg')s\" alt=\"roaraujo's picture\"> }\n"
+"        "
+msgstr ""
+
+#: templates/lobby/base.html:4
+#: templates/lobby/components/single-match-modal.html:12
+msgid "SINGLE MATCH"
+msgstr ""
+
+#: templates/lobby/base.html:6
+#: templates/lobby/components/tournament-modal.html:12
+msgid "TOURNAMENT"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:15
+#: templates/lobby/components/tournament-modal.html:15
+msgid "GAME MODE"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:19
+#: templates/lobby/components/tournament-modal.html:19
+#: templates/stats/components/matches-history.html:10
+msgid "CO-OP"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:23
+#: templates/lobby/components/tournament-modal.html:23
+#: templates/stats/components/matches-history.html:24
+msgid "CLASSIC"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:28
+#: templates/lobby/components/tournament-modal.html:28
+msgid "PLAYER"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:32
+msgid "TWO"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:36
+#: templates/lobby/components/tournament-modal.html:32
+msgid "FOUR"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:41
+#: templates/lobby/components/tournament-modal.html:41
+msgid "MAP"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:45
+#: templates/lobby/components/tournament-modal.html:45
+msgid "MAP 1"
+msgstr ""
+
+#: templates/lobby/components/single-match-modal.html:49
+#: templates/lobby/components/tournament-modal.html:49
+msgid "MAP 2"
+msgstr ""
+
+#: templates/lobby/components/tournament-modal.html:36
+msgid "EIGHT"
+msgstr ""
+
+#: templates/soninha/partials/achievements-segment.html:3
+msgid "ACHIEVEMENTS"
+msgstr ""
+
+#: templates/soninha/partials/friends-segment.html:3
+msgid "MATES ALONG THE WAY"
+msgstr ""
+
+#: templates/soninha/partials/profile-picture-edition-form.html:13
+msgid "Upload Picture"
+msgstr ""
+
+#: templates/soninha/partials/profile-picture-edition-modal.html:12
+msgid "CHANGE PROFILE PICTURE"
+msgstr ""
+
+#: templates/soninha/partials/user-stats.html:4
+msgid "Team ball hits record"
+msgstr ""
+
+#: templates/soninha/partials/user-stats.html:5
+msgid "Distance traveled with a companion"
+msgstr ""
+
+#: templates/soninha/partials/user-stats.html:6
+msgid "Total hours played"
+msgstr ""
+
+#: templates/soninha/partials/user-stats.html:7
+msgid "Companions encountered"
+msgstr ""
+
+#: templates/stats/base.html:8
+msgid "MATCHES HISTORY"
+msgstr ""
+
+#: templates/stats/base.html:9
+msgid "TOURNAMENTS"
+msgstr ""
+
+#: templates/stats/base.html:10
+msgid "USER STATS"
+msgstr ""
+
+#: templates/stats/components/matches-history.html:49
+msgid "No matches played yet"
+msgstr ""
+
+#: templates/stats/components/tournaments.html:16
+msgid "You haven't played any tournaments yet."
+msgstr ""
+
+#: templates/stats/components/user-stats.html:22
+#: templates/stats/components/user-stats.html:39
+#: templates/stats/components/user-stats.html:73
+#: templates/stats/components/user-stats.html:90
+msgid "Distance icon"
+msgstr ""
+
+#: templates/stats/components/user-stats.html:22
+#: templates/stats/components/user-stats.html:39
+#: templates/stats/components/user-stats.html:73
+#: templates/stats/components/user-stats.html:90
+msgid "Distance walked together"
+msgstr ""
+
+#: templates/stats/components/user-stats.html:28
+msgid "DISTANCE WALKED TOGETHER"
+msgstr ""
+
+#: templates/stats/components/user-stats.html:45
+msgid "HIGH FIVE COUNT"
+msgstr ""
+
+#: templates/stats/components/user-stats.html:57
+#, python-format
+msgid "You played %(bff_matches)s matches with %(bff_login)s!"
+msgstr ""
+
+#: templates/stats/components/user-stats.html:61
+msgid "You did not play with anyone yet!"
+msgstr ""
+
+#: templates/stats/components/user-stats.html:79
+msgid "TIME PLAYED"
+msgstr ""
+
+#: templates/stats/components/user-stats.html:96
+msgid "PLAYERS MET"
+msgstr ""
+
+#~ msgid "language"
+#~ msgstr "language"
+
+#~ msgid "Hello World!"
+#~ msgstr "Hello World!"
+
+#~ msgid "This is a test"
+#~ msgstr "This is a test"
+
+#~ msgid "This website is currently in %(current_language)s "
+#~ msgstr "This website is currently in %(current_language)s "
+
+#~ msgid "Play a match!"
+#~ msgstr "Play a match!"
