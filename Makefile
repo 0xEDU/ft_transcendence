@@ -21,7 +21,7 @@ RESET = \e[0m
 
 ## RULES
 # ALL ------------------------------------------------------------------------ #
-start: volumes docker-compose.yml
+start: .env volumes docker-compose.yml
 	docker-compose up --build --detach --force-recreate
 
 stop:
@@ -47,7 +47,7 @@ frestart: fclean start
 
 
 # DATABASE ------------------------------------------------------------------- #
-start-db: volumes docker-compose.yml
+start-db: .env volumes docker-compose.yml
 	docker-compose up --build --detach $(DB_SERVICE_NAME)
 
 stop-db: docker-compose.yml
@@ -67,7 +67,7 @@ frestart-db: fclean-db start-db
 
 
 # DJANGO --------------------------------------------------------------------- #
-start-app: docker-compose.yml
+start-app: .env docker-compose.yml
 	docker-compose up --build --detach $(APP_SERVICE_NAME)
 
 stop-app: docker-compose.yml
@@ -87,7 +87,7 @@ frestart-app: fclean-app start-app
 
 
 # BLOCKCHAIN ----------------------------------------------------------------- #
-start-ganache: docker-compose.yml
+start-ganache: .env docker-compose.yml
 	docker-compose up --build --detach $(GANACHE_SERVICE_NAME)
 
 stop-ganache: docker-compose.yml
@@ -107,7 +107,7 @@ frestart-ganache: fclean-ganache start-ganache
 
 
 # EVEN MORE BLOCKCHAIN ------------------------------------------------------- #
-start-contract-deployer: docker-compose.yml
+start-contract-deployer: .env docker-compose.yml
 	docker-compose up --build --detach $(CONTRACT_DEPLOYER_SERVICE_NAME)
 
 stop-contract-deployer: docker-compose.yml

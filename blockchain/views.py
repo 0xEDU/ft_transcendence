@@ -1,7 +1,8 @@
 """Views for the blockchain app."""
+from dataclasses import dataclass, asdict
 import json
 import os
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from web3 import Web3
 
@@ -16,6 +17,20 @@ from core import settings
 #         {"id": 2, "playerIds": [3, 4], "score": [0, 0], "date": 1638403200}
 #     ]
 # }
+
+@dataclass
+class Match:
+    id: int
+    playerIds: list[int]
+    score: list[int]
+    date: int
+
+@dataclass
+class Tournament:
+    players: list[str]
+    matches: list[Match]
+    tournamentId: int
+
 
 class TournamentView(View):
     """View for adding tournament to blockchain."""
@@ -36,6 +51,15 @@ class TournamentView(View):
                 address=contract_address, abi=contract_abi)
             return contract
 
+    def _get_tournaments(self):
+        contract = self._get_contract()
+        raw_tournaments = contract.functions.getTournaments().call()
+        tournaments = []
+        for tournament in raw_tournaments:
+            matches = list(map(lambda match: Match(*match), tournament[1]))
+            tournaments.append(asdict(Tournament(tournament[0], matches, tournament[2])))
+        return tournaments
+
     def _add_tournament(self, tournament):
         """Add tournament to blockchain"""
 
@@ -44,7 +68,6 @@ class TournamentView(View):
         tx_hash = contract.functions.addTournament(
             tournament).transact({'from': sender_address})
         self.w3.eth.wait_for_transaction_receipt(tx_hash)
-        print(contract.functions.getTournaments().call())
 
     def post(self, request, *args, **kwargs):
         """Add tournament to blockchain."""

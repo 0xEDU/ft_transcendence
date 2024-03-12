@@ -2,19 +2,18 @@
 
 <div class="kudosWrapper">
   <div id="emojiCarousel" class="carousel">
-    <h1>
+    <div class="carousel-item active">
       {% blocktrans %}
-      MADE WITH <span class="emoji-slot">❤️</span>
+      MADE WITH { <span class="emoji">❤️</span> }
       {% endblocktrans %}
-    </h1>
+    </div>
   </div>
   <div id="nameCarousel" class="carousel">
-    <h1>
-      {% blocktrans %}
-      BY <span class="name-slot">roaraujo</span>
-      {% endblocktrans %}
-    </h1>
-    <img class="profile-pic" src="static/images/roaraujo.jpeg" alt="Profile Picture">
+      <div class="carousel-item active">
+        {% blocktrans %}
+        BY { <span class="name">roaraujo</span> <img src="{{ static 'images/roaraujo.jpeg' }}" alt="roaraujo's picture"> }
+        {% endblocktrans %}
+      </div>
   </div>
 </div>
 

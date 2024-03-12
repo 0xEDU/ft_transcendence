@@ -1,15 +1,18 @@
 """Views for the stats app."""
+from dataclasses import dataclass
 from typing import List
 
 # Our imports
-from stats.models import UserStats
+from blockchain.views import TournamentView
 from pong.models import Score
 from soninha.models import User
+from stats.models import UserStats
 
 # Django imports
 from django.db.models import Count
+from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
-from dataclasses import dataclass
 
 # Constants
 ROWS_SIZE = 15
@@ -54,6 +57,16 @@ class MatchRowObject:
     match_hour: str
     match_date: str
 
+@dataclass
+class TournamentObject:
+    """Dataclasse for the tournament object"""
+
+    name: str
+    id: str
+    date: str
+    winner_img: str
+    runner_up_img: str
+    third_place_img: str
 
 # Views
 class MatchesHistoryTemplateView(TemplateView):
@@ -65,7 +78,7 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest scores as a list."""
 
         def __calculate_color(score):
-            if score <= 0:
+            if score < 0:
                 return COOP_COLORS["none"]
             elif score <= 5:
                 return COOP_COLORS["low"]
@@ -76,7 +89,7 @@ class MatchesHistoryTemplateView(TemplateView):
 
         current_user_id = self.request.session["user_id"]
         scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-                  .exclude(match__type="versus"))
+                  .exclude(match__type="classic"))
         scores = list(map(lambda score: CoopCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M") + f"\nScore: {score.score}",
             score=score.score,
@@ -90,16 +103,14 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest scores as a list."""
 
         def __calculate_color(score):
-            if score == 0:
-                return VERSUS_COLORS["none"]
-            elif score == 5:
+            if score == 3:
                 return VERSUS_COLORS["win"]
             else:
                 return VERSUS_COLORS["loss"]
 
         current_user_id = self.request.session["user_id"]
-        scores = (Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-                  .exclude(match__type="coop"))
+        scores = (Score.objects.filter(player_id=current_user_id).exclude(match__type="co-op")
+                  .order_by("match__match_date"))
         scores = list(map(lambda score: VersusCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
             color=f"background-color:{__calculate_color(score.score)}"
@@ -112,16 +123,19 @@ class MatchesHistoryTemplateView(TemplateView):
         """Returns the latest matches as a list."""
 
         def __get_match_description(match, player1_score, player2_name) -> str:
-            if match.type == "coop":
-                return f"🤝 joined forces with {player2_name}"
-            if match.type == "versus" and player1_score == 5:
-                return f"🥇 won against {player2_name}"
-            if match.type == "versus":
-                return f"🥈 lost to {player2_name}"
+            if match.type == "co-op":
+                return _("🤝 joined forces with %(player2_name)s") % {'player2_name': player2_name}
+            if match.type == "classic" and player1_score == 3:
+                return _("🥇 won against %(player2_name)s") % {'player2_name': player2_name}
+            if match.type == "classic" and player1_score in [0, 1, 2]:
+                return _("🥈 lost to %(player2_name)s") % {'player2_name': player2_name}
+
+            return ""
 
         def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
-            match_hour = match.match_date.strftime("%H:%M")
-            match_date = match.match_date.strftime("%d/%m/%y")
+            match_datetime_IN_BRAZIL_IDC = timezone.localtime(match.match_date, timezone=timezone.get_fixed_timezone(-3 * 60))
+            match_hour = match_datetime_IN_BRAZIL_IDC.strftime("%H:%M")
+            match_date = match_datetime_IN_BRAZIL_IDC.strftime("%d/%m/%y")
             score_str = f"{player1_score} x {player2_score}"
             return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
                                   match_date)
@@ -129,7 +143,7 @@ class MatchesHistoryTemplateView(TemplateView):
         current_user_id = self.request.session["user_id"]
         player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
         player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
-                          .exclude(player_id=current_user_id))
+                          .exclude(player_id=current_user_id)).order_by("match__match_date")
         player1_scores_dict = {score.match_id: score for score in player1_scores}
         match_row_objects: List[MatchRowObject] = [
             __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score,
@@ -155,8 +169,23 @@ class TournamentsTemplateView(TemplateView):
 
     template_name = "stats/components/tournaments.html"
 
+    def _get_player_tournaments(self, player, tournaments):
+        return list(filter(lambda tournament: player in tournament['players'], tournaments))
+
+    def _serialize_player_tournaments(self, player_tournaments):
+        tournaments_data = []
+        for tournament in player_tournaments:
+            pass
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        tournaments = TournamentView()._get_tournaments()
+        user = User.objects.get(pk=self.request.session["user_id"])
+        player_tournaments = self._get_player_tournaments(user.login_intra, tournaments)
+        tournaments_data = self._serialize_player_tournaments(player_tournaments)
+        player_tournaments = [TournamentObject("Tournament 3", "0x424242", "2021-03-13", "https://dummyimage.com/84x84/000/ffffff", "https://dummyimage.com/84x84/000/ffffff", "https://dummyimage.com/84x84/000/ffffff")]
+        context['tournaments_data'] = player_tournaments
         return context
 
 
@@ -168,7 +197,7 @@ class UserStatsTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_user_id = self.request.session["user_id"]
-        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+        if "user_id" not in self.request.session.keys() or not self.request.session["user_id"]:
             return context
         userdb = UserStats.objects.get(user=current_user_id)
         if userdb.total_hours_played < 60:

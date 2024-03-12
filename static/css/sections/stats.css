@@ -4,7 +4,7 @@ td#coopSquare,
 td#versusSquare {
     width: 20px;
     height: 20px;
-    border: 0.5px solid var(--LIGHT_GRAY);
+    border: 1px solid var(--HEAVY_GRAY);
 }
 
 table {
@@ -15,29 +15,57 @@ div#coopHistoryDiv {
     margin-bottom: 10vh;
 }
 
-div#matchRow {
-    min-width: 100px;
-    width: 50vw;
+div.matchRow {
     background-color: var(--LIGHT_GRAY);
-    font-size: 1.5em;
+    font-size: 1.3rem;
 }
 
 div#matchesDiv {
-    max-width: 50vw;
-    height: 60vh;
+    height: 50vh;
 }
 
-p#matchText {
-    min-width: 10vh;
-    width: 35vh;
+#matchesDiv::before {
+    content: "";
+    position: absolute;
+    width: 47%;
+    height: 30%;
+    bottom: -75vh;
+    background: linear-gradient(to bottom, transparent, var(--HEAVY_GRAY));
 }
 
-p#matchScore,
-p#matchHour,
-p#matchDate {
-    min-width: 2vh;
-    width: 20vh;
-    text-align: center;
+/* Scrollbar styling for the whole website */
+/* Change scrollbar width, height, and color */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+
+/* Handle portion of the scrollbar */
+::-webkit-scrollbar-thumb {
+    background-color: var(--LIGHT_GRAY);
+    border-radius: 5px;
+}
+
+#matchesDiv:hover::-webkit-scrollbar-thumb,
+#tournamentsDiv:hover::-webkit-scrollbar-thumb {
+    background-color: var(--WHITE);
+}
+
+/* Track portion of the scrollbar */
+::-webkit-scrollbar-track {
+    background-color: var(--HEAVY_GRAY);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: var(--HEAVY_GRAY);
+}
+
+#matchesDiv .spacer {
+    height: 50%;
+}
+
+#tournamentsDiv .spacer {
+    height: 30%;
 }
 
 div#rectangle {
@@ -88,4 +116,49 @@ p#userStatsBFF {
     text-align: center; /* Centralizar o texto horizontalmente */
     font-size: 3.3em;
     font-weight: bold;
+}
+
+div#tournamentsDiv {
+    height: 57vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#tournamentsDiv::before {
+    content: "";
+    position: absolute;
+    width: 48%;
+    height: 30%;
+    bottom: -75vh;
+    background: linear-gradient(to bottom, transparent, var(--HEAVY_GRAY));
+}
+
+div.tournamentCard {
+    width: 100%;
+    background-color: var(--LIGHT_GRAY);
+}
+
+div#tournamentStatsDiv {
+    background-color: var(--LIGHT_GRAY);
+}
+
+img#winnerImg {
+    border: 1px solid var(--GOLD);
+}
+
+img#runnerUpImg {
+    border: 1px solid var(--SILVER);
+}
+
+img#thirdPlaceImg {
+    border: 1px solid var(--COPPER);
+}
+
+div#tournamentContainerDiv {
+    background-color: var(--HEAVY_GRAY);
+}
+
+.empty-tournament-card {
+    width: 100%;
+    background-color: var(--LIGHT_GRAY);
 }

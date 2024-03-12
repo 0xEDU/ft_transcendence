@@ -5,8 +5,8 @@ pragma solidity ^0.8.21;
 contract Tournaments {
     struct Match {
         uint id;
-        uint[2] playerIds;
-        uint[2] score;
+        uint[] playerIds;
+        uint[] score;
         uint date;
     }
 
@@ -15,7 +15,7 @@ contract Tournaments {
         Match[] matches;
         uint tournamentId;
     }
-    
+
     Tournament[] tournaments;
 
     // A new Tournament to the list
