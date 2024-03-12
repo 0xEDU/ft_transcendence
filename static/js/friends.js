@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(userData => {
                 if (userData.error) {
                     swapInnerHTMLOfElement('resultsContainer', '<p id="userNotFoundDel" class="text-danger">User not found!</p>');
-					displayUserNotFound();
                 } else {
                     checkFriendshipAndShowModal(userData);
                 }
@@ -135,27 +134,6 @@ function fetchFriends() {
     .catch(error => console.error('There has been a problem with your fetch operation:', error));
 }
 
-function createFriendCardHtml(friend) {
-	// Adjust the class and button text based on friendship status
-	const cardClass = friend.status === 'pending' ? 'friendCard-pending' : 'friendCard';
-	const buttonText = friend.status === 'pending' && !friend.isRequester ? 'Accept' : 'View Profile';
-	const buttonClass = friend.status === 'pending' && !friend.isRequester ? 'acceptFriendshipButton' : 'viewProfileButton';
-	const buttonColor = friend.status === 'pending' ? 'btn-outline-secondary' : 'btn-outline-light';
-	const friendshipStatus = friend.status === 'pending' ? '(Pending friendship request)' : '';
-
-	// Return the HTML string for the friend card
-	return `
-    <div class="${cardClass} d-flex">
-        <img src="${friend.profilePictureUrl}" alt="Profile Picture" class="imgProfile">
-        <div class="friendCard d-flex align-items-center justify-content-between">
-            <div></div>
-            <div class="friendName">${friend.displayName} ${friendshipStatus}</div>
-            <button type="button" class="btn ${buttonColor} ${buttonClass} ml-auto" 
-                    data-friendship-id="${friend.friendshipId}" data-friend-id="${friend.id}">${buttonText}</button>
-        </div>
-    </div>
-    `;
-}
 
 document.getElementById('friendsList').addEventListener('click', function(event) {
     if (event.target.matches('.acceptFriendshipButton')) {
@@ -242,4 +220,20 @@ function removeFriend(friendshipId) {
         fetchFriends();
     })
     .catch(error => console.error('Error:', error));
+}
+
+function viewProfile(friendId) {
+    fetch(`/get-user-info/${friendId}/`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('userInfoImage').src = data.profilePictureUrl;
+            document.getElementById('userInfoName').textContent = data.displayName;
+            document.getElementById('userInfoLogin').textContent = data.loginIntra;
+
+            var userInfoModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
+            userInfoModal.show();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }

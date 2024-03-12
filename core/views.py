@@ -6,24 +6,23 @@ import json
 from pong.models import Score
 from soninha.models import User, Achievements
 from stats.models import UserStats
+from .models import Friendship
 
 # Django's imports
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
-
+from django.http import HttpResponse
 from django.db.models import Q
-from .models import Friendship
 from django.template.loader import render_to_string
+from django.shortcuts import get_object_or_404
 
 
 class CreateFriendshipView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
-            print(f"DDAAATA AQUI: {data}")
             accepter_id = data.get('accepter_id')
-            print(f"ACCEPTER ID: {accepter_id}")
             requester_id = request.session.get("user_id")
 
             if not requester_id:
@@ -44,7 +43,6 @@ class CreateFriendshipView(View):
             return JsonResponse({"message": "Friend request sent successfully."}, status=201)
 
         except User.DoesNotExist:
-            print("LOUUUUUUCUURAAAAAA")
             return JsonResponse({"error": "User not found."}, status=404)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON."}, status=400)
@@ -116,7 +114,7 @@ class FriendListView(View):
             friends_list.append(friend_data)
 
         # Render the friend cards template to a string
-        rendered_html = render_to_string('friends/friend_card.html', {'friends_list': friends_list})
+        rendered_html = render_to_string('friends/friend-card.html', {'friends_list': friends_list})
         return JsonResponse({'html': rendered_html})
 
 class CheckFriendshipStatusView(View):
@@ -188,6 +186,17 @@ class RemoveFriendView(View):
         except Exception as e:
             print(e)
             return JsonResponse({'error': 'Internal Server Error'}, status=500)
+
+
+class GetUserInfoView(View):
+    def get(self, request, friend_id):
+        user = User.objects.get(id=friend_id)
+        data = {
+            'displayName': user.display_name,
+            'loginIntra': user.login_intra,
+            'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
+        }
+        return JsonResponse(data)
 
 
 class IndexView(View):

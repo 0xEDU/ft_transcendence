@@ -40,7 +40,8 @@
 			</div>
 			<div class="d-flex flex-column">
 				<div class="modal-footer">
-					<button type="button" class="btn btn-light" id="addFriendButton">{% translate "Add as Friend" %}</button>
+					<button type="button" class="btn btn-light" id="addFriendButton">{% translate "Add as Friend"
+						%}</button>
 				</div>
 				<div class="d-flex flex-row-reverse">
 					<div id="errorMessage"></div>
@@ -99,5 +100,24 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true"
+	data-bs-theme="dark">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 id="userInfoName"></h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center">
+				<img id="userInfoImage" src="" alt="User Picture" class="img-fluid rounded matesImage me-4">
+			</div>
+			<div class="modal-footer">
+				<p id="userInfoLogin"></p>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <script type="module" src="{% static 'js/friends.js' %}" defer></script>
