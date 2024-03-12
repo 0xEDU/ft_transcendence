@@ -14,18 +14,21 @@ from django.http import JsonResponse
 
 from django.db.models import Q
 from .models import Friendship
+from django.template.loader import render_to_string
 
 
 class CreateFriendshipView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            print(f"DDAAATA AQUI: {data}")
             accepter_id = data.get('accepter_id')
+            print(f"ACCEPTER ID: {accepter_id}")
             requester_id = request.session.get("user_id")
 
             if not requester_id:
                 return JsonResponse({"error": "Authentication required."}, status=401)
-            if requester_id == accepter_id:  # Prevent user from adding themselves
+            if requester_id == accepter_id:
                 return JsonResponse({"error": "Can't add yourfself"}, status=409)
 
             requester = User.objects.get(pk=requester_id)
@@ -41,6 +44,7 @@ class CreateFriendshipView(View):
             return JsonResponse({"message": "Friend request sent successfully."}, status=201)
 
         except User.DoesNotExist:
+            print("LOUUUUUUCUURAAAAAA")
             return JsonResponse({"error": "User not found."}, status=404)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON."}, status=400)
@@ -85,7 +89,7 @@ class AcceptFriendshipView(View):
 
 class FriendListView(View):
     def get(self, request):
-        requester_id = request.session["user_id"]
+        requester_id = request.session.get("user_id")
         current_user = User.objects.get(pk=requester_id)
 
         friendships = Friendship.objects.filter(
@@ -102,10 +106,88 @@ class FriendListView(View):
                 'status': friendship.status,
                 'isRequester': friendship.requester == current_user,
                 'friendshipId': friendship.id,
+                # Adjust class names and button text based on the friendship status
+                'cardClass': 'friendCard-pending' if friendship.status == 'pending' else 'friendCard',
+                'buttonClass': 'acceptFriendshipButton' if friendship.status == 'pending' and not friendship.requester == current_user else 'viewProfileButton',
+                'buttonColor': 'btn-outline-secondary' if friendship.status == 'pending' else 'btn-outline-light',
+                'buttonText': 'Accept' if friendship.status == 'pending' and not friendship.requester == current_user else 'View Profile',
+                'friendshipStatus': '(Pending friendship request)' if friendship.status == 'pending' else '',
             }
             friends_list.append(friend_data)
 
-        return JsonResponse(friends_list, safe=False)
+        # Render the friend cards template to a string
+        rendered_html = render_to_string('friends/friend_card.html', {'friends_list': friends_list})
+        return JsonResponse({'html': rendered_html})
+
+class CheckFriendshipStatusView(View):
+    def get(self, request):
+        user_id = request.GET.get('user_id')
+        current_user_id = request.session["user_id"]
+
+        if not user_id:
+            return JsonResponse({"error": "User ID is required."}, status=400)
+
+        friendship = Friendship.objects.filter(
+            (Q(requester_id=current_user_id, accepter_id=user_id) | 
+             Q(requester_id=user_id, accepter_id=current_user_id)),
+            status__in=['pending', 'accepted']
+        ).first()
+
+        if friendship:
+            return JsonResponse({
+                "status": friendship.status,
+                "isRequester": friendship.requester_id == current_user_id,
+                "id": friendship.id
+            })
+        return JsonResponse({"status": "not_friends"})
+
+
+class CancelFriendRequestView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            friendship_id = data.get('friendshipId')
+            friendship = Friendship.objects.get(id=friendship_id)
+            current_user_id = request.session["user_id"]
+
+            # Ensure the request.user is the one who made the friend request
+            if friendship.requester.id != current_user_id:
+                return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+            friendship.delete()  # Cancel the friend request
+            return JsonResponse({'message': 'Friend request cancelled successfully.'})
+
+        except Friendship.DoesNotExist:
+            return JsonResponse({'error': 'Friendship request not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            print(e)  # Log error for debugging
+            return JsonResponse({'error': 'Internal Server Error'}, status=500)
+
+
+class RemoveFriendView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            friendship_id = data.get('friendshipId')
+            friendship = Friendship.objects.get(id=friendship_id)
+            current_user_id = request.session["user_id"]
+            print(f"Friendship: {friendship.requester}")
+            print(f"Current user id: {current_user_id}")
+            if current_user_id != friendship.requester.id and current_user_id != friendship.accepter.id:
+                return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+            friendship.delete()
+            return JsonResponse({'message': 'Friend removed successfully.'})
+
+        except Friendship.DoesNotExist:
+            return JsonResponse({'error': 'Friendship not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
 class IndexView(View):
