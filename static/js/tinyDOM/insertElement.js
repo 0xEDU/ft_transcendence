@@ -1,8 +1,8 @@
-export default function insertInElement(elementId, innerHtml) {
+export default function insertElement(elementId, innerHtml) {
     const targetElement = document.getElementById(elementId);
 
     if (targetElement) {
-      targetElement.innerHTML = innerHtml;
+      targetElement.innerHTML += innerHtml;
     } else {
         console.error(`Target element with ID '${elementId}' not found.`);
     }

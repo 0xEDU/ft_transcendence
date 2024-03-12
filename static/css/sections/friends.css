@@ -26,10 +26,10 @@
 }
 
 .friendCard {
-    background-color: #222; /* Or any color you prefer */
+    background-color: #222;
     padding: 10px;
-    margin-bottom: 10px; /* Adds space between cards */
-    border-radius: 4px; /* Optional: if you want rounded corners */
+    margin-bottom: 10px;
+    border-radius: 4px;
 	width: 80vw;
 }
 
@@ -43,10 +43,6 @@
 	border: 1px solid;
 }
 
-.friendCardHtml {
-	height: 10vh;
-}
-
 .overflowList {
 	max-height: 50vh;
 	-ms-overflow-style: none;
@@ -56,10 +52,20 @@
 	display: none;
 }
 
-.friendCardHtml.pending {
-	background-color: #f0ad4e; /* Bootstrap's 'btn-warning' color */
+.friendCard-pending {
+	background-color: #222;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+	width: 80vw;
+	filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
 }
 
-.friendCardHtml.accepted {
-	background-color: #337ab7; /* Bootstrap's 'btn-primary' color */
+#userAlreadyFriend, #addFriendButton {
+	margin-right: 1vw;
+}
+
+#addFriendModalLabel {
+	color: var(--ORANGE);
 }

@@ -1,6 +1,6 @@
 import { scrollToSection } from "./control-panel.js";
 import { showControlPanel } from "./play-button.js";
-import insertInElement from "./tinyDOM/insertInElement.js";
+import swapInnerHTMLOfElement from "./tinyDOM/swapInnerHTMLOfElement.js";
 import styleGuide from "./style-guide.js"
 import { fetchStatsPage } from "./stats-nav.js"
 
@@ -533,7 +533,7 @@ const sendMatchDataToServer = (match_id, players_array) => {
 		})
 		.then(responseHTML => {
 			// update front end dynamically
-			insertInElement("userStatsDiv", responseHTML);
+			swapInnerHTMLOfElement("userStatsDiv", responseHTML);
 			fetchStatsPage("/stats/matches-history");
 			fetchStatsPage("/stats/tournaments");
 			fetchStatsPage("/stats/user-stats");

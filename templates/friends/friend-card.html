@@ -1,0 +1,11 @@
+{% for friend in friends_list %}
+<div class="{{ friend.cardClass }} d-flex">
+    <img src="{{ friend.profilePictureUrl }}" alt="Profile Picture" class="imgProfile">
+    <div class="friendCard d-flex align-items-center justify-content-between">
+		<div></div>
+        <div class="friendName">{{ friend.displayName }} {{ friend.friendshipStatus }}</div>
+        <button type="button" class="btn {{ friend.buttonColor }} {{ friend.buttonClass }} ml-auto" 
+                data-friendship-id="{{ friend.friendshipId }}" data-friend-id="{{ friend.id }}">{{ friend.buttonText }}</button>
+    </div>
+</div>
+{% endfor %}

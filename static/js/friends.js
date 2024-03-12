@@ -1,116 +1,239 @@
 import { scrollToSection } from "./control-panel.js";
-import appendElement from "./tinyDOM/appendElement.js";
-import deleteElement from "./tinyDOM/deleteElement.js";
+import hasElement from "./tinyDOM/hasElement.js";
+import emptyElement from "./tinyDOM/emptyElement.js";
+import swapInnerHTMLOfElement from "./tinyDOM/swapInnerHTMLOfElement.js";
+import insertElement from "./tinyDOM/insertElement.js";
 
 document.getElementById('addSign').addEventListener('click', function() {
-  scrollToSection('findFriends');
+	emptyElement('friendsList');
+    fetchFriends();
+	scrollToSection('findFriends');
 });
+
+
+function getCsrfToken() {
+	return document.getElementsByName('csrfmiddlewaretoken')[0].value;
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
-	fetchFriends();
-	var searchForm = document.getElementById('userSearchForm');
-
-	searchForm.addEventListener('submit', function(event) {
-	event.preventDefault();
-	var searchTerm = document.getElementById('searchField').value;
-
-	// Make sure to replace '/search-user/' with the correct URL to your Django search view
-	fetch(`/search-user/?search=${encodeURIComponent(searchTerm)}`)
-		.then(function(response) {
-			if (response.ok) {
-				return response.json();
-		} else if (response.status === 404) {
-			// Show the user not found message
-			displayUserNotFound();
-			return Promise.reject('User not found'); // Reject the promise chain
-		} else {
-			return Promise.reject('An error occurred'); // Reject the promise chain
-		}
-		})
-		.then(function(userData) {
-			addFriend(userData);
-		})
-		.catch(function(error) {
-		// If we reach this point, there was either a network error or a 404 error
-		console.error('Error:', error);
-		});
-	});
+    var searchForm = document.getElementById('userSearchForm');
+    
+    searchForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        var searchTerm = document.getElementById('searchField').value;
+        
+        if (hasElement('resultsContainer','userNotFoundDel')){
+            emptyElement('resultsContainer');
+        }
+        
+        fetch(`/search-user/?search=${encodeURIComponent(searchTerm)}`)
+            .then(response => response.json())
+            .then(userData => {
+                if (userData.error) {
+                    swapInnerHTMLOfElement('resultsContainer', '<p id="userNotFoundDel" class="text-danger">User not found!</p>');
+                } else {
+                    checkFriendshipAndShowModal(userData);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
 });
 
-// Function to create a friend card HTML
-// function createFriendCardHtml(friend) {
-//     return `
-//     <div class="friendCardHtml d-flex">
-//         <img src="${friend.profilePictureUrl}" alt="Profile Picture" class="imgProfile">
-//         <div class="friendCard d-flex align-items-center justify-content-between">
-//             <div></div>
-//             <div class="friendName">${friend.displayName}</div>
-//             <button type="button" class="btn btn-primary ml-auto" onclick="viewProfile('${friend.id}')">view profile</button>
-//         </div>
-//     </div>
-//     `;
-// }
 
-function addFriend(friend) {
-	const htmlString = createFriendCardHtml(friend);
-	appendElement('friendsList', htmlString);
+function checkFriendshipAndShowModal(userData) {
+    fetch(`/check-friendship-status/?user_id=${userData.id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'not_friends') {
+				data['id'] = userData.id;
+                showAddFriendModal(userData, data);
+            } else if (data.status === 'pending') {
+                if (data.isRequester) {
+                    showPendingFriendModal(userData, data);
+                } else {
+                    showRemoveFriendModal(userData, data);
+                }
+            } else if (data.status === 'accepted') {
+                showRemoveFriendModal(userData, data);
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 
-function displayUserNotFound() {
-	appendElement('resultsContainer', '<p id="userNotFoundDel" class="text-danger">User not found!</p>');
-	
-	// Remove the error message after 1 second
-	setTimeout(() => {
-	deleteElement('userNotFoundDel');
-	}, 1000);
+function showAddFriendModal(userData, data) {
+    document.getElementById('modalUserNameAdd').innerText = userData.displayName;
+    document.getElementById('addFriendButton').onclick = function() {
+        sendFriendRequest(data.id);
+    };
+
+    const addFriendModal = new bootstrap.Modal(document.getElementById('addFriendModal'));
+    addFriendModal.show();
 }
+
+
+function showPendingFriendModal(userData, data) {
+	insertElement('modalUserNamePending', userData.displayName);
+    document.getElementById('pendingFriendButton').onclick = function() {
+        cancelFriendRequest(data.id);
+    };
+
+    const pendingFriendModal = new bootstrap.Modal(document.getElementById('pendingFriendModal'));
+    pendingFriendModal.show();
+}
+
+function showRemoveFriendModal(userData, data) {
+    document.getElementById('modalUserNameRemove').innerText = userData.displayName;
+    document.getElementById('removeFriendButton').onclick = function() {
+        removeFriend(data.id);
+    };
+
+    const removeFriendModal = new bootstrap.Modal(document.getElementById('removeFriendModal'));
+    removeFriendModal.show();
+}
+
+
+function cancelFriendRequest(friendshipId) {
+	const pendingFriendModal = bootstrap.Modal.getInstance(document.getElementById('pendingFriendModal'));
+    fetch('/cancel-friend-request/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({ 'friendshipId': friendshipId }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+		pendingFriendModal.hide();
+        emptyElement('friendsList');
+        fetchFriends();
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 
 function fetchFriends() {
-	fetch('/friends-list/')
-	.then(response => response.json())
-	.then(data => {
-	data.forEach(friend => {
-		const friendCardHtml = createFriendCardHtml(friend);
-		document.getElementById('friendsList').innerHTML += friendCardHtml;
-	});
-	});
+    fetch('/friends-list/')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Assuming the key in the JSON response containing the HTML is 'html'
+        document.getElementById('friendsList').innerHTML = data.html;
+    })
+    .catch(error => console.error('There has been a problem with your fetch operation:', error));
 }
 
-function createFriendCardHtml(friend) {
-	const btnClass = friend.status === 'pending' ? 'btn-warning' : 'btn-primary';
-	const btnText = friend.status === 'pending' ? 'Accept' : 'View Profile';
-	const btnOnClick = friend.status === 'pending' ? `acceptFriend('${friend.friendshipId}')` : `viewProfile('${friend.id}')`;
-	
-	return `
-	<div class="friendCardHtml d-flex ${friend.status}">
-		<img src="${friend.profilePictureUrl}" alt="Profile Picture" class="imgProfile">
-		<div class="friendCard d-flex align-items-center justify-content-between">
-			<div class="friendName">${friend.displayName}</div>
-			<button type="button" class="btn ${btnClass} ml-auto" onclick="${btnOnClick}">${btnText}</button>
-		</div>
-	</div>
-	`;
+
+document.getElementById('friendsList').addEventListener('click', function(event) {
+    if (event.target.matches('.acceptFriendshipButton')) {
+        const friendshipId = event.target.getAttribute('data-friendship-id');
+        acceptFriendship(friendshipId);
+    } else if (event.target.matches('.viewProfileButton')) {
+        const friendId = event.target.getAttribute('data-friend-id');
+        viewProfile(friendId);
+    }
+});
+
+function acceptFriendship(friendshipId) {
+    fetch('/accept-friendship/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({ 'friendshipId': friendshipId }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+		emptyElement('friendsList');
+        fetchFriends();
+    })
+    .catch(error => console.error('Error:', error));
 }
 
-function acceptFriend(friendshipId) {
-	fetch(`/accept-friendship-endpoint/`, {
-	  method: 'POST',
-	  body: JSON.stringify({ 'friendshipId': friendshipId }),
-	  headers: {
-		'Content-Type': 'application/json',
-		'X-CSRFToken': getCsrfToken() // You need to handle CSRF token
-	  }
-	})
-	.then(response => response.json())
-	.then(data => {
-	  // Update the card for the accepted friend...
-	});
-  }
-  
-  // Utility function to get CSRF token from cookie
-  function getCsrfToken() {
-	return document.cookie.split(';').find(c => c.trim().startsWith('csrftoken=')).split('=')[1];
-  }
 
-  
+function sendFriendRequest(friendId) {
+    const addFriendModal = bootstrap.Modal.getInstance(document.getElementById('addFriendModal'));
+    fetch('/create-friendship/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({ 'accepter_id': friendId }),
+    })
+    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+    .then(({ status, body }) => {
+        if (status === 409) {
+            throw new Error(body.error);
+        }
+        if (hasElement("addFriendModal", "errorMessage")) {
+            emptyElement("errorMessage");
+        }
+		addFriendModal.hide();
+        emptyElement('friendsList');
+        fetchFriends();
+    })
+    .catch(error => {
+        if (hasElement("addFriendModal", "errorMessage")) {
+            emptyElement("errorMessage");
+        }
+        swapInnerHTMLOfElement('errorMessage', `<p id="userAlreadyFriend" class="text-danger">${error.message}</p>`);
+    });
+}
+
+function removeFriend(friendshipId) {
+	const removeFriendModal = bootstrap.Modal.getInstance(document.getElementById('removeFriendModal'));
+    fetch('/remove-friend/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({ 'friendshipId': friendshipId }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+		removeFriendModal.hide();
+		emptyElement('friendsList');
+        fetchFriends();
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function viewProfile(friendId) {
+    fetch(`/get-user-info/${friendId}/`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('userInfoImage').src = data.profilePictureUrl;
+            document.getElementById('userInfoName').textContent = data.displayName;
+            document.getElementById('userInfoLogin').textContent = data.loginIntra;
+
+            var userInfoModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
+            userInfoModal.show();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
