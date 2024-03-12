@@ -28,7 +28,7 @@ class CreateFriendshipView(View):
             if not requester_id:
                 return JsonResponse({"error": "Authentication required."}, status=401)
             if requester_id == accepter_id:
-                return JsonResponse({"error": "Can't add yourfself"}, status=409)
+                return JsonResponse({"error": "Can't add yourself"}, status=409)
 
             requester = User.objects.get(pk=requester_id)
             accepter = User.objects.get(pk=accepter_id)
