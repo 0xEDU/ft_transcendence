@@ -1,5 +1,6 @@
 @import 'components/control-panel/base.css';
 @import 'components/control-panel/switch.css';
+@import 'components/languages-button.css';
 @import 'sections/kudos.css';
 @import 'sections/lobby.css';
 @import 'sections/login.css';

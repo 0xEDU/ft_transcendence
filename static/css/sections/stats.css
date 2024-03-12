@@ -21,7 +21,7 @@ div.matchRow {
 }
 
 div#matchesDiv {
-    height: 57vh;
+    height: 50vh;
 }
 
 #matchesDiv::before {

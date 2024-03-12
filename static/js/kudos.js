@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		// Updates element on screen
 		const emoji = emojis[currentEmojiIndex];
-		emojiCarousel.innerHTML = `<div class="carousel-item active">MADE WITH { ${emoji} } </div>`;
+		emojiCarousel.querySelector("span.emoji").innerHTML = emoji;
 	}
 
 	function updateNameCarousel() {
@@ -57,7 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		// Updates element on screen
 		const person = people[currentNameIndex];
-		nameCarousel.innerHTML = `<div class="carousel-item active">BY { <span class="name">${person.name}</span> <img src="${person.image}" alt="${person.name}'s picture"> }</div>`;
+		nameCarousel.querySelector("span.name").innerHTML = person.name;
+		nameCarousel.querySelector("img").src = person.image;
+		nameCarousel.querySelector("img").alt = `${person.name}'s picture`;
 	}
 
 	updateEmojiCarousel();

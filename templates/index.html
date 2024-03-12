@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bakbak+One&family=Quicksand:wght@700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style-guide.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -19,6 +22,7 @@
   <body>
     {% comment %}Fixed-position elements{% endcomment %}
     {% include 'components/control-panel/base.html' %}
+    {% include 'components/languages-button.html' %}
 
     {% comment %}SPA layout{% endcomment %}
     {% comment %}Upper row{% endcomment %}
