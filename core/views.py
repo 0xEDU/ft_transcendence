@@ -58,6 +58,33 @@ class GetFriendsView(View):
         return JsonResponse(friends_list, safe=False)
 
 
+class GetFriendsView(View):
+    def get(self, request, *args, **kwargs):
+        requester_id = request.session.get("user_id")
+        if requester_id is None:
+            return JsonResponse({'error': 'User not logged in.'}, status=401)
+
+        try:
+            user = User.objects.get(pk=requester_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist.'}, status=404)
+
+        # Filter for both accepted requests and requests made by the user, ordered by the most recent.
+        accepted_friendships = Friendship.objects.filter(
+            Q(status='accepted', requester=user) | Q(status='accepted', accepter=user)
+        ).select_related('accepter', 'requester').order_by('-created_at')[:6]
+
+        friends_list = [
+            {
+                'username': friendship.accepter.display_name if friendship.requester_id == requester_id else friendship.requester.display_name,
+                'image_url': friendship.accepter.profile_picture.url if friendship.requester_id == requester_id and friendship.accepter.profile_picture else (friendship.accepter.intra_cdn_profile_picture_url if friendship.requester_id == requester_id else friendship.requester.intra_cdn_profile_picture_url) or 'static/images/default_user_image.svg',
+            }
+            for friendship in accepted_friendships
+        ]
+
+        return JsonResponse(friends_list, safe=False)
+
+
 class CreateFriendshipView(View):
     def post(self, request):
         try:
