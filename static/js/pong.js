@@ -11,6 +11,13 @@ let gameLoopIntervalId;
 let hasFourPlayers;
 let lastPaddleHit = "";
 let isLastMatch;
+let isTournament;
+let tournamentPlayers = [];
+let tournamentAllPlayers = [];
+let tournamentMatchesLeft = 0;
+let tournamentFinalResult = [];
+let tournamentMatches = [];
+let tempPair = [];
 
 // ball variables
 const ballRadius = 10;
@@ -54,8 +61,8 @@ const winningScore = 3;
 // randomize this later
 let dx = -3.2;
 let dy = 2.4;
-let speedX = 1;
-let speedY = 1;
+let speedX = 6;
+let speedY = 6;
 
 // Players movement
 let rightUpPressed = false;
@@ -415,6 +422,17 @@ const movePaddles = () => {
 	}
 }
 
+function updatePlayers() {
+	leftPlayerLogin = tournamentPlayers[0][0];
+	rightPlayerLogin = tournamentPlayers[0][1];
+	tournamentMatchesLeft--;
+	if (tournamentMatchesLeft == 1) {
+		isLastMatch = true;
+	} else {
+		tournamentPlayers.shift();
+	}
+}
+
 const keyDownHandler = (e) => {
 	// Right-side player
 	if (e.key === "Up" || e.key === "ArrowUp") {
@@ -451,12 +469,15 @@ const keyDownHandler = (e) => {
 		drawMiddleLine();
 		startGameAfterCountdown();
 	}
-	if (e.key == "Enter" && gameState === States.GAME_OVER) {
+	if (e.key == "Enter" && gameState === States.GAME_OVER && isLastMatch) {
 		gameState = States.NOT_STARTED;
-		if (isLastMatch) {
-			scrollToSection("lobby");
-			showControlPanel();
-		}
+		scrollToSection("lobby");
+		showControlPanel();
+	}
+	if (e.key == "Enter" && gameState === States.GAME_OVER && !isLastMatch) {
+		gameState = States.NOT_STARTED;
+		// drawNextMatchScreen();
+		updatePlayers();
 	}
 }
 
@@ -535,12 +556,47 @@ const sendMatchDataToServer = (match_id, players_array) => {
 			// update front end dynamically
 			insertInElement("userStatsDiv", responseHTML);
 			fetchStatsPage("/stats/matches-history");
-			fetchStatsPage("/stats/tournaments");
+			// fetchStatsPage("/stats/tournaments");
 			fetchStatsPage("/stats/user-stats");
 		})
 		.catch(error => {
 			console.error('Error updating match data:', error);
 		});
+	tournamentMatches.push({
+		"id": match_id,
+		"players": players_array,
+		"score": [scores.leftScore, scores.rightScore],
+		"date": Date.now()
+	})
+	if (isLastMatch && isTournament) {
+		sendTournamentDataToBlockchain()
+	}
+}
+
+// tournament_obj = {
+//     "tournamentId": 0,
+//     "players": ["Player1", "Player2"],
+//     "matches": [
+//         {"id": 1, "playerIds": [1, 2], "score": [0, 0], "date": 1638316800},
+//         {"id": 2, "playerIds": [3, 4], "score": [0, 0], "date": 1638403200}
+//     ]
+// }
+function sendTournamentDataToBlockchain() {
+	const tournamentData = {
+		"players": tournamentAllPlayers,
+		"matches": tournamentMatches
+	}
+	const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+	const url = `/blockchain/tournament/`;
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': csrfToken,
+		},
+		body: JSON.stringify(tournamentData),
+	};
+	fetch(url, options).then(response => response.text())
 }
 
 function lastPaddleScore() {
@@ -576,25 +632,41 @@ const resetMatchData = () => {
 	})
 }
 
-const runGame = (match_id, players_array, game_type) => {
+const runGame = async (match_id, players_array, game_type) => {
 	if (gameState === States.RUNNING) {
 		if ((game_type === "classic" && (scores.rightScore === winningScore || scores.leftScore === winningScore || scores.topScore === winningScore || scores.bottomScore === winningScore))
 			|| (game_type === "co-op" && coopMatchIsOver)) {
 			// Somebody won. The game is over.
 			gameState = States.GAME_OVER;
 			matchStats.endTime = performance.now();
-			clearInterval(gameLoopIntervalId); // stop game execution
+			if (isLastMatch) {
+				clearInterval(gameLoopIntervalId); // stop game execution
+			}
 			drawEndingScreen(game_type);
-			sendMatchDataToServer(match_id, players_array);
 			ballColor = styleGuide.__WHITE;
-			resetMatchData();
 			coopMatchIsOver = false;
 			const finalObj = {
 				"gameOver": true,
 			}
-			if (game_type === "classic") {
-				finalObj["winner"] = scores.leftScore > scores.rightScore ? players_array[0] : players_array[1]
+			if (game_type === "classic" && isTournament) {
+				const winnerObj = {}
+				winnerObj["score"] = scores.leftScore === winningScore ? scores.leftScore : scores.rightScore
+				winnerObj["player"] = scores.leftScore === winnerObj["score"] ? leftPlayerLogin : rightPlayerLogin
+				tournamentFinalResult.push(winnerObj["score"])
+				tempPair.push(winnerObj["player"])
+				if (tempPair.length === 2) {
+					tournamentPlayers.push(tempPair)
+					tempPair = []
+					match_id.push(await createNewMatchForTournament(players_array))
+				}
 			}
+			if (isTournament) {
+				sendMatchDataToServer(match_id[0], tournamentPlayers[0]);
+				match_id.shift();
+			} else {
+				sendMatchDataToServer(match_id, players_array);
+			}
+			resetMatchData();
 			return finalObj;
 		}
 
@@ -672,6 +744,26 @@ const runGame = (match_id, players_array, game_type) => {
 	return {"gameOver": false};
 }
 
+async function createNewMatchForTournament(players) {
+	const url = "/pong/match"
+	const data = {
+		"gameType": "classic",
+		"players": players.flat()
+	}
+	const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+	const options = {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': csrfToken,
+		},
+		body: JSON.stringify(data),
+	};
+	return fetch(url, options)
+		.then(data => data.json())
+		.then(data => data["match_id"])
+}
+
 function startGameAfterCountdown() {
 	let seconds = 3; // Initial value for the countdown
 
@@ -701,16 +793,26 @@ function startGameAfterCountdown() {
 }
 
 // main
-export default async function launchMatch(match_id, players_array, game_type, lastMatch) {
+export default async function launchMatch(match_id, players_array, game_type, lastMatch, tournamentState) {
 	return new Promise((resolve, _reject) => {
 		// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
 		canvas = document.getElementById("pongGameCanvas");
 		context = canvas.getContext("2d");
-		hasFourPlayers = players_array.length == 4;
+		isTournament = tournamentState
+		hasFourPlayers = players_array.length == 4 && !isTournament;
 		isLastMatch = lastMatch
 
-		leftPlayerLogin = players_array[0];
-		rightPlayerLogin = players_array[1];
+		if (isTournament) {
+			tournamentAllPlayers = players_array.flat();
+			tournamentMatchesLeft = players_array.length === 2 ? 3 : 7;
+			leftPlayerLogin = players_array[0][0];
+			rightPlayerLogin = players_array[0][1];
+			players_array.shift()
+			tournamentPlayers.push(...players_array)
+		} else {
+			leftPlayerLogin = players_array[0];
+			rightPlayerLogin = players_array[1];
+		}
 		if (hasFourPlayers) {
 			topPlayerLogin = players_array[2];
 			bottomPlayerLogin = players_array[3];
@@ -728,10 +830,15 @@ export default async function launchMatch(match_id, players_array, game_type, la
 		document.addEventListener("keyup", keyUpHandler);
 
 		// Start game execution in loop. The loop ends onde gameLoopIntervalId is cleared
+		let finalObj;
 		gameLoopIntervalId = setInterval(() => {
-			const finalObj = runGame(match_id, players_array, game_type); // Pass arguments to runGame function
-			if (finalObj.gameOver) {
-				resolve(finalObj.winner);
+			if (isTournament) {
+				finalObj = runGame(match_id, tournamentPlayers, game_type); // Pass arguments to runGame function
+			} else {
+				finalObj = runGame(match_id, players_array, game_type); // Pass arguments to runGame function
+			}
+			if (finalObj.gameOver == true) {
+				resolve(finalObj);
 			}
 		}, 10);
 	});

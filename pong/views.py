@@ -1,6 +1,7 @@
 # Std imports
 from http import HTTPStatus
 import json
+import random
 
 # Our own imports
 from pong.models import Match, Score
@@ -38,7 +39,6 @@ def get_matches(user_name):
     return matches_list
 
 
-
 class MatchView(View):
     """
     This view is responsible for Matches management.
@@ -65,6 +65,41 @@ class MatchView(View):
             except User.DoesNotExist as e:
                 raise ValueError(_("User '%(player)s' does not exist") % {'player': player}) from e
 
+    def _create_one_match(self, incoming_request):
+    # Form data is valid at this point, now create a new match and return its id
+        new_match = Match.objects.create(type=incoming_request['gameType'])
+        for player in incoming_request['players']:
+            user = User.objects.get(login_intra=player)
+            other_players = [User.objects.get(login_intra=player).id for player in incoming_request['players'] if player != user.login_intra]
+            score = Score.objects.create(player=user, match=new_match, score=0)
+            score.vs_id.add(*other_players)
+            new_match.players.add(user)
+
+        return {"match_id": new_match.id}
+
+    def _create_multiple_matches(self, incoming_request):
+    # Form data is valid at this point, now create a new match and return its id
+        response_data = {"matches_id": [], "players": []}
+        matches = []
+        for _ in range(0, int(incoming_request['playerQuantity'] / 2)):
+            new_match = Match.objects.create(type=incoming_request['gameType'])
+            matches.append(new_match)
+            response_data["matches_id"].append(new_match.id)
+        players = incoming_request["players"]
+        random.shuffle(players)
+        player_pairs =  [players[i:i+2] for i in  range(0, len(players), 2)]
+        response_data["players"] = player_pairs
+        for pair in player_pairs:
+            user1 = User.objects.get(login_intra=pair[0])
+            user2 = User.objects.get(login_intra=pair[1])
+            for match in matches:
+                score1 = Score.objects.create(player=user1, match=match, score=0)
+                score2 = Score.objects.create(player=user2, match=match, score=0)
+                score1.vs_id.add(user2.id)
+                score2.vs_id.add(user1.id)
+                match.players.add(user1, user2)
+        return response_data
+
     def post(self, request):
         incoming_request = json.loads(request.body)
         required_params = [
@@ -87,16 +122,11 @@ class MatchView(View):
                 'error_message': error
             }, status=HTTPStatus.BAD_REQUEST)
 
-        # Form data is valid at this point, now create a new match and return its id
-        new_match = Match.objects.create(type=incoming_request['gameType'])
-        for player in incoming_request['players']:
-            user = User.objects.get(login_intra=player)
-            other_players = [User.objects.get(login_intra=player).id for player in incoming_request['players'] if player != user.login_intra]
-            score = Score.objects.create(player=user, match=new_match, score=0)
-            score.vs_id.add(*other_players)
-            new_match.players.add(user)
-
-        response_data = {"match_id": new_match.id}
+        response_data = {}
+        if (incoming_request["gameMode"] == "singleMatch"):
+            response_data = self._create_one_match(incoming_request)
+        else:
+            response_data = self._create_multiple_matches(incoming_request)
 
         return JsonResponse(response_data)
 
@@ -152,5 +182,14 @@ class MatchView(View):
             }
 
             return render(request, "soninha/partials/user-stats.html", context)
+        except json.JSONDecodeError:
+            return HttpResponse('Something went wrong in the Match View')
+
+    def patch(self, request):
+        try:
+            data = json.loads(request.body)
+            print(data)
+            response = self._create_one_match(data)
+            return JsonResponse(response)
         except json.JSONDecodeError:
             return HttpResponse('Something went wrong in the Match View')

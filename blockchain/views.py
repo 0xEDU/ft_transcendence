@@ -1,6 +1,7 @@
 """Views for the blockchain app."""
 from dataclasses import dataclass, asdict
 import json
+from soninha.models import User
 import os
 from django.http import HttpResponse, JsonResponse
 from django.views import View
@@ -36,6 +37,7 @@ class TournamentView(View):
     """View for adding tournament to blockchain."""
 
     w3 = Web3(Web3.HTTPProvider('http://0.0.0.0:8545'))
+    tournament_count = 0
 
     def _get_contract(self):
         """Get contract from json file and return contract object"""
@@ -75,5 +77,15 @@ class TournamentView(View):
         json_string = request.body.decode('utf-8').split("&")[0]
         json_string = json_string.strip("b'\"").replace("\\", "")
         tournament_dict = json.loads(json_string)
+        for pong_match in tournament_dict["matches"]:
+            player_ids = []
+            for player in pong_match["players"]:
+                user = User.objects.get(login_intra=player)
+                player_ids.append(user.id)
+            pong_match["playerIds"] = player_ids
+            del pong_match["players"]
+        tournament_dict["tournamentId"] = self.tournament_count
+        print(tournament_dict)
+        self.tournament_count += 1
         self._add_tournament(tournament_dict)
         return HttpResponse('')
