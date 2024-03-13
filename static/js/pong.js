@@ -857,7 +857,7 @@ function startGameAfterCountdown() {
 
 // main
 export default async function launchMatch(match_id, players_array, game_type, map_skin, lastMatch, tournamentState) {
-	return await new Promise((resolve, _reject) => {
+	return await new Promise(async (resolve, _reject) => {
 		// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
 		canvas = document.getElementById("pongGameCanvas");
 		context = canvas.getContext("2d");
