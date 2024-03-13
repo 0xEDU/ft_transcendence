@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-11 23:33-0300\n"
+"POT-Creation-Date: 2024-03-13 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,7 +114,7 @@ msgstr "Il ne faut pas insérer le même nom deux fois"
 msgid "User '%(player)s' does not exist"
 msgstr "L'utilisateur '%(player)s' n'existe pas"
 
-#: pong/views.py:80
+#: pong/views.py:115
 #, python-format
 msgid "Missing required parameter: '%(param)s'"
 msgstr "Paramètre requis manquant: '%(param)s'"
@@ -142,6 +142,78 @@ msgstr "Entrez votre nouveau nom d'affichage"
 msgid "Select a file to upload"
 msgstr "Sélectionnez un fichier à téléverser"
 
+#: templates/friends/base.html:7
+#, python-format
+msgid "%(user_display_name)s's friends"
+msgstr "Ami(e)s de %(user_display_name)s"
+
+#: templates/friends/base.html:13
+msgid "Search for someone"
+msgstr "Rechercher quelqu'un"
+
+#: templates/friends/base.html:32
+msgid "Add Friend"
+msgstr "Ajouter un ami(e)"
+
+#: templates/friends/base.html:36
+msgid ""
+"\"Do you want to add \"<span id=\"modalUserNameAdd\"></span>\" as a friend?\""
+msgstr ""
+"\"Veux-tu ajouter \"<span id=\"modalUserNameAdd\"></span>\" en tant qu'ami(e)?\""
+
+#: templates/friends/base.html:40
+msgid "Add as Friend"
+msgstr "Accepter"
+
+#: templates/friends/base.html:55
+msgid "Pending Friend"
+msgstr "Ami(e) en attente"
+
+#: templates/friends/base.html:59
+msgid ""
+"\"Do you want to remove \"<span id=\"modalUserNamePending\"></span>\"'s "
+"friendship request ?\""
+msgstr "\"Veux-tu supprimer la demande d'amitié de \"<span id=\"modalUserNamePending\"></span>\" ?\""
+
+#: templates/friends/base.html:63
+msgid "Remove Request"
+msgstr "Supprimer"
+
+#: templates/friends/base.html:78 templates/friends/base.html:86
+msgid "Remove Friend"
+msgstr "Supprimer ami(e)"
+
+#: templates/friends/base.html:82
+msgid ""
+"\"Do you want to remove \" <span id=\"modalUserNameRemove\"></span>\"'s "
+"friendship?\" "
+msgstr ""
+"\"Veux-tu supprimer l'amitié de \" <span id=\"modalUserNameRemove\"></span>\"?\" "
+
+#: templates/friends/base.html:112 templates/soninha/partials/user-stats.html:4
+msgid "Team ball hits record"
+msgstr "Coups de balle"
+
+#: templates/friends/base.html:113 templates/soninha/partials/user-stats.html:5
+msgid "Distance traveled with a companion"
+msgstr "Distance parcourue ensemble"
+
+#: templates/friends/base.html:116 templates/soninha/partials/user-stats.html:6
+msgid "Total hours played"
+msgstr "Heures de jeu totales"
+
+#: templates/friends/base.html:117 templates/soninha/partials/user-stats.html:7
+msgid "Companions encountered"
+msgstr "Compagnons rencontrés"
+
+#: templates/friends/base.html:120 templates/soninha/partials/user-stats.html:8
+msgid "Classic games won"
+msgstr "Jeux classiques gagnés"
+
+#: templates/friends/base.html:121 templates/soninha/partials/user-stats.html:9
+msgid "Classic games lost"
+msgstr "Jeux classiques perdus"
+
 #: templates/kudos/base.html:6
 msgid ""
 "\n"
@@ -156,13 +228,13 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        BY { <span class=\"name\">roaraujo</span> <img src="
-"\"%(static 'images/roaraujo.jpeg')s\" alt=\"roaraujo's picture\"> }\n"
+"        BY { <span class=\"name\">roaraujo</span> <img "
+"src=\"%(static 'images/roaraujo.jpeg')s\" alt=\"roaraujo's picture\"> }\n"
 "        "
 msgstr ""
 "\n"
-"        PAR { <span class=\"name\">roaraujo</span> <img src="
-"\"%(static 'images/roaraujo.jpeg')s\" alt=\"roaraujo's picture\"> }\n"
+"        PAR { <span class=\"name\">roaraujo</span> <img "
+"src=\"%(static 'images/roaraujo.jpeg')s\" alt=\"roaraujo's picture\"> }\n"
 "        "
 
 #: templates/lobby/base.html:4
@@ -240,22 +312,6 @@ msgstr "Téléverser Photo"
 #: templates/soninha/partials/profile-picture-edition-modal.html:12
 msgid "CHANGE PROFILE PICTURE"
 msgstr "CHANGER LA PDP"
-
-#: templates/soninha/partials/user-stats.html:4
-msgid "Team ball hits record"
-msgstr "Coups de balle"
-
-#: templates/soninha/partials/user-stats.html:5
-msgid "Distance traveled with a companion"
-msgstr "Distance parcourue ensemble"
-
-#: templates/soninha/partials/user-stats.html:6
-msgid "Total hours played"
-msgstr "Heures de jeu totales"
-
-#: templates/soninha/partials/user-stats.html:7
-msgid "Companions encountered"
-msgstr "Compagnons rencontrés"
 
 #: templates/stats/base.html:8
 msgid "MATCHES HISTORY"

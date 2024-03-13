@@ -15,12 +15,13 @@
               <h3 class="settingName">{% translate "GAME MODE" %}</h3>
               <div class="d-flex flex-column align-items-start">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="gameTypeDefault" id="coopRadio" value="co-op" checked />
-                  <label class="form-check-label" for="coopRadio">{% translate "CO-OP" %}</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="gameTypeDefault" id="classicRadio" value="classic" />
+                  <input class="form-check-input" type="radio" name="gameTypeDefault" id="classicRadio" value="classic" checked />
                   <label class="form-check-label" for="classicRadio">{% translate "CLASSIC" %}</label>
+                </div>
+                {% comment %} NOT IMPLEMENTED FOR THE TIME BEING {% endcomment %}
+                <div class="form-check d-none">
+                  <input class="form-check-input" type="radio" name="gameTypeDefault" id="coopRadio" value="co-op" hidden/>
+                  <label class="form-check-label" for="coopRadio">{% translate "CO-OP" %}</label>
                 </div>
               </div>
             </div>

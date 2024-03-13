@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 17:08+0000\n"
+"POT-Creation-Date: 2024-03-13 19:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,70 @@ msgstr "Francês"
 #: core/settings.py:131
 msgid "Brazilian Portuguese"
 msgstr "Português brasileiro"
+
+#: core/views.py:151
+msgid "Accept"
+msgstr "Aceitar"
+
+#: core/views.py:151
+msgid "View Profile"
+msgstr "Ver Perfil"
+
+#: core/views.py:152
+msgid "(Pending friendship request)"
+msgstr "(Pedido de Amizade Pendente)"
+
+#: core/views.py:336
+msgid "distance traveled"
+msgstr "distância viajada"
+
+#: core/views.py:337
+msgid "friends"
+msgstr "companheiros"
+
+#: core/views.py:338
+msgid "time played"
+msgstr "tempo jogado"
+
+#: core/views.py:339
+msgid "classic matches"
+msgstr "partidas clássicas"
+
+#: core/views.py:340
+msgid "co-op matches"
+msgstr "jogos cooperativos jogados"
+
+#: core/views.py:341
+msgid "wins"
+msgstr "vitórias"
+
+#: core/views.py:346
+msgid " achievement"
+msgstr " conquista"
+
+#: core/views.py:348
+msgid "No "
+msgstr "Sem conquista de "
+
+#: core/views.py:348
+msgid " achievement aquired yet, go play some matches!"
+msgstr " ainda, vá jogar algumas partidas!"
+
+#: core/views.py:350
+msgid "copper"
+msgstr "Conquista cobre"
+
+#: core/views.py:350 core/views.py:352 core/views.py:354
+msgid " achievement acquired!"
+msgstr " adquirida!"
+
+#: core/views.py:352
+msgid "silver"
+msgstr "Conquista prateada"
+
+#: core/views.py:354
+msgid "gold"
+msgstr "Conquista dourada"
 
 #: pong/views.py:56
 #, python-format
