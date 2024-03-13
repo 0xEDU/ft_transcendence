@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-// compiler version must be greater than or equal to 0.8.23 and less than 0.9.0
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.13;
 
 contract Tournaments {
     struct Match {
