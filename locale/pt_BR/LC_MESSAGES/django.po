@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 20:21+0000\n"
+"POT-Creation-Date: 2024-03-13 20:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgstr " conquista"
 #: core/views.py:348
 #, fuzzy
 #| msgid " achievement aquired yet, go play some matches!"
-msgid "No {} achievement aquired yet, go play some matches!"
+msgid "No {} achievement acquired yet, go play some matches!"
 msgstr " ainda, vá jogar algumas partidas!"
 
 #: core/views.py:350

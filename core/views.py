@@ -345,7 +345,7 @@ class IndexView(View):
         src = "images/achievements/" + achievement_name + "-" + grade + ".png"
         alt_text = _("{} {} achievement").format(grade.title(), string_mapping[achievement_name].title())
         if (grade == "white"):
-            title = _("No {} achievement aquired yet, go play some matches!").format(string_mapping[achievement_name].title())
+            title = _("No {} achievement acquired yet, go play some matches!").format(string_mapping[achievement_name].title())
         elif (grade == "copper"):
             title = _("Copper {} achievement acquired!").format(string_mapping[achievement_name].title())
         elif (grade == "silver"):
