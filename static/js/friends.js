@@ -249,6 +249,19 @@ function viewProfile(friendId) {
     fetch(`/get-user-info/${friendId}/`)
         .then(response => response.json())
         .then(data => {
+            console.log(data)
+            emptyElement("ball_hits_friends");
+            emptyElement("distance_friends");
+            emptyElement("hour_friends");
+            emptyElement("friends_friends");
+            emptyElement("wins_friends");
+            emptyElement("losses_friends");
+            insertElement("ball_hits_friends", data.ball_hits_record);
+            insertElement("distance_friends", data.cumulative_ball_distance);
+            insertElement("hour_friends", data.total_hours_played);
+            insertElement("friends_friends", data.total_hours_played);
+            insertElement("wins_friends", data.wins);
+            insertElement("losses_friends", data.losses);
             document.getElementById('userInfoImage').src = data.profilePictureUrl;
             document.getElementById('userInfoName').textContent = data.displayName;
             document.getElementById('userInfoLogin').textContent = data.loginIntra;
