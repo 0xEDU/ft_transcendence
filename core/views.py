@@ -289,52 +289,9 @@ class GetUserInfoView(View):
 
 
 class GetUserMatchesView(View):
-    template_name = "friends/base.html"
-    def get(self, request, friend_id):
-        def _get_latest_matches(self):
-            """Returns the latest matches as a list."""
-
-            def __get_match_description(match, player1_score, player2_name) -> str:
-                if match.type == "co-op":
-                    return _("🤝 joined forces with %(player2_name)s") % {'player2_name': player2_name}
-                if match.type == "classic" and player1_score == 3:
-                    return _("🥇 won against %(player2_name)s") % {'player2_name': player2_name}
-                if match.type == "classic" and player1_score in [0, 1, 2]:
-                    return _("🥈 lost to %(player2_name)s") % {'player2_name': player2_name}
-
-                return ""
-
-            def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
-                match_datetime_IN_BRAZIL_IDC = timezone.localtime(match.match_date, timezone=timezone.get_fixed_timezone(-3 * 60))
-                match_hour = match_datetime_IN_BRAZIL_IDC.strftime("%H:%M")
-                match_date = match_datetime_IN_BRAZIL_IDC.strftime("%d/%m/%y")
-                if match.type == "co-op":
-                    score_str = f"{player1_score}"
-                if match.type == "classic":
-                    score_str = f"{player1_score} x {player2_score}"
-                return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
-                                        match_date)
-
-            current_user_id = friend_id
-            player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
-            player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
-                                .exclude(player_id=current_user_id)).order_by("match__match_date")
-            player1_scores_dict = {score.match_id: score for score in player1_scores}
-            match_row_objects: List[MatchRowObject] = [
-                __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score,
-                                            score.player.display_name)
-                for score in player2_scores if score.match_id in player1_scores_dict
-            ]
-            return match_row_objects
-
-        def get_context_data(self, **kwargs):
-            """Returns the context data."""
-
-            context = super().get_context_data(**kwargs)
-            if "user_id" not in self.request.session.keys() or not self.request.session["user_id"]:
-                return context
-            context["match_rows"] = self._get_latest_matches()
-            return context
+    def get(self, request):
+        match_rows = []
+        return render(request, 'stats/components/matches-history-container.html', {'match_rows': match_rows})
 
 class IndexView(View):
     """Renders the home page."""

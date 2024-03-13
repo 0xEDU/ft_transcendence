@@ -298,6 +298,11 @@ function viewProfile(friendId) {
 
 
 function viewMatchHistory() {
-	const userInfoModal = new bootstrap.Modal(document.getElementById('userMatchesModal'));
-	userInfoModal.show();
+	fetch(`matches-history-container/`)
+        .then(response => response.text())
+        .then(data => {
+			swapInnerHTMLOfElement('matchesHistoryContainer', data);
+			const userInfoModal = new bootstrap.Modal(document.getElementById('userMatchesModal'));
+			userInfoModal.show();
+		})
 }
