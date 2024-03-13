@@ -139,6 +139,19 @@ const drawStartingScreen = () => {
 	context.fillText("Press Enter to Start", canvas.width / 2, canvas.height / 2); // Start instructions
 }
 
+function drawNextMatchScreen() {
+	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+	context.fillStyle = styleGuide.__WHITE
+	context.font = "48px sans serif"; // Text font and size
+	context.textAlign = "center"; // Align text to the center
+	context.fillText("Next match:", canvas.width / 2, canvas.height / 3 + 60);
+	context.font = "36px sans serif"; // Smaller text for instructions
+	context.fillText(leftPlayerLogin + " x " + rightPlayerLogin, canvas.width / 2, canvas.height / 2);
+	context.font = "24px sans serif"; // Smaller text for instructions
+	context.fillText("Press Enter to continue", canvas.width / 2, canvas.height / 2 + 60); // Start instructions
+}
+
 const drawEndingScreen = (game_type) => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 	resetBall();
@@ -155,7 +168,11 @@ const drawEndingScreen = (game_type) => {
 				pressEnterHeight += 60;
 			}
 			context.font = "bold 18px sans serif";
-			context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + pressEnterHeight);
+			if (isLastMatch) {
+				context.fillText("(press enter to return to lobby)", canvas.width / 2, canvas.height / 2 + pressEnterHeight);
+			} else {
+				context.fillText("(press enter to continue)", canvas.width / 2, canvas.height / 2 + pressEnterHeight);
+			}
 		}
 		if (game_type === "co-op") {
 			context.textAlign = 'center';
@@ -476,8 +493,8 @@ const keyDownHandler = (e) => {
 	}
 	if (e.key == "Enter" && gameState === States.GAME_OVER && !isLastMatch) {
 		gameState = States.NOT_STARTED;
-		// drawNextMatchScreen();
 		updatePlayers();
+		drawNextMatchScreen();
 	}
 }
 
@@ -573,14 +590,6 @@ const sendMatchDataToServer = (match_id, players_array) => {
 	}
 }
 
-// tournament_obj = {
-//     "tournamentId": 0,
-//     "players": ["Player1", "Player2"],
-//     "matches": [
-//         {"id": 1, "playerIds": [1, 2], "score": [0, 0], "date": 1638316800},
-//         {"id": 2, "playerIds": [3, 4], "score": [0, 0], "date": 1638403200}
-//     ]
-// }
 function sendTournamentDataToBlockchain() {
 	const tournamentData = {
 		"players": tournamentAllPlayers,
