@@ -188,7 +188,6 @@ class MatchView(View):
     def patch(self, request):
         try:
             data = json.loads(request.body)
-            print(data)
             response = self._create_one_match(data)
             return JsonResponse(response)
         except json.JSONDecodeError:

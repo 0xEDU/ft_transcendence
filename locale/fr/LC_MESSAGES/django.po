@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 19:13+0000\n"
+"POT-Creation-Date: 2024-03-13 23:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -145,48 +145,51 @@ msgstr "Sélectionnez un fichier à téléverser"
 #: templates/friends/base.html:7
 #, python-format
 msgid "%(user_display_name)s's friends"
-msgstr ""
+msgstr "Amis de %(user_display_name)s"
 
 #: templates/friends/base.html:13
 msgid "Search for someone"
-msgstr ""
+msgstr "Rechercher quelqu'un"
 
 #: templates/friends/base.html:32
 msgid "Add Friend"
-msgstr ""
+msgstr "Ajouter un ami"
 
 #: templates/friends/base.html:36
 msgid ""
 "\"Do you want to add \"<span id=\"modalUserNameAdd\"></span>\" as a friend?\""
 msgstr ""
+"Voulez-vous ajouter \"<span id=\"modalUserNameAdd\"></span>\" en tant qu'ami ?\""
 
 #: templates/friends/base.html:40
 msgid "Add as Friend"
-msgstr ""
+msgstr "Ajouter comme ami"
 
 #: templates/friends/base.html:55
 msgid "Pending Friend"
-msgstr ""
+msgstr "Ami en attente"
 
 #: templates/friends/base.html:59
 msgid ""
 "\"Do you want to remove \"<span id=\"modalUserNamePending\"></span>\"'s "
 "friendship request ?\""
 msgstr ""
+"Voulez-vous supprimer la demande d'ami de \"<span id=\"modalUserNamePending\"></span>\" ?"
 
 #: templates/friends/base.html:63
 msgid "Remove Request"
-msgstr ""
+msgstr "Supprimer la demande"
 
 #: templates/friends/base.html:78 templates/friends/base.html:86
 msgid "Remove Friend"
-msgstr ""
+msgstr "Supprimer l'ami"
 
 #: templates/friends/base.html:82
 msgid ""
 "\"Do you want to remove \" <span id=\"modalUserNameRemove\"></span>\"'s "
 "friendship?\" "
 msgstr ""
+"Voulez-vous supprimer l'ami \"<span id=\"modalUserNameRemove\"></span>\" ?"
 
 #: templates/friends/base.html:112 templates/soninha/partials/user-stats.html:4
 msgid "Team ball hits record"
@@ -251,19 +254,19 @@ msgid "GAME MODE"
 msgstr "MODE DE JEU"
 
 #: templates/lobby/components/single-match-modal.html:19
-#: templates/lobby/components/tournament-modal.html:19
+#: templates/lobby/components/tournament-modal.html:25
 #: templates/stats/components/matches-history.html:10
 msgid "CO-OP"
 msgstr "COOPERATIF"
 
 #: templates/lobby/components/single-match-modal.html:23
-#: templates/lobby/components/tournament-modal.html:23
+#: templates/lobby/components/tournament-modal.html:19
 #: templates/stats/components/matches-history.html:24
 msgid "CLASSIC"
 msgstr "CLASSIQUE"
 
 #: templates/lobby/components/single-match-modal.html:28
-#: templates/lobby/components/tournament-modal.html:28
+#: templates/lobby/components/tournament-modal.html:30
 msgid "PLAYER"
 msgstr "JOUEUR/JOUEUSE"
 
@@ -272,26 +275,26 @@ msgid "TWO"
 msgstr "DEUX"
 
 #: templates/lobby/components/single-match-modal.html:36
-#: templates/lobby/components/tournament-modal.html:32
+#: templates/lobby/components/tournament-modal.html:34
 msgid "FOUR"
 msgstr "QUATRE"
 
 #: templates/lobby/components/single-match-modal.html:41
-#: templates/lobby/components/tournament-modal.html:41
+#: templates/lobby/components/tournament-modal.html:43
 msgid "MAP"
 msgstr "CARTE"
 
 #: templates/lobby/components/single-match-modal.html:45
-#: templates/lobby/components/tournament-modal.html:45
+#: templates/lobby/components/tournament-modal.html:47
 msgid "MAP 1"
 msgstr "CARTE 1"
 
 #: templates/lobby/components/single-match-modal.html:49
-#: templates/lobby/components/tournament-modal.html:49
+#: templates/lobby/components/tournament-modal.html:51
 msgid "MAP 2"
 msgstr "CARTE 2"
 
-#: templates/lobby/components/tournament-modal.html:36
+#: templates/lobby/components/tournament-modal.html:38
 msgid "EIGHT"
 msgstr "HUIT"
 
@@ -326,6 +329,18 @@ msgstr "MES STATS"
 #: templates/stats/components/matches-history.html:49
 msgid "No matches played yet"
 msgstr "Aucun match joué pour l'instant"
+
+#: templates/stats/components/tournament-card.html:4
+msgid "Tournament"
+msgstr "Tournoi"
+
+#: templates/stats/components/tournament-card.html:5
+msgid "Blockchain hash:"
+msgstr "Hachage de la blockchain:"
+
+#: templates/stats/components/tournament-card.html:9
+msgid "Winner:"
+msgstr "Gagnant"
 
 #: templates/stats/components/tournaments.html:16
 msgid "You haven't played any tournaments yet."

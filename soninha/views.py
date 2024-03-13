@@ -133,6 +133,12 @@ class ProfilePictureView(View):
         return JsonResponse({"new_pfp_url": user.profile_picture.url}, status=HTTPStatus.OK)
 
 class DisplayNameView(View):
+    def get(self, request, *args, **kwargs):
+        login_intra = kwargs["login_intra"]
+        user = User.objects.get(login_intra=login_intra)
+        return JsonResponse({"display_name": user.display_name})
+
+        
     def post(self, request, *args, **kwargs):
         new_display_name = request.POST.get("display-name")
 
