@@ -6,13 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	.then(data => {
 		let friendsHTML = '';
 		data.forEach(friend => {
-		friendsHTML += `
-			<img class="matesImages me-3 mt-3"
-				src="${friend.image_url}" 
-				alt="${friend.username}'s Photo" 
-				title="${friend.username}">
-		`;
-		});
+			const onlineStatus = friend.online ? '🟢' : '🔴';
+			friendsHTML += `
+			  <div class="mate-container">
+				<img class="matesImages me-3 mt-3"
+					 src="${friend.image_url}" 
+					 alt="${friend.username}'s Photo" 
+					 title="${friend.username}">
+				<span class="online-status">${onlineStatus}</span>
+			  </div>
+			`;
+		  });
 
 		swapInnerHTMLOfElement('friendsContainer', friendsHTML);
 	})

@@ -84,3 +84,14 @@ img.matesImages:hover {
 	border-color: white;
 	border: 1px solid;
 }
+
+.mate-container {
+	position: relative;
+	display: inline-block;
+}
+.online-status {
+	position: absolute;
+	top: 15%;
+	right: 15%;
+	font-size: 1vw;
+}

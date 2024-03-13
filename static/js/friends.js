@@ -4,6 +4,29 @@ import emptyElement from "./tinyDOM/emptyElement.js";
 import swapInnerHTMLOfElement from "./tinyDOM/swapInnerHTMLOfElement.js";
 import insertElement from "./tinyDOM/insertElement.js";
 
+
+
+function updateLastSeen() {
+	const csrftoken = getCsrfToken();
+  
+	fetch('/update-last-seen/', {
+	  method: 'POST',
+	  headers: {
+		'Content-Type': 'application/json',
+		'X-CSRFToken': csrftoken,
+	  },
+	})
+	.then(response => {
+	  if (!response.ok) {
+		throw new Error('Server returned an error when updating last seen.');
+	  }
+	})
+	.catch(error => console.error('Error in updating last seen:', error));
+  }
+  
+  setInterval(updateLastSeen, 15000);
+
+
 document.getElementById('addSign').addEventListener('click', function() {
 	emptyElement('friendsList');
     fetchFriends();
@@ -18,7 +41,7 @@ function getCsrfToken() {
 
 document.addEventListener('DOMContentLoaded', function() {
     var searchForm = document.getElementById('userSearchForm');
-    
+	updateLastSeen();
     searchForm.addEventListener('submit', function(event) {
         event.preventDefault();
         var searchTerm = document.getElementById('searchField').value;
