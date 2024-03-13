@@ -30,6 +30,72 @@ msgstr "Français"
 msgid "Brazilian Portuguese"
 msgstr "Portugais brésilien"
 
+#: core/views.py:151
+msgid "Accept"
+msgstr "Accepter"
+
+#: core/views.py:151
+msgid "View Profile"
+msgstr "Voir le profil"
+
+#: core/views.py:152
+msgid "(Pending friendship request)"
+msgstr "(Demande d'amitié en attente)"
+
+#: core/views.py:336
+#, fuzzy
+#| msgid "Distance traveled with a companion"
+msgid "distance traveled"
+msgstr "Distance parcourue ensemble"
+
+#: core/views.py:337
+msgid "friends"
+msgstr "ami(e)s"
+
+#: core/views.py:338
+msgid "time played"
+msgstr "temps joué"
+
+#: core/views.py:339
+msgid "classic matches"
+msgstr "matchs classiques"
+
+#: core/views.py:340
+msgid "co-op matches"
+msgstr "matchs coopératifs"
+
+#: core/views.py:341
+msgid "wins"
+msgstr "victoires"
+
+#: core/views.py:346
+msgid " achievement"
+msgstr "succès"
+
+#: core/views.py:348
+msgid "No "
+msgstr ""
+
+#: core/views.py:348
+msgid " achievement aquired yet, go play some matches!"
+msgstr ""
+
+#: core/views.py:350
+msgid "copper"
+msgstr ""
+
+#: core/views.py:350 core/views.py:352 core/views.py:354
+msgid " achievement acquired!"
+msgstr ""
+
+#: core/views.py:352
+msgid "silver"
+msgstr ""
+
+#: core/views.py:354
+msgid "gold"
+msgstr ""
+
 #: pong/views.py:56
 #, python-format
 msgid "Invalid game mode: '%(match_type)s'"
