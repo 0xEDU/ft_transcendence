@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 19:13+0000\n"
+"POT-Creation-Date: 2024-03-13 20:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,31 +69,25 @@ msgid "wins"
 msgstr "victoires"
 
 #: core/views.py:346
-msgid " achievement"
+#, fuzzy
+#| msgid " achievement"
+msgid "{} {} achievement"
 msgstr "succès"
 
 #: core/views.py:348
-msgid "No "
-msgstr ""
-
-#: core/views.py:348
-msgid " achievement aquired yet, go play some matches!"
+msgid "No {} achievement aquired yet, go play some matches!"
 msgstr ""
 
 #: core/views.py:350
-msgid "copper"
-msgstr ""
-
-#: core/views.py:350 core/views.py:352 core/views.py:354
-msgid " achievement acquired!"
+msgid "Copper {} achievement acquired!"
 msgstr ""
 
 #: core/views.py:352
-msgid "silver"
+msgid "silver {} achievement acquired!"
 msgstr ""
 
 #: core/views.py:354
-msgid "gold"
+msgid "gold {} achievement acquired!"
 msgstr ""
 
 #: pong/views.py:56
@@ -159,7 +153,8 @@ msgstr "Ajouter un ami(e)"
 msgid ""
 "\"Do you want to add \"<span id=\"modalUserNameAdd\"></span>\" as a friend?\""
 msgstr ""
-"\"Veux-tu ajouter \"<span id=\"modalUserNameAdd\"></span>\" en tant qu'ami(e)?\""
+"\"Veux-tu ajouter \"<span id=\"modalUserNameAdd\"></span>\" en tant "
+"qu'ami(e)?\""
 
 #: templates/friends/base.html:40
 msgid "Add as Friend"
@@ -173,7 +168,9 @@ msgstr "Ami(e) en attente"
 msgid ""
 "\"Do you want to remove \"<span id=\"modalUserNamePending\"></span>\"'s "
 "friendship request ?\""
-msgstr "\"Veux-tu supprimer la demande d'amitié de \"<span id=\"modalUserNamePending\"></span>\" ?\""
+msgstr ""
+"\"Veux-tu supprimer la demande d'amitié de \"<span "
+"id=\"modalUserNamePending\"></span>\" ?\""
 
 #: templates/friends/base.html:63
 msgid "Remove Request"
@@ -188,7 +185,8 @@ msgid ""
 "\"Do you want to remove \" <span id=\"modalUserNameRemove\"></span>\"'s "
 "friendship?\" "
 msgstr ""
-"\"Veux-tu supprimer l'amitié de \" <span id=\"modalUserNameRemove\"></span>\"?\" "
+"\"Veux-tu supprimer l'amitié de \" <span id=\"modalUserNameRemove\"></"
+"span>\"?\" "
 
 #: templates/friends/base.html:112 templates/soninha/partials/user-stats.html:4
 msgid "Team ball hits record"
@@ -253,19 +251,19 @@ msgid "GAME MODE"
 msgstr "MODE DE JEU"
 
 #: templates/lobby/components/single-match-modal.html:19
-#: templates/lobby/components/tournament-modal.html:19
+#: templates/lobby/components/tournament-modal.html:25
 #: templates/stats/components/matches-history.html:10
 msgid "CO-OP"
 msgstr "COOPERATIF"
 
 #: templates/lobby/components/single-match-modal.html:23
-#: templates/lobby/components/tournament-modal.html:23
+#: templates/lobby/components/tournament-modal.html:19
 #: templates/stats/components/matches-history.html:24
 msgid "CLASSIC"
 msgstr "CLASSIQUE"
 
 #: templates/lobby/components/single-match-modal.html:28
-#: templates/lobby/components/tournament-modal.html:28
+#: templates/lobby/components/tournament-modal.html:30
 msgid "PLAYER"
 msgstr "JOUEUR/JOUEUSE"
 
@@ -274,26 +272,26 @@ msgid "TWO"
 msgstr "DEUX"
 
 #: templates/lobby/components/single-match-modal.html:36
-#: templates/lobby/components/tournament-modal.html:32
+#: templates/lobby/components/tournament-modal.html:34
 msgid "FOUR"
 msgstr "QUATRE"
 
 #: templates/lobby/components/single-match-modal.html:41
-#: templates/lobby/components/tournament-modal.html:41
+#: templates/lobby/components/tournament-modal.html:43
 msgid "MAP"
 msgstr "CARTE"
 
 #: templates/lobby/components/single-match-modal.html:45
-#: templates/lobby/components/tournament-modal.html:45
+#: templates/lobby/components/tournament-modal.html:47
 msgid "MAP 1"
 msgstr "CARTE 1"
 
 #: templates/lobby/components/single-match-modal.html:49
-#: templates/lobby/components/tournament-modal.html:49
+#: templates/lobby/components/tournament-modal.html:51
 msgid "MAP 2"
 msgstr "CARTE 2"
 
-#: templates/lobby/components/tournament-modal.html:36
+#: templates/lobby/components/tournament-modal.html:38
 msgid "EIGHT"
 msgstr "HUIT"
 
