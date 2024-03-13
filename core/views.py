@@ -7,7 +7,7 @@ from pong.models import Score
 from soninha.models import User, Achievements
 from stats.models import UserStats
 from .models import Friendship
-from stats.views import MatchRowObject
+from stats.views import MatchRowObject, MatchesHistoryTemplateView
 
 # Django's imports
 from django.shortcuts import render
@@ -288,10 +288,11 @@ class GetUserInfoView(View):
         return JsonResponse(data)
 
 
-class GetUserMatchesView(View):
+class GetUserMatchesView(MatchesHistoryTemplateView):
     def get(self, request):
-        match_rows = []
-        return render(request, 'stats/components/matches-history-container.html', {'match_rows': match_rows})
+        context = {}
+        context["match_rows"] = self._get_latest_matches()
+        return render(request, 'stats/components/matches-history-container.html', context)
 
 class IndexView(View):
     """Renders the home page."""
