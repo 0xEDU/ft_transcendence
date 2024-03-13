@@ -719,7 +719,7 @@ const runGame = async (match_id, players_array, game_type, map_skin) => {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		if (map_skin === "map2")
 			drawBackground();
-		if (!hasFourPlayers) {
+		if (!hasFourPlayers || game_type === "classic") {
 			drawMiddleLine(map_skin);
 		}
 		drawPlayersNames(map_skin);
