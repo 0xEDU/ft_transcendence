@@ -119,7 +119,7 @@ class MatchesHistoryTemplateView(TemplateView):
         scores = [scores[i:i + ROWS_SIZE] for i in range(0, len(scores), ROWS_SIZE)]
         return scores
 
-    def _get_latest_matches(self):
+    def _get_latest_matches(self, current_user_id):
         """Returns the latest matches as a list."""
 
         def __get_match_description(match, player1_score, player2_name) -> str:
@@ -143,7 +143,6 @@ class MatchesHistoryTemplateView(TemplateView):
             return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
                                   match_date)
 
-        current_user_id = self.request.session["user_id"]
         player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
         player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
                           .exclude(player_id=current_user_id)).order_by("match__match_date")
@@ -163,7 +162,7 @@ class MatchesHistoryTemplateView(TemplateView):
             return context
         context["coop_cell_rows"] = self._get_latest_coop_scores()
         context["versus_cell_rows"] = self._get_latest_versus_scores()
-        context["match_rows"] = self._get_latest_matches()
+        context["match_rows"] = self._get_latest_matches(self.request.session["user_id"])
         return context
 
 
