@@ -2,10 +2,15 @@
 <div class="{{ friend.cardClass }} d-flex">
     <img src="{{ friend.profilePictureUrl }}" alt="Profile Picture" class="imgProfile">
     <div class="friendCard d-flex align-items-center justify-content-between">
-		<div></div>
-        <div class="friendName">{{ friend.displayName }} {{ friend.friendshipStatus }}</div>
-        <button type="button" class="btn {{ friend.buttonColor }} {{ friend.buttonClass }} ml-auto" 
-                data-friendship-id="{{ friend.friendshipId }}" data-friend-id="{{ friend.id }}">{{ friend.buttonText }}</button>
+        <div></div>
+		<div class="friendName"><h5>{{ friend.displayName }} {{ friend.friendshipStatus }}</h5></div>
+		<div class="d-flex justify-content-between">
+			<button type="button" class="btn {{ friend.buttonColor }} matchHistoryButton ml-auto me-2" 
+					data-friendship-id="{{ friend.friendshipId }}" data-friend-id="{{ friend.id }}">Match History</button>
+	
+			<button type="button" class="btn {{ friend.buttonColor }} {{ friend.buttonClass }} ml-auto" 
+					data-friendship-id="{{ friend.friendshipId }}" data-friend-id="{{ friend.id }}">{{ friend.buttonText }}</button>
+		</div>
     </div>
 </div>
 {% endfor %}
