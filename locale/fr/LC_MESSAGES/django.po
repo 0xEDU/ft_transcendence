@@ -76,19 +76,19 @@ msgstr "succès"
 
 #: core/views.py:348
 msgid "No {} achievement aquired yet, go play some matches!"
-msgstr ""
+msgstr "Aucun succès de {} n'a été acquis pour le moment, allez jouer quelques parties!"
 
 #: core/views.py:350
 msgid "Copper {} achievement acquired!"
-msgstr ""
+msgstr "Succès de {} en cuivre acquis!"
 
 #: core/views.py:352
 msgid "silver {} achievement acquired!"
-msgstr ""
+msgstr "Succès de {} en argent acquis!"
 
 #: core/views.py:354
 msgid "gold {} achievement acquired!"
-msgstr ""
+msgstr "Succès de {} en or acquis!"
 
 #: pong/views.py:56
 #, python-format
