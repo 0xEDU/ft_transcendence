@@ -67,34 +67,24 @@ msgid "wins"
 msgstr "vitórias"
 
 #: core/views.py:346
-#, fuzzy
-#| msgid " achievement"
 msgid "{} {} achievement"
 msgstr " conquista"
 
 #: core/views.py:348
-#, fuzzy
-#| msgid " achievement aquired yet, go play some matches!"
 msgid "No {} achievement acquired yet, go play some matches!"
-msgstr " ainda, vá jogar algumas partidas!"
+msgstr "Nenhuma conquista {} ainda, vá jogar algumas partidas!"
 
 #: core/views.py:350
-#, fuzzy
-#| msgid " achievement acquired!"
 msgid "Copper {} achievement acquired!"
-msgstr " adquirida!"
+msgstr "Conquista Cobre {} adquirida!"
 
 #: core/views.py:352
-#, fuzzy
-#| msgid " achievement acquired!"
 msgid "silver {} achievement acquired!"
-msgstr " adquirida!"
+msgstr "Conquista Prateada {} adquirida!"
 
 #: core/views.py:354
-#, fuzzy
-#| msgid " achievement acquired!"
 msgid "gold {} achievement acquired!"
-msgstr " adquirida!"
+msgstr "Conquista Dourada {} adquirida!"
 
 #: pong/views.py:56
 #, python-format
