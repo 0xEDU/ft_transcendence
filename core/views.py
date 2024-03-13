@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q
 from django.template.loader import render_to_string
+from django.utils.translation import gettext_lazy as _
 
 class UpdateLastSeenView(View):
     def post(self, request, *args, **kwargs):
@@ -147,8 +148,8 @@ class FriendListView(View):
                 'cardClass': 'friendCard-pending' if friendship.status == 'pending' else 'friendCard',
                 'buttonClass': 'acceptFriendshipButton' if friendship.status == 'pending' and not friendship.requester == current_user else 'viewProfileButton',
                 'buttonColor': 'btn-outline-secondary' if friendship.status == 'pending' else 'btn-outline-light',
-                'buttonText': 'Accept' if friendship.status == 'pending' and not friendship.requester == current_user else 'View Profile',
-                'friendshipStatus': '(Pending friendship request)' if friendship.status == 'pending' else '',
+                'buttonText': _('Accept') if friendship.status == 'pending' and not friendship.requester == current_user else _('View Profile'),
+                'friendshipStatus': _('(Pending friendship request)') if friendship.status == 'pending' else '',
             }
             friends_list.append(friend_data)
 
@@ -332,20 +333,25 @@ class IndexView(View):
 
     def _build_achievement_strings_dict(self, achievement_name, value) -> dict:
         string_mapping = {
-            "ball_distance": "distance traveled",
-            "friends_count": "friends",
-            "hours_played": "hours played",
-            "matches_classic": "classic matches",
-            "matches_coop": "co-op matches",
-            "matches_won": "wins",
+            "ball_distance": _("distance traveled"),
+            "friends_count": _("friends"),
+            "hours_played": _("time played"),
+            "matches_classic": _("classic matches"),
+            "matches_coop": _("co-op matches"),
+            "matches_won": _("wins"),
         }
         grade = self._determine_grade(achievement_name, value)
 
         src = "images/achievements/" + achievement_name + "-" + grade + ".png"
-        alt_text = grade.title() + " " + string_mapping[achievement_name].title() + " achievement"
-        title = "No " + string_mapping[achievement_name].title() + " achievement aquired yet, go play some matches!" \
-            if (grade == "white") \
-            else grade.title() + " " + string_mapping[achievement_name].title() + " achievement acquired!"
+        alt_text = _("{} {} achievement").format(grade.title(), string_mapping[achievement_name].title())
+        if (grade == "white"):
+            title = _("No {} achievement aquired yet, go play some matches!").format(string_mapping[achievement_name].title())
+        elif (grade == "copper"):
+            title = _("Copper {} achievement acquired!").format(string_mapping[achievement_name].title())
+        elif (grade == "silver"):
+            title = _("silver {} achievement acquired!").format(string_mapping[achievement_name].title())
+        else:
+            title = _("gold {} achievement acquired!").format(string_mapping[achievement_name].title())
         return ({
             "src": src,
             "alt_text": alt_text,
