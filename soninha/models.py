@@ -1,4 +1,5 @@
 """Models for the soninha app."""
+from django.utils import timezone
 from django.db import models
 
 
@@ -9,7 +10,11 @@ class User(models.Model):
     display_name = models.CharField(max_length=40)
     intra_cdn_profile_picture_url = models.CharField(max_length=200, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
-
+    last_seen = models.DateTimeField(default=timezone.now)
+    
+    def update_last_seen(self):
+        self.last_seen = timezone.now()
+        self.save(update_fields=['last_seen'])
     def __str__(self):
         return f"I am user [{self.id}] - {self.display_name}"
 

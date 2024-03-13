@@ -3,12 +3,16 @@
 <div class="friendsPage-container">
 	<div class="d-flex justify-content-between friendsPage-title">
 		<div class="col-6">
-			<h2><span>{{ user_display_name }}'s friends</span></h2>
+			{% blocktrans %}
+			<h2>
+				<span>{{ user_display_name }}'s friends</span>
+			</h2>
+			{% endblocktrans %}
 		</div>
 		<div class="d-flex flex-column">
 			<form id="userSearchForm" class="input-group friendsPage-inputGroup">
 				<input type="text" id="searchField" class="form-control friendsPage-formControl"
-					placeholder="search for someone" aria-label="Search for someone">
+					placeholder="search for someone" aria-label="{% translate 'Search for someone' %}">
 				<button class="btn btn-outline-secondary friendsPage-btnOutlineSecondary" type="submit"><i
 						class="fa fa-search"></i></button>
 			</form>
@@ -21,5 +25,107 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendModalLabel" aria-hidden="true"
+	data-bs-theme="dark">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="addFriendModalLabel">{% translate "Add Friend" %}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body text-white pt-0">
+				<p>{% blocktrans %}"Do you want to add "<span id="modalUserNameAdd"></span>" as a friend?"{% endblocktrans %}</p>
+			</div>
+			<div class="d-flex flex-column">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" id="addFriendButton">{% translate "Add as Friend" %}</button>
+				</div>
+				<div class="d-flex flex-row-reverse">
+					<div id="errorMessage"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="pendingFriendModal" tabindex="-1" aria-labelledby="pendingFriendModalLabel"
+	aria-hidden="true" data-bs-theme="dark">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="pendingFriendModalLabel">{% translate "Pending Friend" %}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body text-white pt-0">
+				<p>{% blocktrans %}"Do you want to remove "<span id="modalUserNamePending"></span>"'s friendship request ?"{% endblocktrans %}</p>
+			</div>
+			<div class="d-flex flex-column">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" id="pendingFriendButton">{% translate "Remove Request" %}</button>
+				</div>
+				<div class="d-flex flex-row-reverse">
+					<div id="errorMessage"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="removeFriendModal" tabindex="-1" aria-labelledby="removeFriendModalLabel" aria-hidden="true"
+	data-bs-theme="dark">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="removeFriendModalLabel">{% translate "Remove Friend" %}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body text-white pt-0">
+				<p>{% blocktrans %}"Do you want to remove " <span id="modalUserNameRemove"></span>"'s friendship?" {% endblocktrans %}</p>
+			</div>
+			<div class="d-flex flex-column">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" id="removeFriendButton">{% translate "Remove Friend" %}</button>
+				</div>
+				<div class="d-flex flex-row-reverse">
+					<div id="errorMessage"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true"
+	data-bs-theme="dark">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 id="userInfoName"></h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center">
+				<img id="userInfoImage" src="" alt="User Picture" class="img-fluid rounded matesImage me-4">
+			</div>
+			<div class="modal-footer" style="display: flex; flex-direction: column;">
+				<div>
+					<p id="userInfoLogin"></p>
+				</div>
+				<div style="display: flex; justify-content: space-between;">
+					<h4 class="ms-3" title="{% translate 'Team ball hits record' %}">🙌 <h4 id="ball_hits_friends"></h4></h4>
+					<h4 class="ms-3" title="{% translate 'Distance traveled with a companion' %}">📍 <h4 id="distance_friends"></h4></h4>
+				</div>
+				<div style="display: flex; justify-content: space-between;">
+					<h4 class="ms-3"  title="{% translate 'Total hours played' %}">🕰️ <h4 id="hour_friends"></h4></h4>
+					<h4 class="ms-3"  title="{% translate 'Companions encountered' %}">👯 <h4 id="friends_friends"></h4></h4>
+				</div>
+				<div style="display: flex; justify-content: space-between;">
+					<h4 class="ms-3"  title="{% translate 'Classic games won' %}">🏆 <h4 id="wins_friends"></h4></h4>
+					<h4 class="ms-3"  title="{% translate 'Classic games lost' %}">😞 <h4 id="losses_friends"></h4></h4>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <script type="module" src="{% static 'js/friends.js' %}" defer></script>

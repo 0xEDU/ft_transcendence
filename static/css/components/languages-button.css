@@ -1,0 +1,27 @@
+#languages-dropdown {
+  background: #1C1A1A !important;
+
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+
+.navbar-expand-lg .navbar-nav .dropdown-menu {
+  position: static !important;
+}
+
+.dropdown-menu {
+  border: 0 !important;
+  background: #1C1A1A !important;
+}
+
+.dropdown-item {
+  width: 50% !important;
+}
+
+.language-button {
+  padding: 0; /* Remove any padding */
+  background-color: transparent; /* Make the background transparent */
+  border: none; /* Remove border */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}

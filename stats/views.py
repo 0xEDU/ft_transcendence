@@ -11,6 +11,7 @@ from stats.models import UserStats
 # Django imports
 from django.db.models import Count
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 
 # Constants
@@ -123,11 +124,12 @@ class MatchesHistoryTemplateView(TemplateView):
 
         def __get_match_description(match, player1_score, player2_name) -> str:
             if match.type == "co-op":
-                return f"🤝 joined forces with {player2_name}"
+                return _("🤝 joined forces with %(player2_name)s") % {'player2_name': player2_name}
             if match.type == "classic" and player1_score == 3:
-                return f"🥇 won against {player2_name}"
+                return _("🥇 won against %(player2_name)s") % {'player2_name': player2_name}
             if match.type == "classic" and player1_score in [0, 1, 2]:
-                return f"🥈 lost to {player2_name}"
+                return _("🥈 lost to %(player2_name)s") % {'player2_name': player2_name}
+
             return ""
 
         def __format_match_row_object(match, player1_score, player2_score, player2_name) -> MatchRowObject:
@@ -195,7 +197,7 @@ class UserStatsTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_user_id = self.request.session["user_id"]
-        if "user_id" not in self.request.session.keys() or self.request.session["user_id"] is '':
+        if "user_id" not in self.request.session.keys() or not self.request.session["user_id"]:
             return context
         userdb = UserStats.objects.get(user=current_user_id)
         if userdb.total_hours_played < 60:

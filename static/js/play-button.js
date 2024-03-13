@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
 
         const url = event.target.getAttribute('action');
-        const method = event.target.getAttribute('method');
 
         const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const formData = new FormData(event.target);
@@ -137,8 +136,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 hideControlPanel();
                 return response.json();
             })
-            .then(responseData => {
-                launchMatch(responseData.match_id, playersArray, gameData.gameType, gameData.mapSkin, true);
+            .then(async responseData => {
+                if (gameData.gameMode == "singleMatch") {
+                    await launchMatch(responseData.match_id, playersArray, gameData.gameType, gameData.mapSkin, true, false);
+                } else {
+                    await launchMatch(responseData.matches_id, responseData.players, gameData.gameType, gameData.mapSkin, false, true);
+                }
             })
             .catch(error => {
                 error.text().then(errorBody => {

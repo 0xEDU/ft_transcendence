@@ -1,29 +1,103 @@
 """Core views."""
 # Python Std Libs
 import os
+import json
 # Our imports
 from pong.models import Score
 from soninha.models import User, Achievements
 from stats.models import UserStats
+from .models import Friendship
 
 # Django's imports
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
-
+from django.utils import timezone
 from django.db.models import Q
-from .models import Friendship
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.template.loader import render_to_string
 
+class UpdateLastSeenView(View):
+    def post(self, request, *args, **kwargs):
+        user_id = request.session.get("user_id")
+        if user_id:
+            try:
+                user = User.objects.get(pk=user_id)
+                user.last_seen = timezone.now()
+                user.save(update_fields=['last_seen'])
+                return JsonResponse({'status': 'success'})
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'User does not exist'}, status=404)
+        else:
+            return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+class GetFriendsView(View):
+    def get(self, request, *args, **kwargs):
+        requester_id = request.session.get("user_id")
+        if requester_id is None:
+            return JsonResponse({'error': 'User not logged in.'}, status=401)
+
+        try:
+            user = User.objects.get(pk=requester_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist.'}, status=404)
+
+        # Filter for both accepted requests and requests made by the user, ordered by the most recent.
+        accepted_friendships = Friendship.objects.filter(
+            Q(status='accepted', requester=user) | Q(status='accepted', accepter=user)
+        ).select_related('accepter', 'requester').order_by('-created_at')[:6]
+
+        friends_list = [
+            {
+                'username': friendship.accepter.display_name if friendship.requester_id == requester_id else friendship.requester.display_name,
+                'image_url': friendship.accepter.profile_picture.url if friendship.requester_id == requester_id and friendship.accepter.profile_picture else (friendship.accepter.intra_cdn_profile_picture_url if friendship.requester_id == requester_id else friendship.requester.intra_cdn_profile_picture_url) or 'static/images/default_user_image.svg',
+                'online': (timezone.now() - friendship.accepter.last_seen).total_seconds() < 15,
+            }
+            for friendship in accepted_friendships
+        ]
+
+        return JsonResponse(friends_list, safe=False)
+
+
+class CreateFriendshipView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            accepter_id = data.get('accepter_id')
+            requester_id = request.session.get("user_id")
+
+            if not requester_id:
+                return JsonResponse({"error": "Authentication required."}, status=401)
+            if requester_id == accepter_id:
+                return JsonResponse({"error": "Can't add yourself"}, status=409)
+
+            requester = User.objects.get(pk=requester_id)
+            accepter = User.objects.get(pk=accepter_id)
+
+            if Friendship.objects.filter(requester=requester, accepter=accepter).exists():
+                return JsonResponse({"error": "Request already sent!"}, status=409)
+            elif Friendship.objects.filter(requester=accepter, accepter=requester).exists():
+                return JsonResponse({"error": "You can't add twice!"}, status=409)
+
+            Friendship.objects.create(requester=requester, accepter=accepter, status='pending')
+            return JsonResponse({"message": "Friend request sent successfully."}, status=201)
+
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User not found."}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON."}, status=400)
+        except Exception as e:
+            print(e)
+            return JsonResponse({"error": "Internal Server Error"}, status=500)
 
 class SearchUserView(View):
     def get(self, request, *args, **kwargs):
         search_term = request.GET.get('search', '')
         try:
-            user = User.objects.get(display_name__icontains=search_term)
+            user = User.objects.get(login_intra__icontains=search_term)
             data = {
+                'id': user.id,
                 'displayName': user.display_name,
+                'loginIntra': user.login_intra,
                 'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
                 'profileUrl': f'/profile/{user.id}/',
             }
@@ -31,52 +105,185 @@ class SearchUserView(View):
         except User.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
 
-class FriendshipRequestView(View):
-    def post(self, request):
-        accepter_id = request.POST.get('accepter_id')
-        accepter = User.objects.get(pk=accepter_id)
-        Friendship.objects.create(requester=request.user, accepter=accepter)
-        return JsonResponse({'message': 'Friendship request sent!'}, status=201)
 
 class AcceptFriendshipView(View):
     def post(self, request):
-        friendship_id = request.POST.get('friendship_id')
-        friendship = Friendship.objects.get(pk=friendship_id, accepter=request.user)
-        friendship.status = 'accepted'
-        friendship.save()
-        return JsonResponse({'message': 'Friendship accepted!'}, status=200)
+        data = json.loads(request.body)
+        friendship_id = data.get('friendshipId')
+        requester_id = request.session.get("user_id")
+        if not requester_id:
+            return JsonResponse({'error': 'User not authenticated'}, status=403)
+        current_user = User.objects.get(pk=requester_id)
+        
+        try:
+            friendship = Friendship.objects.get(pk=friendship_id, accepter=current_user)
+            friendship.status = 'accepted'
+            friendship.save()
+            return JsonResponse({'message': 'Friendship accepted!'}, status=200)
+        except Friendship.DoesNotExist:
+            return JsonResponse({'error': 'Friendship not found or you do not have permission to accept this friendship.'}, status=404)
 
-class FriendshipStatusView(View):
-    def get(self, request):
-        # Return the friendship status between two users
-        user_id = request.GET.get('user_id')
-        friendships = Friendship.objects.filter(
-            Q(requester_id=request.user.id, accepter_id=user_id) |
-            Q(requester_id=user_id, accepter_id=request.user.id)
-        ).first()
-        if friendships:
-            return JsonResponse({
-                'status': friendships.status
-            })
-        return JsonResponse({'status': 'not_friends'})
 
-@method_decorator(login_required, name='dispatch')
 class FriendListView(View):
     def get(self, request):
+        requester_id = request.session.get("user_id")
+        current_user = User.objects.get(pk=requester_id)
+
         friendships = Friendship.objects.filter(
-            Q(requester=request.user) | Q(accepter=request.user)
+            Q(requester=current_user) | Q(accepter=current_user)
         ).distinct()
-        friends_data = []
+
+        friends_list = []
         for friendship in friendships:
-            friend = friendship.accepter if friendship.requester == request.user else friendship.requester
-            friends_data.append({
+            friend = friendship.accepter if friendship.requester == current_user else friendship.requester
+            friend_data = {
                 'id': friend.id,
                 'displayName': friend.display_name,
                 'profilePictureUrl': friend.profile_picture.url if friend.profile_picture else friend.intra_cdn_profile_picture_url,
                 'status': friendship.status,
-                'friendshipId': friendship.id,  # Include the friendship ID for accept action
+                'isRequester': friendship.requester == current_user,
+                'friendshipId': friendship.id,
+                # Adjust class names and button text based on the friendship status
+                'cardClass': 'friendCard-pending' if friendship.status == 'pending' else 'friendCard',
+                'buttonClass': 'acceptFriendshipButton' if friendship.status == 'pending' and not friendship.requester == current_user else 'viewProfileButton',
+                'buttonColor': 'btn-outline-secondary' if friendship.status == 'pending' else 'btn-outline-light',
+                'buttonText': 'Accept' if friendship.status == 'pending' and not friendship.requester == current_user else 'View Profile',
+                'friendshipStatus': '(Pending friendship request)' if friendship.status == 'pending' else '',
+            }
+            friends_list.append(friend_data)
+
+        # Render the friend cards template to a string
+        rendered_html = render_to_string('friends/friend-card.html', {'friends_list': friends_list})
+        return JsonResponse({'html': rendered_html})
+
+class CheckFriendshipStatusView(View):
+    def get(self, request):
+        user_id = request.GET.get('user_id')
+        current_user_id = request.session["user_id"]
+
+        if not user_id:
+            return JsonResponse({"error": "User ID is required."}, status=400)
+
+        friendship = Friendship.objects.filter(
+            (Q(requester_id=current_user_id, accepter_id=user_id) | 
+             Q(requester_id=user_id, accepter_id=current_user_id)),
+            status__in=['pending', 'accepted']
+        ).first()
+
+        if friendship:
+            return JsonResponse({
+                "status": friendship.status,
+                "isRequester": friendship.requester_id == current_user_id,
+                "id": friendship.id
             })
-        return JsonResponse(friends_data, safe=False)
+        return JsonResponse({"status": "not_friends"})
+
+
+class CancelFriendRequestView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            friendship_id = data.get('friendshipId')
+            friendship = Friendship.objects.get(id=friendship_id)
+            current_user_id = request.session["user_id"]
+
+            # Ensure the request.user is the one who made the friend request
+            if friendship.requester.id != current_user_id:
+                return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+            friendship.delete()  # Cancel the friend request
+            return JsonResponse({'message': 'Friend request cancelled successfully.'})
+
+        except Friendship.DoesNotExist:
+            return JsonResponse({'error': 'Friendship request not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            print(e)  # Log error for debugging
+            return JsonResponse({'error': 'Internal Server Error'}, status=500)
+
+
+class RemoveFriendView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            friendship_id = data.get('friendshipId')
+            friendship = Friendship.objects.get(id=friendship_id)
+            current_user_id = request.session["user_id"]
+            print(f"Friendship: {friendship.requester}")
+            print(f"Current user id: {current_user_id}")
+            if current_user_id != friendship.requester.id and current_user_id != friendship.accepter.id:
+                return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+            friendship.delete()
+            return JsonResponse({'message': 'Friend removed successfully.'})
+
+        except Friendship.DoesNotExist:
+            return JsonResponse({'error': 'Friendship not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': 'Internal Server Error'}, status=500)
+
+
+class GetUserInfoView(View):
+    def get(self, request, friend_id):
+        user = User.objects.get(id=friend_id)
+        stats = UserStats.objects.get(user=friend_id)
+        if stats.total_hours_played < 60:
+            time = "{:,.2f}".format(stats.total_hours_played) + " sec"
+        elif stats.total_hours_played < 3600:
+            time = "{:,.2f}".format(stats.total_hours_played / 60) + " min"
+        else:
+            time = "{:,.2f}".format(stats.total_hours_played / 3600) + " hours"
+        distance = stats.classic_cumulative_ball_distance + stats.coop_cumulative_ball_distance
+        if distance < 10:
+            finalDistance = "{:,.2f}".format(distance) + " mm"
+        elif distance < 1000:
+            finalDistance = "{:,.2f}".format(distance / 10) + " cm"
+        elif distance < 1000000:
+            finalDistance = "{:,.2f}".format(distance / 1000) + " m"
+        else:
+            finalDistance = "{:,.2f}".format(distance / 1000000) + " km"
+        opponents_with_counts = [opponent for opponent in stats.classic_opponents.all()]
+        companions_with_counts = [companion for companion in stats.coop_companions.all()]
+        combined_set = set(opponents_with_counts + companions_with_counts)
+        playedWith = len(combined_set)
+
+        ###############
+        """Calculates the number of games won and lost."""
+        # Define the variables to store the counts
+        num_wins = 0
+        num_losses = 0
+        # Define the function to calculate color based on the score
+        def __verify_game(score):
+            if score == 3:
+                return "win"
+            else:
+                return "loss"
+        scores = (Score.objects.filter(player=friend_id).exclude(match__type="co-op")
+                .order_by("match__match_date"))
+        # Iterate over the scores and update the counts
+        for score in scores:
+            game = __verify_game(score.score)
+            if game == "win":
+                num_wins += 1
+            else:
+                num_losses += 1
+        ###############
+        data = {
+            'displayName': user.display_name,
+            'loginIntra': user.login_intra,
+            'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
+            'ball_hits_record': stats.coop_hits_record,
+            'cumulative_ball_distance': finalDistance,
+            'total_hours_played': time,
+            'unique_companions_encountered': playedWith,
+            'wins': num_wins,
+            'losses': num_losses,
+        }
+        return JsonResponse(data)
 
 
 class IndexView(View):
@@ -201,6 +408,30 @@ class IndexView(View):
             else:
                 context["total_hours_played"] = "{:,.2f}".format(hours / 3600) + " hours"
             context["unique_companions_encountered"] = userStats.coop_companions.count()
+            ###############
+            """Calculates the number of games won and lost."""
+            # Define the variables to store the counts
+            num_wins = 0
+            num_losses = 0
+            # Define the function to calculate color based on the score
+            def __verify_game(score):
+                if score == 3:
+                    return "win"
+                else:
+                    return "loss"
+            current_user_id = self.request.session["user_id"]
+            scores = (Score.objects.filter(player_id=current_user_id).exclude(match__type="co-op")
+                    .order_by("match__match_date"))
+            # Iterate over the scores and update the counts
+            for score in scores:
+                game = __verify_game(score.score)
+                if game == "win":
+                    num_wins += 1
+                else:
+                    num_losses += 1
+            ###############
+            context["wins"] = num_wins
+            context["losses"] = num_losses
 
             # Get user achievements info
             context.update(self._get_achievements_context(user))
