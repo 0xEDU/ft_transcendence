@@ -1,16 +1,14 @@
 {% load static i18n %}
 
 <h3>{% translate "MATES ALONG THE WAY" %}</h3>
-<!-- First row of images -->
-<div class="d-flex mt-3">
-  <img class="matesImage me-4" width="80" height="80" src="static/images/etachott.jpeg" alt="Friend's Photo" title="Friend's Name">
-  <img class="matesImage me-4" width="80" height="80" src="static/images/feralves.jpeg" alt="Friend's Photo" title="Friend's Name">
-  <img class="matesImage me-4" width="80" height="80" src="static/images/guribeir.png" alt="Friend's Photo" title="Friend's Name">
+<!-- Flex container for friends images and the plus sign -->
+<div class="d-flex mt-3 col-8 md-4">
+    <!-- Div for friends images -->
+    <div id="friendsContainer">
+        <!-- Friends will be added here by JS -->
+    </div>
+    <!-- Plus sign to add more friends, wrapped in a span to align it with images -->
+    <h1 id="addSign" class="align-self-center ms-2">+</h1>
 </div>
 
-<!-- Second row of images -->
-<div class="d-flex mt-3">
-  <img class="matesImage me-4" width="80" height="80" src="static/images/roaraujo.jpeg" alt="Friend's Photo" title="Friend's Name">
-  <img class="matesImage me-4" width="80" height="80" src="static/images/viferrei.jpeg" alt="Friend's Photo" title="Friend's Name">
-  <h1 id="addSign" class="ms-4" >+</h1>
-</div>
+<script type="module" src="{% static 'js/mates-along.js' %}" defer></script>

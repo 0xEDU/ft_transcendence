@@ -40,6 +40,7 @@ urlpatterns = [
 	path('cancel-friend-request/', views.CancelFriendRequestView.as_view(), name='cancel-friend-request'),
 	path('remove-friend/', views.RemoveFriendView.as_view(), name='remove-friend'),
 	path('get-user-info/<int:friend_id>/', views.GetUserInfoView.as_view(), name='get_user_info'),
+	path('get-friends/', views.GetFriendsView.as_view(), name='get-friends'),
 ]
 
 # # Add the media URL pattern only during development
