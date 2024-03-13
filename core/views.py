@@ -217,10 +217,58 @@ class RemoveFriendView(View):
 class GetUserInfoView(View):
     def get(self, request, friend_id):
         user = User.objects.get(id=friend_id)
+        stats = UserStats.objects.get(user=friend_id)
+        if stats.total_hours_played < 60:
+            time = "{:,.2f}".format(stats.total_hours_played) + " sec"
+        elif stats.total_hours_played < 3600:
+            time = "{:,.2f}".format(stats.total_hours_played / 60) + " min"
+        else:
+            time = "{:,.2f}".format(stats.total_hours_played / 3600) + " hours"
+        distance = stats.classic_cumulative_ball_distance + stats.coop_cumulative_ball_distance
+        if distance < 10:
+            finalDistance = "{:,.2f}".format(distance) + " mm"
+        elif distance < 1000:
+            finalDistance = "{:,.2f}".format(distance / 10) + " cm"
+        elif distance < 1000000:
+            finalDistance = "{:,.2f}".format(distance / 1000) + " m"
+        else:
+            finalDistance = "{:,.2f}".format(distance / 1000000) + " km"
+        opponents_with_counts = [opponent for opponent in stats.classic_opponents.all()]
+        companions_with_counts = [companion for companion in stats.coop_companions.all()]
+        combined_set = set(opponents_with_counts + companions_with_counts)
+        playedWith = len(combined_set)
+
+        ###############
+        """Calculates the number of games won and lost."""
+        # Define the variables to store the counts
+        num_wins = 0
+        num_losses = 0
+        # Define the function to calculate color based on the score
+        def __verify_game(score):
+            if score == 3:
+                return "win"
+            else:
+                return "loss"
+        scores = (Score.objects.filter(player=friend_id).exclude(match__type="co-op")
+                .order_by("match__match_date"))
+        # Iterate over the scores and update the counts
+        for score in scores:
+            game = __verify_game(score.score)
+            if game == "win":
+                num_wins += 1
+            else:
+                num_losses += 1
+        ###############
         data = {
             'displayName': user.display_name,
             'loginIntra': user.login_intra,
             'profilePictureUrl': user.profile_picture.url if user.profile_picture else user.intra_cdn_profile_picture_url,
+            'ball_hits_record': stats.coop_hits_record,
+            'cumulative_ball_distance': finalDistance,
+            'total_hours_played': time,
+            'unique_companions_encountered': playedWith,
+            'wins': num_wins,
+            'losses': num_losses,
         }
         return JsonResponse(data)
 
@@ -347,6 +395,30 @@ class IndexView(View):
             else:
                 context["total_hours_played"] = "{:,.2f}".format(hours / 3600) + " hours"
             context["unique_companions_encountered"] = userStats.coop_companions.count()
+            ###############
+            """Calculates the number of games won and lost."""
+            # Define the variables to store the counts
+            num_wins = 0
+            num_losses = 0
+            # Define the function to calculate color based on the score
+            def __verify_game(score):
+                if score == 3:
+                    return "win"
+                else:
+                    return "loss"
+            current_user_id = self.request.session["user_id"]
+            scores = (Score.objects.filter(player_id=current_user_id).exclude(match__type="co-op")
+                    .order_by("match__match_date"))
+            # Iterate over the scores and update the counts
+            for score in scores:
+                game = __verify_game(score.score)
+                if game == "win":
+                    num_wins += 1
+                else:
+                    num_losses += 1
+            ###############
+            context["wins"] = num_wins
+            context["losses"] = num_losses
 
             # Get user achievements info
             context.update(self._get_achievements_context(user))
