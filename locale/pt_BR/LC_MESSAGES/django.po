@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 19:07+0000\n"
+"POT-Creation-Date: 2024-03-13 23:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -255,19 +255,19 @@ msgid "GAME MODE"
 msgstr "MODO"
 
 #: templates/lobby/components/single-match-modal.html:19
-#: templates/lobby/components/tournament-modal.html:19
+#: templates/lobby/components/tournament-modal.html:25
 #: templates/stats/components/matches-history.html:10
 msgid "CO-OP"
 msgstr "COOPERATIVO"
 
 #: templates/lobby/components/single-match-modal.html:23
-#: templates/lobby/components/tournament-modal.html:23
+#: templates/lobby/components/tournament-modal.html:19
 #: templates/stats/components/matches-history.html:24
 msgid "CLASSIC"
 msgstr "CLÁSSICO"
 
 #: templates/lobby/components/single-match-modal.html:28
-#: templates/lobby/components/tournament-modal.html:28
+#: templates/lobby/components/tournament-modal.html:30
 msgid "PLAYER"
 msgstr "JOGADOR"
 
@@ -276,26 +276,26 @@ msgid "TWO"
 msgstr "DOIS"
 
 #: templates/lobby/components/single-match-modal.html:36
-#: templates/lobby/components/tournament-modal.html:32
+#: templates/lobby/components/tournament-modal.html:34
 msgid "FOUR"
 msgstr "QUATRO"
 
 #: templates/lobby/components/single-match-modal.html:41
-#: templates/lobby/components/tournament-modal.html:41
+#: templates/lobby/components/tournament-modal.html:43
 msgid "MAP"
 msgstr "MAPA"
 
 #: templates/lobby/components/single-match-modal.html:45
-#: templates/lobby/components/tournament-modal.html:45
+#: templates/lobby/components/tournament-modal.html:47
 msgid "MAP 1"
 msgstr "MAPA 1"
 
 #: templates/lobby/components/single-match-modal.html:49
-#: templates/lobby/components/tournament-modal.html:49
+#: templates/lobby/components/tournament-modal.html:51
 msgid "MAP 2"
 msgstr "MAPA 2"
 
-#: templates/lobby/components/tournament-modal.html:36
+#: templates/lobby/components/tournament-modal.html:38
 msgid "EIGHT"
 msgstr "OITO"
 
@@ -330,6 +330,18 @@ msgstr "MEUS STATS"
 #: templates/stats/components/matches-history.html:49
 msgid "No matches played yet"
 msgstr "Você ainda não jogou nenhuma partida"
+
+#: templates/stats/components/tournament-card.html:4
+msgid "Tournament"
+msgstr "Torneio"
+
+#: templates/stats/components/tournament-card.html:5
+msgid "Blockchain hash:"
+msgstr "Hash de blockchain:"
+
+#: templates/stats/components/tournament-card.html:9
+msgid "Winner:"
+msgstr "Vencedor"
 
 #: templates/stats/components/tournaments.html:16
 msgid "You haven't played any tournaments yet."
