@@ -1,4 +1,5 @@
 import deleteElement from "./tinyDOM/deleteElement.js";
+import fetchAndUpdateFriends from "./mates-along.js";
 
 export const state = {
     position: "",
@@ -99,6 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
             pongLogo.classList.remove("minimise")
 
             toggleControlPanelSize(controlPanel);
+			fetchAndUpdateFriends();
             scrollToSection("profile");
         }, 3000);
     }
@@ -195,6 +197,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (activateFullMotion) {
                 triggerAnimation(selectedPegToDrag, "performFullMotion");
                 setTimeout(() => {
+					if (pegName === "profile") {
+						fetchAndUpdateFriends();
+					}
                     scrollToSection(pegName);
                 }, 500);
             } else {
