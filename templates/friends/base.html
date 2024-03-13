@@ -133,27 +133,7 @@
 				<h2 id="userInfoName"></h2>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body d-flex justify-content-center">
-				<div class="col-6">
-					<div id="matchesDiv" class="overflow-scroll pe-2">
-						{% if not match_rows %}
-							<div class="row matchRow mb-3 me-2">
-								<p id="matchText" class="m-2">{% translate "No matches played yet" %}</p>
-							</div>
-						{% else %}
-							{% for match in match_rows|slice:"::-1" %}
-							<div class="row matchRow mb-3 me-2 p-2">
-								<div class="col-7">{{ match.description }}</div>
-								<div class="col">{{ match.score }}</div>
-								<div class="col">{{ match.match_hour }}</div>
-								<div class="col">{{ match.match_date }}</div>
-							  </div>
-							{% endfor %}
-						{% endif %}
-						<div class="spacer"></div>
-					</div>
-				</div>
-			</div>
+			<div>ESSE é o modal de amigos</div>
 		</div>
 	</div>
 </div>

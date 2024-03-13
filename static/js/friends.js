@@ -186,8 +186,8 @@ document.getElementById('friendsList').addEventListener('click', function(event)
         const friendId = event.target.getAttribute('data-friend-id');
         viewProfile(friendId);
 	} else if (event.target.matches('.matchHistoryButton')) {
-		const friendId = event.target.getAttribute('data-friend-id');
-		viewMatchHistory(friendId);
+		// const friendId = event.target.getAttribute('data-friend-id');
+		viewMatchHistory();
 	}
 });
 
@@ -288,7 +288,7 @@ function viewProfile(friendId) {
             document.getElementById('userInfoName').textContent = data.displayName;
             document.getElementById('userInfoLogin').textContent = data.loginIntra;
 
-            var userInfoModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
+            const userInfoModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
             userInfoModal.show();
         })
         .catch(error => {
@@ -297,18 +297,7 @@ function viewProfile(friendId) {
 }
 
 
-function viewMatchHistory(friendId) {
-    fetch(`/get-user-info/${friendId}/`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('userInfoImage').src = data.profilePictureUrl;
-            document.getElementById('userInfoName').textContent = data.displayName;
-            document.getElementById('userInfoLogin').textContent = "TESTE";
-
-            var userInfoModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
-            userInfoModal.show();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+function viewMatchHistory() {
+	const userInfoModal = new bootstrap.Modal(document.getElementById('userMatchesModal'));
+	userInfoModal.show();
 }
