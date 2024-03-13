@@ -227,7 +227,7 @@ const drawPaddles = (map_skin) => {
 	if (map_skin === "map1")
 		context.fillStyle = hasFourPlayers ? leftPaddleColor : styleGuide.__WHITE;
 	else
-		context.fillStyle = hasFourPlayers ? rightPaddleColor : styleGuide.__HEAVY_GRAY;
+		context.fillStyle = hasFourPlayers ? leftPaddleColor : styleGuide.__HEAVY_GRAY;
 	context.beginPath();
 	context.rect(
 		paddlePadding, (canvas.height / 2) - (paddleHeight / 2) + paddleCoords.leftPaddleY,
