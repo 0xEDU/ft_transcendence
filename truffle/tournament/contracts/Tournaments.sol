@@ -23,7 +23,7 @@ contract Tournaments {
     }
 
     // Return the Tournament list
-    function getTournaments() public view returns (Tournament[] memory) {
-        return tournaments;
+    function getTournaments() public view returns (Tournament[] memory, bytes32) {
+        return (tournaments, blockhash(block.number - 1));
     }
 }

@@ -1,17 +1,11 @@
 <div class="tournamentCard row mb-5 py-4">
   <div class="col-5 ps-5">
-    <h3>{{ tournament_data.name }}</h3>
-    <p>ID: {{ tournament_data.id }}</p>
+    <h3>Tournament {{ tournament_data.name }}</h3>
+    <p>Block at {{ tournament_data.id }} in blockchain.</p>
     <p>{{ tournament_data.date }}</p>
   </div>
-  <div class="col-7 d-flex flex-wrap align-items-center">
-    <img class="me-3 mb-3" id="winnerImg" src="{{ tournament_data.winner_img }}" height=84 width=84>
-    <img class="me-3 mb-3" id="runnerUpImg" src="{{ tournament_data.runner_up_img }}" height=84 width=84>
-    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
-    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
-    <img class="me-3 mb-3" id="winnerImg" src="{{ tournament_data.winner_img }}" height=84 width=84>
-    <img class="me-3 mb-3" id="runnerUpImg" src="{{ tournament_data.runner_up_img }}" height=84 width=84>
-    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
-    <img class="me-3 mb-3" id="thirdPlaceImg" src="{{ tournament_data.third_place_img }}" height=84 width=84>
+  <div class="col-7 d-flex flex-wrap justify-content-end align-items-center">
+    <h3 class="me-5">Winner: {{ tournament_data.winner_name }}</h3>
+    <img class="me-3 mb-3" id="winnerImg" src="{{ tournament_data.winner_img }}" height=100 width=100>
   </div>
 </div>
