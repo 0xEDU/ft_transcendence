@@ -136,7 +136,10 @@ class MatchesHistoryTemplateView(TemplateView):
             match_datetime_IN_BRAZIL_IDC = timezone.localtime(match.match_date, timezone=timezone.get_fixed_timezone(-3 * 60))
             match_hour = match_datetime_IN_BRAZIL_IDC.strftime("%H:%M")
             match_date = match_datetime_IN_BRAZIL_IDC.strftime("%d/%m/%y")
-            score_str = f"{player1_score} x {player2_score}"
+            if match.type == "co-op":
+                score_str = f"{player1_score}"
+            if match.type == "classic":
+                score_str = f"{player1_score} x {player2_score}"
             return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
                                   match_date)
 

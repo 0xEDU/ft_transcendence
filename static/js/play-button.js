@@ -138,9 +138,9 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(async responseData => {
                 if (gameData.gameMode == "singleMatch") {
-                    await launchMatch(responseData.match_id, playersArray, gameData.gameType, true, false);
+                    await launchMatch(responseData.match_id, playersArray, gameData.gameType, gameData.mapSkin, true, false);
                 } else {
-                    await launchMatch(responseData.matches_id, responseData.players, gameData.gameType, false, true);
+                    await launchMatch(responseData.matches_id, responseData.players, gameData.gameType, gameData.mapSkin, false, true);
                 }
             })
             .catch(error => {
