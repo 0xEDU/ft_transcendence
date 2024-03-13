@@ -5,7 +5,6 @@ import swapInnerHTMLOfElement from "./tinyDOM/swapInnerHTMLOfElement.js";
 import insertElement from "./tinyDOM/insertElement.js";
 
 
-
 function updateLastSeen() {
 	const csrftoken = getCsrfToken();
   
@@ -24,7 +23,11 @@ function updateLastSeen() {
 	.catch(error => console.error('Error in updating last seen:', error));
   }
   
-  setInterval(updateLastSeen, 15000);
+  setInterval(function() {
+    if (!isLoginSectionVisible()) {
+        updateLastSeen();
+    }
+}, 10000);
 
 
 document.getElementById('addSign').addEventListener('click', function() {
@@ -39,9 +42,26 @@ function getCsrfToken() {
 }
 
 
+function isLoginSectionVisible() {
+	const loginSection = document.getElementById('login');
+	
+	if (loginSection) {
+	const bounds = loginSection.getBoundingClientRect();
+	
+	const isVisibleVertically = bounds.top >= 0 && bounds.bottom <= window.innerHeight;
+	const isVisibleHorizontally = bounds.left >= 0 && bounds.right <= window.innerWidth;
+	
+	return isVisibleVertically && isVisibleHorizontally;
+	}
+	return false;
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     var searchForm = document.getElementById('userSearchForm');
-	updateLastSeen();
+	if (!isLoginSectionVisible()) {
+		updateLastSeen();
+	}
     searchForm.addEventListener('submit', function(event) {
         event.preventDefault();
         var searchTerm = document.getElementById('searchField').value;
@@ -249,7 +269,6 @@ function viewProfile(friendId) {
     fetch(`/get-user-info/${friendId}/`)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             emptyElement("ball_hits_friends");
             emptyElement("distance_friends");
             emptyElement("hour_friends");
