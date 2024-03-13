@@ -69,3 +69,18 @@
 #addFriendModalLabel {
 	color: var(--ORANGE);
 }
+
+img.matesImages:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.matesImages {
+	width: 5vw;
+	height: 9vh;
+	border-radius: 0.375rem;
+	object-fit: cover;
+	margin-right: 1vw;
+	border-color: white;
+	border: 1px solid;
+}

@@ -18,6 +18,33 @@ from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 
 
+class GetFriendsView(View):
+    def get(self, request, *args, **kwargs):
+        requester_id = request.session.get("user_id")
+        if requester_id is None:
+            return JsonResponse({'error': 'User not logged in.'}, status=401)
+
+        try:
+            user = User.objects.get(pk=requester_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist.'}, status=404)
+
+        # Filter for both accepted requests and requests made by the user, ordered by the most recent.
+        accepted_friendships = Friendship.objects.filter(
+            Q(status='accepted', requester=user) | Q(status='accepted', accepter=user)
+        ).select_related('accepter', 'requester').order_by('-created_at')[:6]
+
+        friends_list = [
+            {
+                'username': friendship.accepter.display_name if friendship.requester_id == requester_id else friendship.requester.display_name,
+                'image_url': friendship.accepter.profile_picture.url if friendship.requester_id == requester_id and friendship.accepter.profile_picture else (friendship.accepter.intra_cdn_profile_picture_url if friendship.requester_id == requester_id else friendship.requester.intra_cdn_profile_picture_url) or 'static/images/default_user_image.svg',
+            }
+            for friendship in accepted_friendships
+        ]
+
+        return JsonResponse(friends_list, safe=False)
+
+
 class CreateFriendshipView(View):
     def post(self, request):
         try:
@@ -33,7 +60,6 @@ class CreateFriendshipView(View):
             requester = User.objects.get(pk=requester_id)
             accepter = User.objects.get(pk=accepter_id)
 
-            # Check if the friendship request already exists in any direction
             if Friendship.objects.filter(requester=requester, accepter=accepter).exists():
                 return JsonResponse({"error": "Request already sent!"}, status=409)
             elif Friendship.objects.filter(requester=accepter, accepter=requester).exists():
@@ -47,7 +73,7 @@ class CreateFriendshipView(View):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON."}, status=400)
         except Exception as e:
-            print(e)  # Log error for debugging
+            print(e)
             return JsonResponse({"error": "Internal Server Error"}, status=500)
 
 class SearchUserView(View):
