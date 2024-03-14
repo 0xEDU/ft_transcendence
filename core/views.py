@@ -343,15 +343,15 @@ class IndexView(View):
         grade = self._determine_grade(achievement_name, value)
 
         src = "images/achievements/" + achievement_name + "-" + grade + ".png"
-        alt_text = grade.title() + " " + string_mapping[achievement_name].title() + _(" achievement")
+        alt_text = _("{} {} achievement").format(grade.title(), string_mapping[achievement_name].title())
         if (grade == "white"):
-            title = _("No ") + string_mapping[achievement_name].title() + _(" achievement aquired yet, go play some matches!")
+            title = _("No {} achievement acquired yet, go play some matches!").format(string_mapping[achievement_name].title())
         elif (grade == "copper"):
-            title = _("copper") + " " + string_mapping[achievement_name].title() + _(" achievement acquired!")
+            title = _("Copper {} achievement acquired!").format(string_mapping[achievement_name].title())
         elif (grade == "silver"):
-            title = _("silver") + " " + string_mapping[achievement_name].title() + _(" achievement acquired!")
+            title = _("silver {} achievement acquired!").format(string_mapping[achievement_name].title())
         else:
-            title = _("gold") + " " + string_mapping[achievement_name].title() + _(" achievement acquired!")
+            title = _("gold {} achievement acquired!").format(string_mapping[achievement_name].title())
         return ({
             "src": src,
             "alt_text": alt_text,

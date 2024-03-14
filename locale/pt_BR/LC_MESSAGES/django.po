@@ -67,32 +67,24 @@ msgid "wins"
 msgstr "vitórias"
 
 #: core/views.py:346
-msgid " achievement"
+msgid "{} {} achievement"
 msgstr " conquista"
 
 #: core/views.py:348
-msgid "No "
-msgstr "Sem conquista de "
-
-#: core/views.py:348
-msgid " achievement aquired yet, go play some matches!"
-msgstr " ainda, vá jogar algumas partidas!"
+msgid "No {} achievement acquired yet, go play some matches!"
+msgstr "Nenhuma conquista {} ainda, vá jogar algumas partidas!"
 
 #: core/views.py:350
-msgid "copper"
-msgstr "Conquista cobre"
-
-#: core/views.py:350 core/views.py:352 core/views.py:354
-msgid " achievement acquired!"
-msgstr " adquirida!"
+msgid "Copper {} achievement acquired!"
+msgstr "Conquista Cobre {} adquirida!"
 
 #: core/views.py:352
-msgid "silver"
-msgstr "Conquista prateada"
+msgid "silver {} achievement acquired!"
+msgstr "Conquista Prateada {} adquirida!"
 
 #: core/views.py:354
-msgid "gold"
-msgstr "Conquista dourada"
+msgid "gold {} achievement acquired!"
+msgstr "Conquista Dourada {} adquirida!"
 
 #: pong/views.py:56
 #, python-format
@@ -385,3 +377,15 @@ msgstr "TEMPO DE JOGO"
 #: templates/stats/components/user-stats.html:96
 msgid "PLAYERS MET"
 msgstr "ENCONTROS"
+
+#~ msgid "No "
+#~ msgstr "Sem conquista de "
+
+#~ msgid "copper"
+#~ msgstr "Conquista cobre"
+
+#~ msgid "silver"
+#~ msgstr "Conquista prateada"
+
+#~ msgid "gold"
+#~ msgstr "Conquista dourada"
