@@ -3,9 +3,9 @@ import emptyElement from "./tinyDOM/emptyElement.js";
 
 let currentStatPage = "matchesHistoryText"
 const statPages = {
-	"matchesHistoryText": "/stats/matches-history",
-	"tournamentsText": "/stats/tournaments",
-	"userStatsText": "/stats/user-stats",
+	"matchesHistoryText": "/stats/matches-history/",
+	"tournamentsText": "/stats/tournaments/",
+	"userStatsText": "/stats/user-stats/",
 }
 
 function removeHighlight() {
