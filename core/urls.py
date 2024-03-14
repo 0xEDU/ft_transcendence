@@ -42,7 +42,7 @@ urlpatterns = [
 	path('get-user-info/<int:friend_id>/', views.GetUserInfoView.as_view(), name='get_user_info'),
 	path('get-friends/', views.GetFriendsView.as_view(), name='get-friends'),
 	path('update-last-seen/', views.UpdateLastSeenView.as_view(), name='update-last-seen'),
-	path('matches-history-container/', views.GetUserMatchesView.as_view(), name='matches-history-container'),
+	path('matches-history-container/<int:friend_id>/', views.GetUserMatchesView.as_view(), name='matches-history-container'),
 ]
 
 # # Add the media URL pattern only during development

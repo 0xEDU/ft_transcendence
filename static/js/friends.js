@@ -186,8 +186,8 @@ document.getElementById('friendsList').addEventListener('click', function(event)
         const friendId = event.target.getAttribute('data-friend-id');
         viewProfile(friendId);
 	} else if (event.target.matches('.matchHistoryButton')) {
-		// const friendId = event.target.getAttribute('data-friend-id');
-		viewMatchHistory();
+		const friendId = event.target.getAttribute('data-friend-id');
+		viewMatchHistory(friendId);
 	}
 });
 
@@ -297,11 +297,12 @@ function viewProfile(friendId) {
 }
 
 
-function viewMatchHistory() {
-	fetch(`matches-history-container/`)
+function viewMatchHistory(friendId) {
+	fetch(`matches-history-container/${friendId}/`)
         .then(response => response.text())
         .then(data => {
 			swapInnerHTMLOfElement('matchesHistoryContainer', data);
+			swapInnerHTMLOfElement('historyUserNameAdd', document.getElementById('friendHiddenName').textContent);
 			const userInfoModal = new bootstrap.Modal(document.getElementById('userMatchesModal'));
 			userInfoModal.show();
 		})

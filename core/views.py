@@ -289,9 +289,10 @@ class GetUserInfoView(View):
 
 
 class GetUserMatchesView(MatchesHistoryTemplateView):
-    def get(self, request):
+    def get(self, request, friend_id):
         context = {}
-        context["match_rows"] = self._get_latest_matches(current_user_id=request.session["user_id"])
+        context["match_rows"] = self._get_latest_matches(current_user_id=friend_id)
+        context['friendName'] = User.objects.get(id=friend_id).display_name
         return render(request, 'stats/components/matches-history-container.html', context)
 
 class IndexView(View):
