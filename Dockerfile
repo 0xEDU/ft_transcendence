@@ -6,6 +6,7 @@ ENV TRANSCENDENCE_DIR=/ft_transcendence
 ENV TRANSCENDENCE_PROTOCOL=https
 ENV POSTGRES_PORT=5432
 ENV POSTGRES_HOST=postgres-transcendence
+ENV GANACHE_HOST=ganache-transcendence
 
 COPY requirements.txt $TRANSCENDENCE_DIR/
 
