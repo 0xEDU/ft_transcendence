@@ -46,6 +46,7 @@ services:
       - postgres-transcendence
     volumes:
       - django-vol:/ft_transcendence/media
+      - ./truffle/tournament/build/contracts:/ft_transcendence/truffle/tournament/build/contracts
 
 networks:
   ft_transcendence:
