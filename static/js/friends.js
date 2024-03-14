@@ -185,7 +185,10 @@ document.getElementById('friendsList').addEventListener('click', function(event)
     } else if (event.target.matches('.viewProfileButton')) {
         const friendId = event.target.getAttribute('data-friend-id');
         viewProfile(friendId);
-    }
+	} else if (event.target.matches('.matchHistoryButton')) {
+		const friendId = event.target.getAttribute('data-friend-id');
+		viewMatchHistory(friendId);
+	}
 });
 
 function acceptFriendship(friendshipId) {
@@ -285,10 +288,22 @@ function viewProfile(friendId) {
             document.getElementById('userInfoName').textContent = data.displayName;
             document.getElementById('userInfoLogin').textContent = data.loginIntra;
 
-            var userInfoModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
+            const userInfoModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
             userInfoModal.show();
         })
         .catch(error => {
             console.error('Error:', error);
         });
+}
+
+
+function viewMatchHistory(friendId) {
+	fetch(`matches-history-container/${friendId}/`)
+        .then(response => response.text())
+        .then(data => {
+			swapInnerHTMLOfElement('matchesHistoryContainer', data);
+			swapInnerHTMLOfElement('historyUserNameAdd', document.getElementById('friendHiddenName').textContent);
+			const userInfoModal = new bootstrap.Modal(document.getElementById('userMatchesModal'));
+			userInfoModal.show();
+		})
 }

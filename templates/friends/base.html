@@ -125,5 +125,18 @@
 	</div>
 </div>
 
+<div class="modal fade" id="userMatchesModal" tabindex="-1" aria-labelledby="userMatchesModalLabel" aria-hidden="true"
+	data-bs-theme="dark">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 id="userInfoName">{% translate "Matches History" %} - <span id="historyUserNameAdd"></span></h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div id="matchesHistoryContainer"></div>
+		</div>
+	</div>
+</div>
+
 
 <script type="module" src="{% static 'js/friends.js' %}" defer></script>

@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div id="matchesDiv" class="overflow-scroll pe-2">
+	{% if friendName %}
+		<div id="friendHiddenName" class="d-none">{{friendName}}</div>
+	{% endif %}
+	{% if not match_rows %}
+		<div class="row matchRow mb-3 me-2">
+			<p id="matchText" class="m-2">{% translate "No matches played yet" %}</p>
+		</div>
+	{% else %}
+		{% for match in match_rows|slice:"::-1" %}
+			{% include "stats/components/matches-history-entry.html" %}
+		{% endfor %}
+	{% endif %}
+	{% if not friendName %}
+		<div class="spacer"></div>
+	{% endif %}
+</div>

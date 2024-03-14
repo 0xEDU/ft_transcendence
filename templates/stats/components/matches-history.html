@@ -41,18 +41,7 @@
     <div class="col-1"></div>
 
     <div class="col-6">
-        <div id="matchesDiv" class="overflow-scroll pe-2">
-            {% if not match_rows %}
-                <div class="row matchRow mb-3 me-2">
-                    <p id="matchText" class="m-2">{% translate "No matches played yet" %}</p>
-                </div>
-            {% else %}
-                {% for match in match_rows|slice:"::-1" %}
-                    {% include "stats/components/matches-history-entry.html" %}
-                {% endfor %}
-            {% endif %}
-            <div class="spacer"></div>
-        </div>
+        {% include 'stats/components/matches-history-container.html' %}
     </div>
 
     {% comment %} Empty space {% endcomment %}
