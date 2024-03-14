@@ -53,16 +53,20 @@ let scores = {
 };
 let coopMatchIsOver = false;
 let rightPlayerLogin;
+let rightPlayerDName;
 let leftPlayerLogin;
+let leftPlayerDName;
 let topPlayerLogin;
+let topPlayerDName;
 let bottomPlayerLogin;
+let bottomPlayerDname;
 const winningScore = 3;
 
 // randomize this later
 let dx = -3.2;
 let dy = 2.4;
-let speedX = 6;
-let speedY = 6;
+let speedX = 10;
+let speedY = 10;
 
 // Players movement
 let rightUpPressed = false;
@@ -150,7 +154,7 @@ function drawNextMatchScreen() {
 	context.textAlign = "center"; // Align text to the center
 	context.fillText("Next match:", canvas.width / 2, canvas.height / 3 + 60);
 	context.font = "36px sans serif"; // Smaller text for instructions
-	context.fillText(leftPlayerLogin + " x " + rightPlayerLogin, canvas.width / 2, canvas.height / 2);
+	context.fillText(leftPlayerDName + " x " + rightPlayerDName, canvas.width / 2, canvas.height / 2);
 	context.font = "24px sans serif"; // Smaller text for instructions
 	context.fillText("Press Enter to continue", canvas.width / 2, canvas.height / 2 + 60); // Start instructions
 }
@@ -165,9 +169,9 @@ const drawEndingScreen = (game_type) => {
 			context.textAlign = 'center';
 			context.font = "bold 48px sans serif";
 			context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
-			context.fillText(leftPlayerLogin + ' ' + scores.leftScore + " x " + scores.rightScore + ' ' + rightPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
+			context.fillText(leftPlayerDName + ' ' + scores.leftScore + " x " + scores.rightScore + ' ' + rightPlayerDName, canvas.width / 2, canvas.height / 2 + 60);
 			if (hasFourPlayers) {
-				context.fillText(topPlayerLogin + ' ' + scores.topScore + " x " + scores.bottomScore + ' ' + bottomPlayerLogin, canvas.width / 2, canvas.height / 2 + 120);
+				context.fillText(topPlayerDName + ' ' + scores.topScore + " x " + scores.bottomScore + ' ' + bottomPlayerDname, canvas.width / 2, canvas.height / 2 + 120);
 				pressEnterHeight += 60;
 			}
 			context.font = "bold 18px sans serif";
@@ -182,9 +186,9 @@ const drawEndingScreen = (game_type) => {
 			context.font = "bold 48px sans serif";
 			context.fillText("Game Over", canvas.width / 2, canvas.height / 2 - 60);
 			context.fillText(matchStats.paddleHits, canvas.width / 2, canvas.height / 2);
-			context.fillText(leftPlayerLogin + ' + ' + rightPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
+			context.fillText(leftPlayerDName + ' + ' + rightPlayerDName, canvas.width / 2, canvas.height / 2 + 60);
 			if (hasFourPlayers) {
-				context.fillText(topPlayerLogin + ' + ' + bottomPlayerLogin, canvas.width / 2, canvas.height / 2 + 120);
+				context.fillText(topPlayerDName + ' + ' + bottomPlayerDname, canvas.width / 2, canvas.height / 2 + 120);
 				pressEnterHeight += 60;
 			}
 			context.font = "bold 18px sans serif";
@@ -325,15 +329,15 @@ const drawPlayersNames = (map_skin) => {
 	if (!hasFourPlayers) {
 		let y = canvas.height / 15 + 60;
 		context.textAlign = "left";
-		context.fillText(leftPlayerLogin, margin, y);
+		context.fillText(leftPlayerDName, margin, y);
 		context.textAlign = "right";
-		context.fillText(rightPlayerLogin, canvas.width - margin, y);
+		context.fillText(rightPlayerDName, canvas.width - margin, y);
 
 	} else {
-		context.fillText(leftPlayerLogin, canvas.width / 2 - 60 - 60, canvas.height / 2);
-		context.fillText(rightPlayerLogin, canvas.width / 2 + 60 + 60, canvas.height / 2);
-		context.fillText(topPlayerLogin, canvas.width / 2, canvas.height / 2 - 60);
-		context.fillText(bottomPlayerLogin, canvas.width / 2, canvas.height / 2 + 60);
+		context.fillText(leftPlayerDName, canvas.width / 2 - 60 - 60, canvas.height / 2);
+		context.fillText(rightPlayerDName, canvas.width / 2 + 60 + 60, canvas.height / 2);
+		context.fillText(topPlayerDName, canvas.width / 2, canvas.height / 2 - 60);
+		context.fillText(bottomPlayerDname, canvas.width / 2, canvas.height / 2 + 60);
 	}
 	return;
 }
@@ -460,9 +464,19 @@ const movePaddles = () => {
 	}
 }
 
-function updatePlayers() {
+async function getDisplayName(login) {
+	const url = `/auth/user/display-name/${login}`;
+	return fetch(url)
+		.then(response => response.json())
+		.then(data => data["display_name"])
+
+}
+
+async function updatePlayers() {
 	leftPlayerLogin = tournamentPlayers[0][0];
+	leftPlayerDName = await getDisplayName(tournamentPlayers[0][0]);
 	rightPlayerLogin = tournamentPlayers[0][1];
+	rightPlayerDName = await getDisplayName(tournamentPlayers[0][1]);
 	tournamentMatchesLeft--;
 	if (tournamentMatchesLeft == 1) {
 		isLastMatch = true;
@@ -471,7 +485,7 @@ function updatePlayers() {
 	}
 }
 
-const keyDownHandler = (e) => {
+const keyDownHandler = async (e) => {
 	// Right-side player
 	if (e.key === "Up" || e.key === "ArrowUp") {
 		rightUpPressed = true;
@@ -514,7 +528,7 @@ const keyDownHandler = (e) => {
 	}
 	if (e.key == "Enter" && gameState === States.GAME_OVER && !isLastMatch) {
 		gameState = States.NOT_STARTED;
-		updatePlayers();
+		await updatePlayers();
 		drawNextMatchScreen();
 	}
 }
@@ -594,7 +608,7 @@ const sendMatchDataToServer = (match_id, players_array) => {
 			// update front end dynamically
 			swapInnerHTMLOfElement("userStatsDiv", responseHTML);
 			fetchStatsPage("/stats/matches-history");
-			// fetchStatsPage("/stats/tournaments");
+			fetchStatsPage("/stats/tournaments");
 			fetchStatsPage("/stats/user-stats");
 		})
 		.catch(error => {
@@ -607,12 +621,13 @@ const sendMatchDataToServer = (match_id, players_array) => {
 		"date": Date.now()
 	})
 	if (isLastMatch && isTournament) {
-		sendTournamentDataToBlockchain()
+		sendTournamentDataToBlockchain(scores.leftScore > scores.rightScore ? players_array[0] : players_array[1])
 	}
 }
 
-function sendTournamentDataToBlockchain() {
+function sendTournamentDataToBlockchain(winner) {
 	const tournamentData = {
+		"winner": winner,
 		"players": tournamentAllPlayers,
 		"matches": tournamentMatches
 	}
@@ -842,7 +857,7 @@ function startGameAfterCountdown() {
 
 // main
 export default async function launchMatch(match_id, players_array, game_type, map_skin, lastMatch, tournamentState) {
-	return new Promise((resolve, _reject) => {
+	return await new Promise(async (resolve, _reject) => {
 		// console.log(`about to start match number ${match_id} of type ${game_type} with ${players_array}...`)
 		canvas = document.getElementById("pongGameCanvas");
 		context = canvas.getContext("2d");
@@ -854,16 +869,22 @@ export default async function launchMatch(match_id, players_array, game_type, ma
 			tournamentAllPlayers = players_array.flat();
 			tournamentMatchesLeft = players_array.length === 2 ? 3 : 7;
 			leftPlayerLogin = players_array[0][0];
+			leftPlayerDName = await getDisplayName(players_array[0][0]);
 			rightPlayerLogin = players_array[0][1];
+			rightPlayerDName = await getDisplayName(players_array[0][1]);
 			players_array.shift()
 			tournamentPlayers.push(...players_array)
 		} else {
 			leftPlayerLogin = players_array[0];
+			leftPlayerDName = await getDisplayName(players_array[0]);
 			rightPlayerLogin = players_array[1];
+			rightPlayerDName = await getDisplayName(players_array[1]);
 		}
 		if (hasFourPlayers) {
 			topPlayerLogin = players_array[2];
+			topPlayerDName = await getDisplayName(players_array[2]);
 			bottomPlayerLogin = players_array[3];
+			bottomPlayerDname = await getDisplayName(players_array[3]);
 		}
 
 		// Initial set up of the canvas

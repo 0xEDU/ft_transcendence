@@ -55,12 +55,13 @@ class TournamentView(View):
 
     def _get_tournaments(self):
         contract = self._get_contract()
-        raw_tournaments = contract.functions.getTournaments().call()
+        raw_response = contract.functions.getTournaments().call()
+        raw_tournaments, tournament_hash = raw_response[0], raw_response[1]
         tournaments = []
         for tournament in raw_tournaments:
             matches = list(map(lambda match: Match(*match), tournament[1]))
             tournaments.append(asdict(Tournament(tournament[0], matches, tournament[2])))
-        return tournaments
+        return tournaments, tournament_hash
 
     def _add_tournament(self, tournament):
         """Add tournament to blockchain"""
@@ -77,6 +78,9 @@ class TournamentView(View):
         json_string = request.body.decode('utf-8').split("&")[0]
         json_string = json_string.strip("b'\"").replace("\\", "")
         tournament_dict = json.loads(json_string)
+        winner = tournament_dict["winner"]
+        tournament_dict["players"].remove(winner)
+        tournament_dict["players"].insert(0, winner)
         for pong_match in tournament_dict["matches"]:
             player_ids = []
             for player in pong_match["players"]:
@@ -84,8 +88,9 @@ class TournamentView(View):
                 player_ids.append(user.id)
             pong_match["playerIds"] = player_ids
             del pong_match["players"]
-        tournament_dict["tournamentId"] = self.tournament_count
-        print(tournament_dict)
-        self.tournament_count += 1
+        if "tournamentId" not in request.session.keys():
+            request.session["tournamentId"] = 0
+        tournament_dict["tournamentId"] = request.session["tournamentId"]
+        request.session["tournamentId"] += 1
         self._add_tournament(tournament_dict)
         return HttpResponse('')
