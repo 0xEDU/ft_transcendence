@@ -18,6 +18,7 @@ let tournamentMatchesLeft = 0;
 let tournamentFinalResult = [];
 let tournamentMatches = [];
 let tempPair = [];
+let global_game_type = "";
 
 // ball variables
 const ballRadius = 10;
@@ -125,14 +126,16 @@ function adjustCanvasSizeToWindow(game_type) {
 	canvas.height = canvasHeight;
 
 	// TODO: redraw the screen, when a window 'resize' event happens
-	drawMiddleLine();
+	if (!hasFourPlayers || game_type === "classic") {
+		drawMiddleLine(map_skin);
+	}
 	drawPlayersNames();
 	drawScore(game_type);
 	drawBall();
 	drawPaddles();
 }
 
-const drawStartingScreen = (map_skin) => {
+const drawStartingScreen = (map_skin, game_type) => {
 	context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
 	if (map_skin === "map1")
@@ -142,7 +145,10 @@ const drawStartingScreen = (map_skin) => {
 	context.font = "48px sans serif"; // Text font and size
 	context.textAlign = "center"; // Align text to the center
 	context.fillText("Pong Game", canvas.width / 2, canvas.height / 4); // Game title
+	context.fillText(leftPlayerDName + " and " + rightPlayerDName, canvas.width / 2, canvas.height / 4 + 120); // Game title
 	context.font = "24px sans serif"; // Smaller text for instructions
+	context.fillText("Top paddle controls: <- [i] [o] ->", canvas.width / 2, canvas.height / 4 + 170);
+	context.fillText("Bottom paddle controls: <- [b] [n] ->", canvas.width / 2, canvas.height / 4 + 200);
 	context.fillText("Press Enter to Start", canvas.width / 2, canvas.height / 2); // Start instructions
 }
 
@@ -269,6 +275,9 @@ const drawMiddleLine = (map_skin) => {
 	const lineLength = 2 * paddleWidth; // Length of each dash
 	const gap = paddleWidth; // Gap between dashes
 	let y = 0;
+	if (global_game_type === "co-op" || hasFourPlayers) {
+		return;
+	}
 
 	if (map_skin === "map1")
 		context.fillStyle = styleGuide.__WHITE;
@@ -376,6 +385,8 @@ const checkCollisionWithPaddle = () => {
 		if (hasFourPlayers) {
 			ballColor = leftPaddleColor;
 		}
+		speedX += 0.05
+		speedY += 0.05
 	}
 
 	// Collision with Right Paddle
@@ -387,6 +398,8 @@ const checkCollisionWithPaddle = () => {
 		if (hasFourPlayers) {
 			ballColor = rightPaddleColor;
 		}
+		speedX += 0.05
+		speedY += 0.05
 	}
 
 	if (!hasFourPlayers) {
@@ -402,6 +415,8 @@ const checkCollisionWithPaddle = () => {
 		if (hasFourPlayers) {
 			ballColor = topPaddleColor;
 		}
+		speedX += 0.05
+		speedY += 0.05
 	}
 
 	// Collision with Bottom Paddle
@@ -414,6 +429,8 @@ const checkCollisionWithPaddle = () => {
 		if (hasFourPlayers) {
 			ballColor = bottomPaddleColor;
 		}
+		speedX += 0.05
+		speedY += 0.05
 	}
 }
 
@@ -518,7 +535,9 @@ const keyDownHandler = async (e) => {
 
 	// Transitions for starting and ending screens
 	if (e.key == "Enter" && gameState === States.NOT_STARTED) {
-		drawMiddleLine();
+		if (!hasFourPlayers || global_game_type === "classic") {
+			drawMiddleLine();
+		}
 		startGameAfterCountdown();
 	}
 	if (e.key == "Enter" && gameState === States.GAME_OVER && isLastMatch) {
@@ -694,11 +713,11 @@ const drawBackground = () => {
 
 //acrescentar map_skin
 const runGame = async (match_id, players_array, game_type, map_skin) => {
-	if (gameState === States.RUNNING) {
-		if ((game_type === "classic" && (scores.rightScore === winningScore || scores.leftScore === winningScore || scores.topScore === winningScore || scores.bottomScore === winningScore))
+	if (gameState === States.RUNNING) { if ((game_type === "classic" && (scores.rightScore === winningScore || scores.leftScore === winningScore || scores.topScore === winningScore || scores.bottomScore === winningScore))
 			|| (game_type === "co-op" && coopMatchIsOver)) {
 			// Somebody won. The game is over.
 			gameState = States.GAME_OVER;
+			global_game_type = ""
 			matchStats.endTime = performance.now();
 			if (isLastMatch) {
 				clearInterval(gameLoopIntervalId); // stop game execution
@@ -887,11 +906,12 @@ export default async function launchMatch(match_id, players_array, game_type, ma
 			bottomPlayerLogin = players_array[3];
 			bottomPlayerDname = await getDisplayName(players_array[3]);
 		}
+		global_game_type = game_type
 
 		// Initial set up of the canvas
 		adjustCanvasSizeToWindow();
 		randomizeBallMovement();
-		drawStartingScreen(map_skin);
+		drawStartingScreen(map_skin, game_type);
 
 		// Readjusts the size of the canvas in case of window resizing mid-game
 		window.addEventListener("resize", adjustCanvasSizeToWindow);
