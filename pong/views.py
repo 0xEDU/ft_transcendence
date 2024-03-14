@@ -67,7 +67,7 @@ class MatchView(View):
 
     def _create_one_match(self, incoming_request):
     # Form data is valid at this point, now create a new match and return its id
-        new_match = Match.objects.create(type=incoming_request['gameType'])
+        new_match = Match.objects.create(type=incoming_request['gameType'], tournament=incoming_request.get("gameMode", '') == 'tournament')
         for player in incoming_request['players']:
             user = User.objects.get(login_intra=player)
             other_players = [User.objects.get(login_intra=player).id for player in incoming_request['players'] if player != user.login_intra]
@@ -82,7 +82,7 @@ class MatchView(View):
         response_data = {"matches_id": [], "players": []}
         matches = []
         for _ in range(0, int(incoming_request['playerQuantity'] / 2)):
-            new_match = Match.objects.create(type=incoming_request['gameType'])
+            new_match = Match.objects.create(type=incoming_request['gameType'], tournament=True)
             matches.append(new_match)
             response_data["matches_id"].append(new_match.id)
         players = incoming_request["players"]

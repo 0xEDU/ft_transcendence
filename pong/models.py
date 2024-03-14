@@ -14,6 +14,7 @@ class Match(models.Model):
     match_date = models.DateTimeField(auto_now_add=True)
     players = models.ManyToManyField(User, through="Score")
     type = models.CharField(max_length=10, choices=MATCH_TYPE_CHOICES)
+    tournament = models.BooleanField(default=False)
 
 
 class Score(models.Model):
