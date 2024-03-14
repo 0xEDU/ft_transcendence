@@ -36,7 +36,8 @@ class Tournament:
 class TournamentView(View):
     """View for adding tournament to blockchain."""
 
-    w3 = Web3(Web3.HTTPProvider('http://0.0.0.0:8545'))
+    ganche_url = os.getenv('GANACHE_HOST')
+    w3 = Web3(Web3.HTTPProvider(f'http://{ganche_url}:8545'))
     tournament_count = 0
 
     def _get_contract(self):
