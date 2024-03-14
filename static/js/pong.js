@@ -811,6 +811,7 @@ async function createNewMatchForTournament(players) {
 	const url = "/pong/match"
 	const data = {
 		"gameType": "classic",
+		"gameMode": "tournament",
 		"players": players.flat()
 	}
 	const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;

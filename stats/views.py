@@ -109,7 +109,7 @@ class MatchesHistoryTemplateView(TemplateView):
                 return VERSUS_COLORS["loss"]
 
         current_user_id = self.request.session["user_id"]
-        scores = (Score.objects.filter(player_id=current_user_id).exclude(match__type="co-op")
+        scores = (Score.objects.filter(player_id=current_user_id).exclude(match__type="co-op").exclude(match__tournament=True)
                   .order_by("match__match_date"))
         scores = list(map(lambda score: VersusCellObject(
             match_date=score.match.match_date.strftime("%d-%m-%Y %H:%M"),
@@ -143,9 +143,9 @@ class MatchesHistoryTemplateView(TemplateView):
             return MatchRowObject(__get_match_description(match, player1_score, player2_name), score_str, match_hour,
                                   match_date)
 
-        player1_scores = Score.objects.filter(player_id=current_user_id).order_by("match__match_date")
+        player1_scores = Score.objects.filter(player_id=current_user_id).exclude(match__tournament=True).order_by("match__match_date")
         player2_scores = (Score.objects.filter(match__in=player1_scores.values("match_id"))
-                          .exclude(player_id=current_user_id)).order_by("match__match_date")
+                          .exclude(player_id=current_user_id).exclude(match__tournament=True)).order_by("match__match_date")
         player1_scores_dict = {score.match_id: score for score in player1_scores}
         match_row_objects: List[MatchRowObject] = [
             __format_match_row_object(score.match, player1_scores_dict[score.match_id].score, score.score,
