@@ -377,6 +377,23 @@ class IndexView(View):
 
         return context
 
+    def _build_empty_dict(self) -> dict:
+        return {
+            "src": "images/white-image.png",
+            "alt_text": _("No achievement acquired yet"),
+            "title": _("No achievement acquired yet, go play some matches!"),
+        }
+
+    def _get_empty_achievements_context(self) -> dict:
+        context = {}
+
+        for field in Achievements._meta.get_fields():
+            field_name = field.name
+            if (field_name not in ["id", "user"]):
+                context[field_name] = self._build_empty_dict()
+
+        return context
+
     def get(self, request, *args, **kwargs):
         # Get context
         # Build redirect url
@@ -449,5 +466,9 @@ class IndexView(View):
 
             # Get user achievements info
             context.update(self._get_achievements_context(user))
+        else:
+            # User not logged, we should ou
+            context.update(self._get_empty_achievements_context())
+            
 
         return render(request, 'index.html', context)
