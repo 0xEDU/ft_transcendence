@@ -65,8 +65,8 @@ const winningScore = 3;
 // randomize this later
 let dx = -3.2;
 let dy = 2.4;
-let speedX = 10;
-let speedY = 10;
+let speedX = 1;
+let speedY = 1;
 
 // Players movement
 let rightUpPressed = false;
